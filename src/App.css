@@ -44,7 +44,7 @@ body{
 .display-test {
 	display: flex;
 	flex-direction: row;
-	margin: 0 auto;
+	margin: 0 auto 50px;
 }
 
 .intro > #intro-main{
@@ -70,7 +70,7 @@ body{
 }
 .below_intro{
 	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	text-align: center;
 }
 #intro-sub{
