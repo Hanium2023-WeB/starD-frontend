@@ -9,7 +9,7 @@ const Backarrow=({subname})=>{
         navigate(-1);
     }
     return(
-        <div className="backarrow">
+        <div className="backarrow" style={{cursor:"pointer"}}>
             <svg
                 onClick={handleSVGClick}
                 xmlns="../images/Arrow.svg"

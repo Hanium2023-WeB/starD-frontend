@@ -158,8 +158,19 @@ html {
 }
 .study_list .list_deadline {
 	font-size: 13px;
-	padding-top: -10px;
 	color: #99a3af;
+	margin-top:15px;
+}
+.study_list .list_founder{
+	font-size: 13px;
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+}
+.study_list .list_founder img{
+	width:13px;
+	height:13px;
+	margin-right: 3px;
 }
 .study_list .list_title {
 	font-size: 20px;

@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Link, useNavigate, useParams, useLocation} from "react-router-dom";
 
 import Backarrow from "../../components/repeat_etc/Backarrow";
-import StudyInsert from "../../pages/studypage/StudyInsert";
 import Header from "../../components/repeat_etc/Header";
 import "../../css/study_css/MyOpenStudy.css";
 import "../../css/study_css/StudyDetail.css";
