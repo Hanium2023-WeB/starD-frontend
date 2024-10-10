@@ -27,7 +27,7 @@ const Slide = ({ type, userId }) => {
     }
 
     useEffect(() => {
-        axios.get("http://localhost:8080/study/stars/scraps", config)
+        axios.get("/api/study/stars/scraps", config)
             .then (response => {
                 setLikeStates(response.data);
             })
@@ -37,7 +37,7 @@ const Slide = ({ type, userId }) => {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/scrap/study", config)
+        axios.get("/api/scrap/study", config)
             .then(response => {
                 const studyList = response.data;
 
@@ -61,7 +61,7 @@ const Slide = ({ type, userId }) => {
     //다른 사용자 스터디 모집 게시글 조회
     useEffect(() => {
         axios
-            .get(`http://localhost:8080/user/mypage/profile/${userId}/open-study`, config)
+            .get(`/api/user/mypage/profile/${userId}/open-study`, config)
             .then((res) => {
                 console.error("스터디 모집 게시글 가져오기 성공:", res.data);
                 setOpenStudies(res.data);
@@ -94,7 +94,7 @@ const Slide = ({ type, userId }) => {
                 config.headers['Authorization'] = `Bearer ${accessToken}`;
             }
             if (newStudies[index].scrap) {
-                axios.delete(`http://localhost:8080/scrap/study/${studyId}`, config)
+                axios.delete(`/api/scrap/study/${studyId}`, config)
                     .then(response => {
                         console.log("스크랩 취소 성공 " + response.data);
                     })
@@ -103,7 +103,7 @@ const Slide = ({ type, userId }) => {
                         console.log("스크랩 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/scrap/study/${studyId}`, null, config)
+                axios.post(`/api/scrap/study/${studyId}`, null, config)
                     .then(response => {
                         console.log("스크랩 성공");
                     })
@@ -131,7 +131,7 @@ const Slide = ({ type, userId }) => {
                 config.headers['Authorization'] = `Bearer ${accessToken}`;
             }
             if (newStudies[index].like) {
-                axios.delete(`http://localhost:8080/star/study/${studyId}`, config)
+                axios.delete(`/api/star/study/${studyId}`, config)
                     .then(response => {
                         console.log("공감 취소 성공 " + response.data);
                     })
@@ -140,7 +140,7 @@ const Slide = ({ type, userId }) => {
                         console.log("공감 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/star/study/${studyId}`, null, config)
+                axios.post(`/api/star/study/${studyId}`, null, config)
                     .then(response => {
                         console.log("공감 성공");
                     })

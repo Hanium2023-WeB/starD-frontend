@@ -26,7 +26,7 @@ const StudyApplyList = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/v2/studies/${id}/select`, {
+        axios.get(`/api/api/v2/studies/${id}/select`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -41,7 +41,7 @@ const StudyApplyList = () => {
                 console.error("신청자 데이터 가져오기 실패:", error);
             });
 
-        axios.get(`http://localhost:8080/api/v2/studies/${id}/study-member`, {
+        axios.get(`/api/api/v2/studies/${id}/study-member`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -73,7 +73,7 @@ const StudyApplyList = () => {
         } else {
             const result = window.confirm(memberId + "을(를) 수락하시겠습니까?");
             if (result) {
-                axios.put(`http://localhost:8080/api/v2/studies/${id}/select`, {}, {
+                axios.put(`/api/api/v2/studies/${id}/select`, {}, {
                     params: {
                         applicantId: memberId,
                         isSelect: true
@@ -135,7 +135,7 @@ const StudyApplyList = () => {
             if (result) {
 
                 //TODO db에서 받아오기 setApplyList로 상태 업데이트
-                axios.put(`http://localhost:8080/api/v2/studies/${id}/select`, {}, {
+                axios.put(`/api/api/v2/studies/${id}/select`, {}, {
                     params: {
                         applicantId: memberId,
                         isSelect: false
@@ -191,7 +191,7 @@ const StudyApplyList = () => {
                 alert("모집인원을 초과하였습니다.");
                 return;
             } else {
-                axios.post(`http://localhost:8080/api/v2/studies/${id}/open`, {}, {
+                axios.post(`/api/api/v2/studies/${id}/open`, {}, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -203,7 +203,7 @@ const StudyApplyList = () => {
                         const requestData = {
                             studyId: id
                         };
-                        axios.post('http://localhost:8080/chat/room', requestData, {
+                        axios.post('/api/chat/room', requestData, {
                             withCredentials: true,
                             headers: {
                                 'Authorization': `Bearer ${accessToken}`

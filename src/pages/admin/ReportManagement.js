@@ -27,7 +27,7 @@ const ReportManagement = () => {
     //TODO 신고목록 조회
     // TODO 5회 이상 신고된 목록 가져오기
     useEffect(() => {
-        axios.get("http://localhost:8080/reports", {
+        axios.get("/api/reports", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -46,7 +46,7 @@ const ReportManagement = () => {
 
     const openReasonModal = (report) => {
         // TODO 신고 사유 조회
-        axios.get(`http://localhost:8080/reports/reason/${report.id}`, {
+        axios.get(`/api/reports/reason/${report.id}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -119,7 +119,7 @@ const ReportManagement = () => {
         const confirmReject = window.confirm("신고를 승인하시겠습니까?");
 
         if (confirmReject) {
-            axios.post(`http://localhost:8080/reports/accept/${report.id}`, null, {
+            axios.post(`/api/reports/accept/${report.id}`, null, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -146,7 +146,7 @@ const ReportManagement = () => {
         const confirmReject = window.confirm("신고를 반려하시겠습니까?");
 
         if (confirmReject) {
-            axios.delete(`http://localhost:8080/reports/${report.id}`, {
+            axios.delete(`/api/reports/${report.id}`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -191,7 +191,7 @@ const ReportManagement = () => {
     useEffect(() => {
         reports.forEach((report) => {
             if (!report.reportCount) {
-                axios.get(`http://localhost:8080/reports/report-count/${report.id}`, {
+                axios.get(`/api/reports/report-count/${report.id}`, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -229,7 +229,7 @@ const ReportManagement = () => {
             window.open(popupUrl, '_blank', 'width=800,height=600');
         } else if (report.tableType === 'REPLY') {
             // TODO 댓글 id로 댓글 객체 가져오기
-            axios.get(`http://localhost:8080/replies/${report.reply.id}`, {
+            axios.get(`/api/replies/${report.reply.id}`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -251,7 +251,7 @@ const ReportManagement = () => {
                 });
         } else if (report.tableType === 'STUDYPOST') {
             // TODO studypost id로 study id 알아오기
-            axios.get(`http://localhost:8080/study/post/${report.studyPost.id}`, {
+            axios.get(`/api/study/post/${report.studyPost.id}`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`

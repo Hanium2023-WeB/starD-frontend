@@ -14,7 +14,7 @@ const MyScore = () => {
 
     //TODO 참여한스터디 목록
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/wrap-up-study", {
+        axios.get("/api/user/mypage/wrap-up-study", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -34,7 +34,7 @@ const MyScore = () => {
 
     //TODO 개인신뢰도 가져오기
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/credibility", {
+        axios.get("/api/user/mypage/credibility", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'
@@ -50,7 +50,7 @@ const MyScore = () => {
     //TODO 평가당한 내역 가져오기
     useEffect(() => {
         if (selectedStudy) {
-            axios.get(`http://localhost:8080/user/mypage/rate/target/study/${selectedStudy}`, {
+            axios.get(`/api/user/mypage/rate/target/study/${selectedStudy}`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

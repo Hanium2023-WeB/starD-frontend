@@ -36,7 +36,7 @@ const ToDoList = ({sideheader}) => {
     let lastTodoId = useRef("1");
     console.log("########: ", studyMems);
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/studying", {
+        axios.get("/api/user/mypage/studying", {
             withCredentials: true, headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
@@ -64,7 +64,7 @@ const ToDoList = ({sideheader}) => {
     }, [accessToken]);
     useEffect(() => {
         if (InsertToDoStudyId === "0") {
-            axios.get(`http://localhost:8080/todo/all`, {
+            axios.get(`/api/todo/all`, {
                 params: {
                     year: Year, month: Month,
                 }, headers: {
@@ -94,7 +94,7 @@ const ToDoList = ({sideheader}) => {
                 console.log('전체 스터디 투두리스트 가져오기 실패:', error);
             })
         } else {
-            axios.get(`http://localhost:8080/todo/user/${studyIdAsNumber}`, {
+            axios.get(`/api/todo/user/${studyIdAsNumber}`, {
                 params: {
                     year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1,
                 }, headers: {
@@ -178,7 +178,7 @@ const ToDoList = ({sideheader}) => {
             alert("삭제하시겠습니까?");
 
             try {
-                const deleteDataResponse = await axios.delete(`http://localhost:8080/todo/${id}`, {
+                const deleteDataResponse = await axios.delete(`/api/todo/${id}`, {
                     withCredentials: true, headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
@@ -215,7 +215,7 @@ const ToDoList = ({sideheader}) => {
         const todoData = {
             task: UpdatedToDo.toDo.task, dueDate: isoString,
         };
-        const postDataResponse = await axios.put(`http://localhost:8080/todo/${UpdatedToDo.toDo.id}`, todoData, {
+        const postDataResponse = await axios.put(`/api/todo/${UpdatedToDo.toDo.id}`, todoData, {
             params: {
                 studyId: UpdatedToDo.toDo.study.id, assigneeStr: assigneeStr,
             }, withCredentials: true, headers: {
@@ -254,7 +254,7 @@ const ToDoList = ({sideheader}) => {
         console.log("체크 스터디 아이디", id);
         console.log("체크 전 상태", todo_status);
         console.log("체크 후 상태", !todo_status);
-        const postDataResponse = await axios.post(`http://localhost:8080/todo/${id}/status`, null, {
+        const postDataResponse = await axios.post(`/api/todo/${id}/status`, null, {
             params: {status: !todo_status},
             withCredentials: true, headers: {
                 'Authorization': `Bearer ${accessToken}`

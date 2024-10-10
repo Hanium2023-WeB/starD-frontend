@@ -31,7 +31,7 @@ const MemberEvaluate = () => {
     useEffect(() => {
         setLoading(true);
 
-        axios.get(`http://localhost:8080/api/v2/studies/${studyId}/study-member`, {
+        axios.get(`/api/api/v2/studies/${studyId}/study-member`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -54,7 +54,7 @@ const MemberEvaluate = () => {
     useEffect(() => {
         setLoading(true);
 
-        axios.get(`http://localhost:8080/rate/member/${studyId}`, {
+        axios.get(`/api/rate/member/${studyId}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`

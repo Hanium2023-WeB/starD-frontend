@@ -28,7 +28,7 @@ const Signout = () => {
   const handleSignOutClick = () => {
     const confirmDelete = window.confirm("정말로 탈퇴하시겠습니까?");
     if (confirmDelete) {
-        axios.post("http://localhost:8080/user/mypage/delete",null , {
+        axios.post("/api/user/mypage/delete",null , {
             params: { password: password },
             withCredentials: true,
             headers: {

@@ -33,7 +33,7 @@ const StudyPostDetail = ( ) => {
     const [isWriter, setIsWriter] = useState(false);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/star/studypost/${postid}`, {
+        axios.get(`/api/star/studypost/${postid}`, {
             params: { postid: postid },
             withCredentials: true,
             headers: {
@@ -52,7 +52,7 @@ const StudyPostDetail = ( ) => {
 
     useEffect(() => {
         if (initiallyLikeStates) {
-            axios.get(`http://localhost:8080/study/post/${postid}`, {
+            axios.get(`/api/study/post/${postid}`, {
                 params: { postid: postid },
                 withCredentials: true,
                 headers: {
@@ -72,7 +72,7 @@ const StudyPostDetail = ( ) => {
 
     const toggleLike = () => {
         if (likeStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`http://localhost:8080/star/studypost/${postid}`, {
+            axios.delete(`/api/star/studypost/${postid}`, {
                 params: { postid: postid },
                 withCredentials: true,
                 headers: {
@@ -89,7 +89,7 @@ const StudyPostDetail = ( ) => {
 
             setLikeStates(false);
         } else {
-            axios.post(`http://localhost:8080/star/studypost/${postid}`, null, {
+            axios.post(`/api/star/studypost/${postid}`, null, {
                 params: { postid: postid },
                 withCredentials: true,
                 headers: {
@@ -131,7 +131,7 @@ const StudyPostDetail = ( ) => {
             postData.append('fileUpdateStatus', false);
         }
 
-        axios.post(`http://localhost:8080/study/post/${postid}`, postData, {
+        axios.post(`/api/study/post/${postid}`, postData, {
             params: { postid: updatedPost.id },
             withCredentials: true,
             headers: {
@@ -160,7 +160,7 @@ const StudyPostDetail = ( ) => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
 
-            axios.delete(`http://localhost:8080/study/post/${postid}`, {
+            axios.delete(`/api/study/post/${postid}`, {
                 params: { postId: postid },
                 withCredentials: true,
                 headers: {
@@ -229,7 +229,7 @@ const StudyPostDetail = ( ) => {
     };
 
     const handleDownloadClick = () => {
-        axios.get(`http://localhost:8080/study/post/download/${postid}`, {
+        axios.get(`/api/study/post/download/${postid}`, {
             params: { postId: postid },
             withCredentials: true,
             headers: {

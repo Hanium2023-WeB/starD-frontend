@@ -41,7 +41,7 @@ const QnaSearchResult = () => {
         let base_url = "";
         let params = {};
         if (categoryOption === "전체") {
-            base_url = "http://localhost:8080/qna/search";
+            base_url = "/api/qna/search";
             params = {
                 searchType: selectOption,
                 searchWord: searchQuery,
@@ -49,7 +49,7 @@ const QnaSearchResult = () => {
             };
         }
         else {
-            base_url = "http://localhost:8080/qna/search/category";
+            base_url = "/api/qna/search/category";
             params = {
                 searchType: selectOption,
                 category: categoryOption,
@@ -77,7 +77,7 @@ const QnaSearchResult = () => {
         let base_url = "";
         let params = {};
         if (categoryOption === "전체") {
-            base_url = "http://localhost:8080/qna/search";
+            base_url = "/api/qna/search";
             params = {
                 searchType: selectOption,
                 searchWord: searchQuery,
@@ -85,7 +85,7 @@ const QnaSearchResult = () => {
             };
         }
         else {
-            base_url = "http://localhost:8080/qna/search/category";
+            base_url = "/api/qna/search/category";
             params = {
                 searchType: selectOption,
                 category: categoryOption,

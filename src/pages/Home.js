@@ -57,7 +57,7 @@ const Home = () => {
     useEffect(() => {
         AOS.init();
 
-        axios.get("http://localhost:8080/api/v2/studies/study-ranking")
+        axios.get("/api/api/v2/studies/study-ranking")
             .then((res) => {
                 setTop5Field(res.data.data.slice(0, 5));
                 setFirstRow(res.data.data.slice(0, 3));
@@ -66,7 +66,7 @@ const Home = () => {
             console.log('Top 5 전송 실패', error);
         });
 
-        axios.get(`http://localhost:8080/todo/all`, {
+        axios.get(`/api/todo/all`, {
             params: {
                 year: Year, month: Month,
             }, headers: {

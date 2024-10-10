@@ -7,7 +7,7 @@ const SubscribeComponent = () => {
     const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        const eventSource = new EventSource(`http://localhost:8080/notifications/subscribe?token=${accessToken}`, { withCredentials: true });
+        const eventSource = new EventSource(`/api/notifications/subscribe?token=${accessToken}`, { withCredentials: true });
 
         eventSource.onopen = () => {
             console.log("SSE 연결이 열렸습니다.");
@@ -33,7 +33,7 @@ const SubscribeComponent = () => {
 
     const sendData = async () => {
         try {
-            await axios.post(`http://localhost:8080/notifications/send-data?token=${accessToken}`, null, { withCredentials: true });
+            await axios.post(`/api/notifications/send-data?token=${accessToken}`, null, { withCredentials: true });
             console.log("데이터 전송 성공");
         } catch (error) {
             console.error("데이터 전송 실패:", error);

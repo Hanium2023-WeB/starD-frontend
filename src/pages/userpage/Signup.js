@@ -193,7 +193,7 @@ const Signup = () => {
 
 
         try {
-            const response = await axios.post("http://localhost:8080/signup", {
+            const response = await axios.post("/api/signup", {
                 id: state.id,
                 password: state.password,
                 name: state.name,
@@ -233,7 +233,7 @@ const Signup = () => {
         }
 
         try {
-            const response = await axios.get("http://localhost:8080/checkDuplicateID", {
+            const response = await axios.get("/api/checkDuplicateID", {
                 params: {id: id},
             });
 
@@ -274,7 +274,7 @@ const Signup = () => {
         }
 
         try {
-            const response = await axios.get("http://localhost:8080/checkDuplicateNickname", {
+            const response = await axios.get("/api/checkDuplicateNickname", {
                 params: {nickname: nickname},
             });
 

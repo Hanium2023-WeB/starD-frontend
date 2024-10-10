@@ -11,7 +11,7 @@ const Logout = ({sideheader}) => {
         const accessToken = localStorage.getItem('accessToken');
 
         if (member && accessToken) {
-            axios.post("http://localhost:8080/user/auth/sign-out",{}, {
+            axios.post("/api/user/auth/sign-out",{}, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`

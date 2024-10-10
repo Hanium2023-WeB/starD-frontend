@@ -105,7 +105,7 @@ const TeamToDoList = () => {
         };
 
         if (StringAssignees) {
-            const postDataResponse = await axios.post(`http://localhost:8080/todo`, todoData, {
+            const postDataResponse = await axios.post(`/api/todo`, todoData, {
                 params: {
                     studyId: studyId,
                     assigneeStr: StringAssignees,
@@ -135,7 +135,7 @@ const TeamToDoList = () => {
         async (id) => {
             alert("삭제하시겠습니까?");
 
-            const deleteDataResponse = await axios.delete(`http://localhost:8080/todo/${id}`, {
+            const deleteDataResponse = await axios.delete(`/api/todo/${id}`, {
                 withCredentials: true, headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
@@ -162,7 +162,7 @@ const TeamToDoList = () => {
         };
         const toDoId = UpdatedToDo.toDo.id;
 
-        const postDataResponse = await axios.put(`http://localhost:8080/todo/${toDoId}`, updateToDo, {
+        const postDataResponse = await axios.put(`/api/todo/${toDoId}`, updateToDo, {
             params: {
                 assigneeStr: assigneeStr,
             },
@@ -211,7 +211,7 @@ const TeamToDoList = () => {
             console.log("진행 중이다.");
             try {
                 const response = await axios.post(
-                    `http://localhost:8080/todo/${toDoId}/status`,
+                    `/api/todo/${toDoId}/status`,
                     null,
                     {
                         params: {status: !todo_status},
@@ -224,7 +224,7 @@ const TeamToDoList = () => {
                 if (response.status === 200) {
                     console.log("체크 성공:", response);
 
-                    axios.get(`http://localhost:8080/todo/${studyIdAsNumber}`, {
+                    axios.get(`/api/todo/${studyIdAsNumber}`, {
                         params: {
                             year: Year, month: Month,
                         }, headers: {
@@ -295,7 +295,7 @@ const TeamToDoList = () => {
     }, [currentMonth]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/todo/${studyIdAsNumber}`, {
+        axios.get(`/api/todo/${studyIdAsNumber}`, {
             params: {
                 year: Year, month: Month,
             }, headers: {

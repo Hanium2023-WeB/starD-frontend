@@ -58,7 +58,7 @@ const Mypage = ({sideheader}) => {
 
 
     useEffect(() => {
-        axios.get("http://localhost:8080/scrap/post", {
+        axios.get("/api/scrap/post", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -116,7 +116,7 @@ const Mypage = ({sideheader}) => {
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/todo/all`, {
+        axios.get(`/api/todo/all`, {
             params: {
                 year: Year, month: Month,
             }, headers: {
@@ -132,7 +132,7 @@ const Mypage = ({sideheader}) => {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/schedule/all", {
+        axios.get("/api/schedule/all", {
             params: {
                 year: Year, month: Month,
             }, withCredentials: true, headers: {
@@ -147,7 +147,7 @@ const Mypage = ({sideheader}) => {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/credibility", {
+        axios.get("/api/user/mypage/credibility", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'

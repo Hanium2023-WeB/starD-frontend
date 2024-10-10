@@ -33,7 +33,7 @@ const FindID = () => {
             return;
         }
         try {
-            axios.get("http://localhost:8080/member/find-id", {
+            axios.get("/api/member/find-id", {
                 params: {
                     "email": state.Email,
                     "phone": state.phone,

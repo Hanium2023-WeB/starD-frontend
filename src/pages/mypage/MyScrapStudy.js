@@ -24,7 +24,7 @@ const MyScrapStudy = () => {
     let accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        axios.get("http://localhost:8080/study/stars/scraps", {
+        axios.get("/api/study/stars/scraps", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -39,7 +39,7 @@ const MyScrapStudy = () => {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/scrap/study", {
+        axios.get("/api/scrap/study", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -80,7 +80,7 @@ const MyScrapStudy = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].scrap) {
-                axios.delete(`http://localhost:8080/scrap/study/${studyId}`, {
+                axios.delete(`/api/scrap/study/${studyId}`, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -95,7 +95,7 @@ const MyScrapStudy = () => {
                         console.log("스크랩 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/scrap/study/${studyId}`, null, {
+                axios.post(`/api/scrap/study/${studyId}`, null, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -121,7 +121,7 @@ const MyScrapStudy = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].like) {
-                axios.delete(`http://localhost:8080/star/study/${studyId}`, {
+                axios.delete(`/api/star/study/${studyId}`, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -136,7 +136,7 @@ const MyScrapStudy = () => {
                         console.log("공감 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/star/study/${studyId}`, null, {
+                axios.post(`/api/star/study/${studyId}`, null, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {

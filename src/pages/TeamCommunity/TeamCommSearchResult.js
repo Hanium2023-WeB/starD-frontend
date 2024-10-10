@@ -29,7 +29,7 @@ const TeamCommSearchResult = () => {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/study/post/search/${studyId}`, {
+        axios.get(`/api/study/post/search/${studyId}`, {
             params: {
                 studyId: studyId,
                 searchType: selectOption,

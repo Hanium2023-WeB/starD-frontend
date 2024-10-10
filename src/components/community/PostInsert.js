@@ -73,7 +73,7 @@ const PostInsert = () => {
         setFormData(onInsertPost(formData));
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("http://localhost:8080/com",
+        const response = axios.post("/api/com",
             {
                 title:formData.title,
                 category:formData.category,

@@ -25,7 +25,7 @@ const InputSubSign = () => {
     }
 
     const onClickSaveBtn = () => {
-        axios.post("http://localhost:8080/signup/option-data", {
+        axios.post("/api/signup/option-data", {
             id: memberId,
             city: mem.city,
             district: mem.district,

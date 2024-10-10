@@ -20,7 +20,7 @@ const EditProfile = () => {
     //프로필 조회하기
     useEffect(() => {
         axios
-            .get("http://localhost:8080/user/mypage/profile", {
+            .get("/api/user/mypage/profile", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -88,7 +88,7 @@ const EditProfile = () => {
         formData.append("imgFile", imgfile);
 
         axios
-            .put("http://localhost:8080/user/mypage/profile", formData, {
+            .put("/api/user/mypage/profile", formData, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

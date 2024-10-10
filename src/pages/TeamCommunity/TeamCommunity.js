@@ -30,7 +30,7 @@ const TeamCommunity = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:8080/study/post", {
+        axios.get("/api/study/post", {
             params: { studyId: studyId },
             withCredentials: true,
             headers: {

@@ -30,7 +30,7 @@ const NoticeDetail = () => {
 
     useEffect(() => {
         if (accessToken && isLoggedInUserId) {
-            axios.get(`http://localhost:8080/star/notice/${id}`, {
+            axios.get(`/api/star/notice/${id}`, {
                 params: { type : type },
                 withCredentials: true,
                 headers: {
@@ -52,7 +52,7 @@ const NoticeDetail = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/member/auth", {
+            .get("/api/member/auth", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -84,7 +84,7 @@ const NoticeDetail = () => {
         }
 
         if (initiallyLikeStates) {
-            axios.get(`http://localhost:8080/notice/${id}`, config)
+            axios.get(`/api/notice/${id}`, config)
                 .then((res) => {
                     setPostItem(res.data);
                 })
@@ -101,7 +101,7 @@ const NoticeDetail = () => {
         }
 
         if (likeStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`http://localhost:8080/star/notice/${id}`, {
+            axios.delete(`/api/star/notice/${id}`, {
                 params: { type : type },
                 withCredentials: true,
                 headers: {
@@ -118,7 +118,7 @@ const NoticeDetail = () => {
 
             setLikeStates(false);
         } else {
-            axios.post(`http://localhost:8080/star/notice/${id}`, null, {
+            axios.post(`/api/star/notice/${id}`, null, {
                 params: { type : type },
                 withCredentials: true,
                 headers: {
@@ -156,7 +156,7 @@ const NoticeDetail = () => {
             config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
-        axios.post(`http://localhost:8080/notice/${id}`, {
+        axios.post(`/api/notice/${id}`, {
             title: updatedPost.title,
             content: updatedPost.content,
         }, {
@@ -188,7 +188,7 @@ const NoticeDetail = () => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
 
-            axios.delete(`http://localhost:8080/notice/${id}`, {
+            axios.delete(`/api/notice/${id}`, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {

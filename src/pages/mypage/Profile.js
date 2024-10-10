@@ -19,7 +19,7 @@ const Profile = () => {
     //프로필 조회하기
     useEffect(() => {
         axios
-            .get("http://localhost:8080/user/mypage/profile", {
+            .get("/api/user/mypage/profile", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`

@@ -21,7 +21,7 @@ const NoticeManagingListItem = ({posts, setPosts}) => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
 
-            axios.delete(`http://localhost:8080/notice/${id}`, {
+            axios.delete(`/api/notice/${id}`, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {

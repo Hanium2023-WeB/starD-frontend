@@ -53,7 +53,7 @@ const MyWriteComment = () => {
     const insertPage = location.state && location.state.page;
 
     const fetchMyComments = (pageNumber) => {
-        axios.get("http://localhost:8080/user/mypage/reply", {
+        axios.get("/api/user/mypage/reply", {
             params: {
                 page: pageNumber,
             },
@@ -76,7 +76,7 @@ const MyWriteComment = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/reply", {
+        axios.get("/api/user/mypage/reply", {
             params: {
                 page: 1,
             },

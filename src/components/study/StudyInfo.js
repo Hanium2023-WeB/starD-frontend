@@ -62,7 +62,7 @@ const StudyInfo = ({study, isRecruiter}) => {
         const confirmDelete = window.confirm("정말로 스터디를 삭제하시겠습니까?");
         if (confirmDelete) {
             axios
-                .delete(`http://localhost:8080/api/v2/studies/${study.id}`, {
+                .delete(`/api/api/v2/studies/${study.id}`, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`

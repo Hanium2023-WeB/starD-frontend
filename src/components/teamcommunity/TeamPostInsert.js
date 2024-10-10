@@ -72,7 +72,7 @@ const TeamPostInsert = ( {studyId} ) => {
             postData.append('file', formData.file);
         }
 
-        axios.post("http://localhost:8080/study/post", postData, {
+        axios.post("/api/study/post", postData, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

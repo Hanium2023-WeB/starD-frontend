@@ -35,7 +35,7 @@ const StudyDetail = ({sideheader}) => {
             studyId = id;
         }
 
-        axios.get(`http://localhost:8080/api/v2/studies/${studyId}`, {
+        axios.get(`/api/api/v2/studies/${studyId}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -53,7 +53,7 @@ const StudyDetail = ({sideheader}) => {
                 console.error("스터디 세부 데이터 가져오기 실패:", error);
             });
 
-        axios.get(`http://localhost:8080/api/v2/studies/${studyId}/study-member`, {
+        axios.get(`/api/api/v2/studies/${studyId}/study-member`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -68,7 +68,7 @@ const StudyDetail = ({sideheader}) => {
                 console.error("스터디 모집 여부 데이터 가져오기 실패:", error);
             });
 
-        axios.get(`http://localhost:8080/api/v2/studies/${studyId}/apply-reason`, {
+        axios.get(`/api/api/v2/studies/${studyId}/apply-reason`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -89,7 +89,7 @@ const StudyDetail = ({sideheader}) => {
     const handleStudyDelete = useCallback(() => {
         const confirmDelete = window.confirm("정말로 스터디를 삭제하시겠습니까?");
         if (confirmDelete) {
-            axios.delete(`http://localhost:8080/api/v2/studies/${studyId}`,
+            axios.delete(`/api/api/v2/studies/${studyId}`,
                 {
                     withCredentials: true,
                     headers: {

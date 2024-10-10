@@ -99,7 +99,7 @@ const Home = () => {
 
     // TODO 가장 인기 있는 분야 Top 5
     useEffect(() => {
-        axios.get("http://localhost:8080/api/v2/studies/study-ranking")
+        axios.get("/api/api/v2/studies/study-ranking")
             .then((res) => {
                 setTop5Field(res.data.data);
                 setFirstRow(res.data.data.slice(0, 3));

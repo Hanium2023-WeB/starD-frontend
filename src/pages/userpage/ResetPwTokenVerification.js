@@ -37,7 +37,7 @@ const ResetPwTokenVerification = () => {
 
     const tokenVerification = () => {
 
-        axios.get(`http://localhost:8080/reset-password?token=${token}`)
+        axios.get(`/api/reset-password?token=${token}`)
             .then((res) => {
                 console.log("토큰 검증 완료");
 
@@ -63,7 +63,7 @@ const ResetPwTokenVerification = () => {
             newPassword: state.pw
         };
 
-        axios.put("http://localhost:8080/user/mypage/reset-password", passwordUpdateDto,{
+        axios.put("/api/user/mypage/reset-password", passwordUpdateDto,{
             withCredentials: true,
             headers: { 'Authorization': `Bearer ${accessToken}` } })
             .then((res) => {

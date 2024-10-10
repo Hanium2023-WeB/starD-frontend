@@ -18,7 +18,7 @@ const Schedule = ({sideheader}) => {
     const [studyMems, setStudyMems] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/studying", {
+        axios.get("/api/user/mypage/studying", {
             withCredentials: true, headers: {
                 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
             }
@@ -44,7 +44,7 @@ const Schedule = ({sideheader}) => {
     const [schedules, setSchedules] = useState({});
 
     useEffect(() => {
-        axios.get("http://localhost:8080/schedule/all", {
+        axios.get("/api/schedule/all", {
             params: {
                 year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1,
             }, withCredentials: true, headers: {
@@ -78,7 +78,7 @@ const Schedule = ({sideheader}) => {
         const schedule = {
              title: title, startDate: formattedDate, color: color,
         };
-        axios.post("http://localhost:8080/schedule", schedule, {
+        axios.post("/api/schedule", schedule, {
             params: {
                 studyId: studyIdAsNumber
             }, withCredentials: true, headers: {
@@ -97,7 +97,7 @@ const Schedule = ({sideheader}) => {
         console.log("title:", newTitle);
         console.log("COLOR:", newColor);
 
-        axios.put(`http://localhost:8080/schedule/${id}`, {}, {
+        axios.put(`/api/schedule/${id}`, {}, {
             params: {
                 title: newTitle, color: newColor,
             }, withCredentials: true, headers: {
@@ -118,7 +118,7 @@ const Schedule = ({sideheader}) => {
 
     //일정 삭제 함수
     const onRemove = (id) => {
-        axios.delete(`http://localhost:8080/schedule/${id}`, {
+        axios.delete(`/api/schedule/${id}`, {
             withCredentials: true, headers: {
                 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
             }

@@ -37,7 +37,7 @@ const Notice = () => {
     };
 
     const fetchNotices = (pageNumber) => {
-        let base_url = "http://localhost:8080/notice/search";
+        let base_url = "/api/notice/search";
         let params = {
             searchType: selectOption,
             searchWord: searchQuery,
@@ -59,7 +59,7 @@ const Notice = () => {
     }, [searchQuery, selectOption, page]);
 
     useEffect(() => {
-        let base_url = "http://localhost:8080/notice/search";
+        let base_url = "/api/notice/search";
         let params = {
             searchType: selectOption,
             searchWord: searchQuery,

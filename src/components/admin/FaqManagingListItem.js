@@ -20,7 +20,7 @@ const FaqManagingListItem = ({posts, setPosts}) => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
 
-            axios.delete(`http://localhost:8080/faq/${id}`, {
+            axios.delete(`/api/faq/${id}`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`

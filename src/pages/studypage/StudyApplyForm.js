@@ -25,7 +25,7 @@ const StudyApplyForm = ({sideheader}) => {
     useEffect(() => {
 
         // 백엔드 REST API 호출 코드
-        axios.get(`http://localhost:8080/api/v2/studies/${id}`, {
+        axios.get(`/api/api/v2/studies/${id}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -49,7 +49,7 @@ const StudyApplyForm = ({sideheader}) => {
             return;
         }
 
-        axios.post(`http://localhost:8080/api/v2/studies/${id}/apply`, {}, {
+        axios.post(`/api/api/v2/studies/${id}/apply`, {}, {
             params: {
                 apply_reason: content
             },

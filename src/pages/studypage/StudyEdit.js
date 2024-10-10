@@ -112,7 +112,7 @@ const StudyEdit = () => {
         console.log("수정될 데이터?:", updatedStudy);
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.put(`http://localhost:8080/api/v2/studies/${study.id}`,
+        axios.put(`/api/api/v2/studies/${study.id}`,
             {
                 title: updatedStudy.title,
                 field: updatedStudy.field,

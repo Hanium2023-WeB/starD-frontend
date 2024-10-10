@@ -34,7 +34,7 @@ const TeamToDoInsert = ({onInsert, dueDate, Inserttodostudyid, studyidasnumber, 
 
     // TODO 서버에서 참여스터디와 참여멤버 가져오기
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/studying", {
+        axios.get("/api/user/mypage/studying", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`

@@ -73,7 +73,7 @@ const QnaInsert = () => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("http://localhost:8080/qna",
+        const response = axios.post("/api/qna",
             {
                 title: formData.title,
                 content: formData.content,

@@ -30,7 +30,7 @@ const Login = () => {
     };
     const login = () => {
         // const accessToken = localStorage.getItem('accessToken');
-        const eventSource = new EventSource(`http://localhost:8080/notifications/subscribe/${state.ID}`);
+        const eventSource = new EventSource(`/api/notifications/subscribe/${state.ID}`);
 
         eventSource.addEventListener("sse", function (event) {
             console.log(event.data);
@@ -52,7 +52,7 @@ const Login = () => {
         }
 
         axios
-            .post("http://localhost:8080/user/auth/sign-in", {
+            .post("/api/user/auth/sign-in", {
                 memberId: state.ID,
                 password: state.PW
             }, {

@@ -73,7 +73,7 @@ const FaqInsert = () => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("http://localhost:8080/faq",
+        const response = axios.post("/api/faq",
             {
                 title: formData.title,
                 content: formData.content,

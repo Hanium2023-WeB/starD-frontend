@@ -30,7 +30,7 @@ const FindPW = () => {
         };
         console.log(emailDto.email);
 
-        axios.post("http://localhost:8080/find-password", emailDto)
+        axios.post("/api/find-password", emailDto)
             .then((res) => {
 
                 // TODO 이메일 전송했다는 페이지로 이동

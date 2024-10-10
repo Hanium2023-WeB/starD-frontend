@@ -26,7 +26,7 @@ const TeamCommunity = () => {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/v2/studies/discontinue/${studyId}`, {
+        axios.get(`/api/api/v2/studies/discontinue/${studyId}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -47,7 +47,7 @@ const TeamCommunity = () => {
         const confirmDelete = window.confirm("스터디 중단을 동의하시겠습니까?");
 
         if (confirmDelete) {
-            axios.post(`http://localhost:8080/api/v2/studies/discontinue/${studyId}`, null, {
+            axios.post(`/api/api/v2/studies/discontinue/${studyId}`, null, {
                 params: {
                     studyId: studyId,
                 },

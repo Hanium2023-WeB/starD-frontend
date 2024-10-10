@@ -41,7 +41,7 @@ const Community = () => {
         let base_url = "";
         let params = {};
         if (categoryOption === "전체") {
-            base_url = "http://localhost:8080/com/search";
+            base_url = "/api/com/search";
             params = {
                 searchType: selectOption,
                 searchWord: searchQuery,
@@ -49,7 +49,7 @@ const Community = () => {
             };
         }
         else {
-            base_url = "http://localhost:8080/com/search/category";
+            base_url = "/api/com/search/category";
             params = {
                 searchType: selectOption,
                 category: categoryOption,
@@ -78,7 +78,7 @@ const Community = () => {
         let base_url = "";
         let params = {};
         if (categoryOption === "전체") {
-            base_url = "http://localhost:8080/com/search";
+            base_url = "/api/com/search";
             params = {
                 searchType: selectOption,
                 searchWord: searchQuery,
@@ -86,7 +86,7 @@ const Community = () => {
             };
         }
         else {
-            base_url = "http://localhost:8080/com/search/category";
+            base_url = "/api/com/search/category";
             params = {
                 searchType: selectOption,
                 category: categoryOption,

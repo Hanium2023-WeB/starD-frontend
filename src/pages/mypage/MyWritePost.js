@@ -57,10 +57,10 @@ const MyWritePost = () => {
         let url;
 
         if (selectedCategory === "STUDYPOST") {
-            url = "http://localhost:8080/user/mypage/studypost";
+            url = "/api/user/mypage/studypost";
         }
         else {
-            url = "http://localhost:8080/user/mypage/post";
+            url = "/api/user/mypage/post";
         }
         axios.get(url, {
             params: {
@@ -85,7 +85,7 @@ const MyWritePost = () => {
     }, [page, selectedCategory]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/post", {
+        axios.get("/api/user/mypage/post", {
             params: {
                 page: 1,
             },

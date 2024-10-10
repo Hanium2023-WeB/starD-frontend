@@ -79,7 +79,7 @@ const Chat = (props) => {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
             try {
-                const response = await axios.get(`http://localhost:8080/chat/history/${studyId}`, {
+                const response = await axios.get(`/api/chat/history/${studyId}`, {
                     withCredentials: true,
                     headers: {
                         Authorization: `Bearer ${accessToken}`,

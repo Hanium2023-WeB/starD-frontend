@@ -27,7 +27,7 @@ const Comment = ({ type }) => {
   const [studyStatus, setStudyStatus] = useState("");
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/v2/studies/${targetId}`, {
+    axios.get(`/api/api/v2/studies/${targetId}`, {
       withCredentials: true,
       headers: {
         'Authorization': `Bearer ${accessToken}`
@@ -55,7 +55,7 @@ const Comment = ({ type }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/member/find-nickname", {
+      .get("/api/member/find-nickname", {
         withCredentials: true,
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -80,11 +80,11 @@ const Comment = ({ type }) => {
 
     let url;
     if (type === "QNA" || type === 'COMM' ) {
-      url = `http://localhost:8080/replies/post/${targetId}`;
+      url = `/api/replies/post/${targetId}`;
     } else if (type === "STUDY") {
-      url = `http://localhost:8080/replies/study/${targetId}`;
+      url = `/api/replies/study/${targetId}`;
     } else if (type === "STUDYPOST") {
-      url = `http://localhost:8080/replies/studypost/${targetId}`;
+      url = `/api/replies/studypost/${targetId}`;
     }
 
     return axios
@@ -112,11 +112,11 @@ const Comment = ({ type }) => {
   const addComment = (newComment) => {
     let url;
     if (type === "QNA" || type === 'COMM') {
-      url = "http://localhost:8080/replies/post";
+      url = "/api/replies/post";
     } else if (type === "STUDY") {
-      url = "http://localhost:8080/replies/study";
+      url = "/api/replies/study";
     } else if (type === "STUDYPOST") {
-        url = "http://localhost:8080/replies/studypost";
+        url = "/api/replies/studypost";
     }
 
     axios
@@ -147,7 +147,7 @@ const Comment = ({ type }) => {
 
   const handleCommentSave = (commentId, updatedContent) => {
     axios
-      .post(`http://localhost:8080/replies/${commentId}`, {
+      .post(`/api/replies/${commentId}`, {
         replyContent: updatedContent,
       }, {
         withCredentials: true,
@@ -177,7 +177,7 @@ const Comment = ({ type }) => {
 
     if (confirmDelete) {
         axios
-          .delete(`http://localhost:8080/replies/${commentId}`, {
+          .delete(`/api/replies/${commentId}`, {
             withCredentials: true,
             headers: {
               'Authorization': `Bearer ${accessToken}`

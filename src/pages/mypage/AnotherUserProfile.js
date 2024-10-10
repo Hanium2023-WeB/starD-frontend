@@ -33,7 +33,7 @@ const AnotherUserProfile = () => {
     //프로필 조회하기
     useEffect(() => {
         axios
-            .get(`http://localhost:8080/user/mypage/profile/${id}`, {
+            .get(`/api/user/mypage/profile/${id}`, {
                 withCredentials: true,
             })
             .then((res) => {
@@ -51,7 +51,7 @@ const AnotherUserProfile = () => {
     //다른 사용자 커뮤니티 게시글 조회
     useEffect(() => {
         axios
-            .get(`http://localhost:8080/user/mypage/profile/${id}/community`, {
+            .get(`/api/user/mypage/profile/${id}/community`, {
                 withCredentials: true,
             })
             .then((res) => {

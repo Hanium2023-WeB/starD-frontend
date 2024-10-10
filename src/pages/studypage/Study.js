@@ -61,7 +61,7 @@ const Study = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].scrap) {
-                axios.delete(`http://localhost:8080/scrap/study/${studyId}`, {
+                axios.delete(`/api/scrap/study/${studyId}`, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -76,7 +76,7 @@ const Study = () => {
                         console.log("스크랩 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/scrap/study/${studyId}`, null, {
+                axios.post(`/api/scrap/study/${studyId}`, null, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -107,7 +107,7 @@ const Study = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].like) {
-                axios.delete(`http://localhost:8080/star/study/${studyId}`, {
+                axios.delete(`/api/star/study/${studyId}`, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -122,7 +122,7 @@ const Study = () => {
                         console.log("공감 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/star/study/${studyId}`, null, {
+                axios.post(`/api/star/study/${studyId}`, null, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -150,7 +150,7 @@ const Study = () => {
 
     const fetchLikeScrap = (pageNumber) => {
         if (accessToken && isLoggedInUserId) {
-            const res_like = axios.get("http://localhost:8080/study/stars", {
+            const res_like = axios.get("/api/study/stars", {
                 params: {
                     page: pageNumber,
                 },
@@ -165,7 +165,7 @@ const Study = () => {
                 console.error("공감 가져오기 실패:", error);
             });
 
-            const res_scrap = axios.get("http://localhost:8080/study/scraps", {
+            const res_scrap = axios.get("/api/study/scraps", {
                 params: {
                     page: pageNumber,
                 },
@@ -185,7 +185,7 @@ const Study = () => {
 
     const fetchStudies = (pageNumber) => {
         setLoading(true);
-        axios.get("http://localhost:8080/api/v2/studies/all", {
+        axios.get("/api/api/v2/studies/all", {
             params: {
                 page: pageNumber,
             },
@@ -212,7 +212,7 @@ const Study = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/v2/studies/all", {
+        axios.get("/api/api/v2/studies/all", {
             params: {
                 page: 1,
             },

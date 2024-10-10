@@ -27,7 +27,7 @@ const MyOpenStudy = ({sideheader}) => {
     const [itemsPerPage, setItemsPerPage] = useState(9);
     useEffect(() => {
         if (accessToken && isLoggedInUserId) {
-            axios.get("http://localhost:8080/mypage/study/star-scrap", { // 공감
+            axios.get("/api/mypage/study/star-scrap", { // 공감
                 params: {
                     page: page,
                     status: "open",
@@ -45,7 +45,7 @@ const MyOpenStudy = ({sideheader}) => {
                     console.log("공감 불러오기 실패", error);
                 });
 
-            axios.get("http://localhost:8080/mypage/study/star-scrap", { // 스크랩
+            axios.get("/api/mypage/study/star-scrap", { // 스크랩
                 params: {
                     page: page,
                     status: "open",
@@ -67,7 +67,7 @@ const MyOpenStudy = ({sideheader}) => {
 
     const handlePageChange = ({page, itemsPerPage, totalItemsCount}) => {
         setPage(page);
-        const result = axios.get("http://localhost:8080/user/mypage/open-study", {
+        const result = axios.get("/api/user/mypage/open-study", {
             params: {
                 page: page,
             }, withCredentials: true,
@@ -83,7 +83,7 @@ const MyOpenStudy = ({sideheader}) => {
             setCount(response.data.totalElements);
 
             if (accessToken && isLoggedInUserId) {
-                const res_like = axios.get("http://localhost:8080/mypage/study/star-scrap", { // 공감
+                const res_like = axios.get("/api/mypage/study/star-scrap", { // 공감
                     params: {
                         page: page,
                         status: "open",
@@ -95,7 +95,7 @@ const MyOpenStudy = ({sideheader}) => {
                     }
                 });
 
-                const res_scrap = axios.get("http://localhost:8080/mypage/study/star-scrap", { // 스크랩
+                const res_scrap = axios.get("/api/mypage/study/star-scrap", { // 스크랩
                     params: {
                         page: page,
                         status: "open",
@@ -131,7 +131,7 @@ const MyOpenStudy = ({sideheader}) => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/open-study", {
+        axios.get("/api/user/mypage/open-study", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -164,7 +164,7 @@ const MyOpenStudy = ({sideheader}) => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].scrap) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-                axios.delete(`http://localhost:8080/scrap/study/${studyId}`, {
+                axios.delete(`/api/scrap/study/${studyId}`, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {
@@ -179,7 +179,7 @@ const MyOpenStudy = ({sideheader}) => {
                         console.log("스크랩 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/scrap/study/${studyId}`, null, {
+                axios.post(`/api/scrap/study/${studyId}`, null, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {
@@ -205,7 +205,7 @@ const MyOpenStudy = ({sideheader}) => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].like) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-                axios.delete(`http://localhost:8080/star/study/${studyId}`, {
+                axios.delete(`/api/star/study/${studyId}`, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {
@@ -220,7 +220,7 @@ const MyOpenStudy = ({sideheader}) => {
                         console.log("공감 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/star/study/${studyId}`, null, {
+                axios.post(`/api/star/study/${studyId}`, null, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {

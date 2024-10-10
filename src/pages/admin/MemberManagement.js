@@ -10,7 +10,7 @@ const MemberManagement = () => {
     const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        axios.get("http://localhost:8080/reports/members", {
+        axios.get("/api/reports/members", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -35,7 +35,7 @@ const MemberManagement = () => {
         const confirmWithdraw = window.confirm("정말로 강제 탈퇴 시키겠습니까?");
 
         if (confirmWithdraw) {
-            axios.post(`http://localhost:8080/reports/members/${member.id}`, null,
+            axios.post(`/api/reports/members/${member.id}`, null,
                 {
                     withCredentials: true,
                     headers: {

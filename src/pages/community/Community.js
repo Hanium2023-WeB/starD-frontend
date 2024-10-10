@@ -35,7 +35,7 @@ const Community = () => {
     };
 
     const fetchCommunities = (pageNumber) => {
-        axios.get("http://localhost:8080/com", {
+        axios.get("/api/com", {
             params: {
                 page: pageNumber,
             },
@@ -54,7 +54,7 @@ const Community = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/com", {
+        axios.get("/api/com", {
             params: {
                 page: 1,
             }

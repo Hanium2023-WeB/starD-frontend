@@ -10,7 +10,7 @@ const OtherProfile=()=>{
     let accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/user/mypage/profile/${memberId}`, {
+        axios.get(`/api/user/mypage/profile/${memberId}`, {
             withCredentials: true,
         })
             .then((response) => {

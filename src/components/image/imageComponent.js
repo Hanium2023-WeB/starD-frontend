@@ -8,7 +8,7 @@ const ImageComponent = (getImgName, imgsrc) => {
     const imgName = getImgName;
 
     useEffect(() => {
-        const imageUrl = imageSrc || `http://localhost:8080/user/mypage/profile/image/${imgName.getImgName}`;
+        const imageUrl = imageSrc || `/api/user/mypage/profile/image/${imgName.getImgName}`;
         axios
             .get(imageUrl, {
                 withCredentials: true,

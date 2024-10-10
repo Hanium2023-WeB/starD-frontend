@@ -16,7 +16,7 @@ const Header = ({showSideCenter}) => {
         useEffect(() => {
 
             const logout = (member) => {
-                axios.post("http://localhost:8080/user/auth/sign-out", {}, {
+                axios.post("/api/user/auth/sign-out", {}, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -41,7 +41,7 @@ const Header = ({showSideCenter}) => {
 
 
             if (accessToken != null && isLoggedInUserId != null) {
-                axios.get("http://localhost:8080/user/auth/accessToken-expiration", {    // accessToken 만료 여부 확인 function
+                axios.get("/api/user/auth/accessToken-expiration", {    // accessToken 만료 여부 확인 function
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -72,7 +72,7 @@ const Header = ({showSideCenter}) => {
         useEffect(() => {
             if (accessToken != null && isLoggedInUserId != null) {
                 axios
-                    .get("http://localhost:8080/user/auth/authority", {
+                    .get("/api/user/auth/authority", {
                         withCredentials: true,
                         headers: {
                             'Authorization': `Bearer ${accessToken}`

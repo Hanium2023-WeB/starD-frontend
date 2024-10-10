@@ -44,7 +44,7 @@ const HomeDashBoard = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].study.id;
             if (newStudies[index].scrap) {
-                axios.delete(`http://localhost:8080/scrap/study/${studyId}`, {
+                axios.delete(`/api/scrap/study/${studyId}`, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {
@@ -59,7 +59,7 @@ const HomeDashBoard = () => {
                         console.log("스크랩 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/scrap/study/${studyId}`, null, {
+                axios.post(`/api/scrap/study/${studyId}`, null, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {
@@ -85,7 +85,7 @@ const HomeDashBoard = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].study.id;
             if (newStudies[index].like) {
-                axios.delete(`http://localhost:8080/star/study/${studyId}`, {
+                axios.delete(`/api/star/study/${studyId}`, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {
@@ -100,7 +100,7 @@ const HomeDashBoard = () => {
                         console.log("공감 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/star/study/${studyId}`, null, {
+                axios.post(`/api/star/study/${studyId}`, null, {
                     params: { id: studyId },
                     withCredentials: true,
                     headers: {
@@ -122,7 +122,7 @@ const HomeDashBoard = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:8080/mypage/study/star-scrap", {
+        axios.get("/api/mypage/study/star-scrap", {
             params: {
                 page: page,
                 status: "participate",
@@ -140,7 +140,7 @@ const HomeDashBoard = () => {
                 console.log("공감 불러오기 실패", error);
             });
 
-        axios.get("http://localhost:8080/mypage/study/star-scrap", {
+        axios.get("/api/mypage/study/star-scrap", {
             params: {
                 page: page,
                 status: "participate",
@@ -162,7 +162,7 @@ const HomeDashBoard = () => {
     const handlePageChange = ({page, itemsPerPage, totalItemsCount}) => {
         setPage(page);
 
-		const result = axios.get("http://localhost:8080/user/mypage/studying", {
+		const result = axios.get("/api/user/mypage/studying", {
 			params: {
 				page: page,
 			}, withCredentials: true,
@@ -174,7 +174,7 @@ const HomeDashBoard = () => {
         setItemsPerPage(result.data.pageable.pageSize);
         setCount(result.data.totalElements);
 
-        const res_like = axios.get("http://localhost:8080/mypage/study/star-scrap", { // 공감
+        const res_like = axios.get("/api/mypage/study/star-scrap", { // 공감
             params: {
                 page: page,
                 status: "participate",
@@ -186,7 +186,7 @@ const HomeDashBoard = () => {
             }
         });
 
-        const res_scrap = axios.get("http://localhost:8080/mypage/study/star-scrap", { // 스크랩
+        const res_scrap = axios.get("/api/mypage/study/star-scrap", { // 스크랩
             params: {
                 page: page,
                 status: "participate",
@@ -215,7 +215,7 @@ const HomeDashBoard = () => {
         setCount(totalItemsCount);
     };
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/studying", {
+        axios.get("/api/user/mypage/studying", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`

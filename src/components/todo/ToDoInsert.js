@@ -30,7 +30,7 @@ const ToDoInsert = ({onInsert, dueDate, Inserttodostudyid, Inserttodotitle, Inse
 
     // TODO 서버에서 참여스터디와 참여멤버 가져오기
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/studying", {
+        axios.get("/api/user/mypage/studying", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -89,7 +89,7 @@ const ToDoInsert = ({onInsert, dueDate, Inserttodostudyid, Inserttodotitle, Inse
             try {
                 // Step 1: 먼저 필요한 데이터를 서버에서 가져옵니다.
 /*
-                const fetchDataResponse = await axios.get(`http://localhost:8080/todo/all`, {
+                const fetchDataResponse = await axios.get(`/api/todo/all`, {
                     params: {
                         year: year,
                         month: month,
@@ -116,7 +116,7 @@ const ToDoInsert = ({onInsert, dueDate, Inserttodostudyid, Inserttodotitle, Inse
                     dueDate: formattedDate,
                 };
 
-                const postDataResponse = await axios.post(`http://localhost:8080/todo`, todoData, {
+                const postDataResponse = await axios.post(`/api/todo`, todoData, {
                     params: {
                         studyId: studyId,
                         assigneeStr: assigneeStr,

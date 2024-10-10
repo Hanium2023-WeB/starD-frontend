@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/current-member", {
+            .get("/api/current-member", {
                 withCredentials: true,
             })
             .then((res) => {

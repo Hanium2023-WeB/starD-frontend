@@ -97,7 +97,7 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
 
     //회원가입 시 입력한 구, 군 위치찍기 -> 위도 경도 초기화
     useEffect(() => {
-        axios.get(`http://localhost:8080/location/${studyId}/all`, {
+        axios.get(`/api/location/${studyId}/all`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -201,7 +201,7 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
         }
 
 
-        axios.get("http://localhost:8080/location/find", {
+        axios.get("/api/location/find", {
             params: {placeList: inputs.join(',')},
             withCredentials: true,
             headers: {

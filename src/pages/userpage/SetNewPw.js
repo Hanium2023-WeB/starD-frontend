@@ -24,7 +24,7 @@ const SetNewPw = () => {
 
     const changePassword = () => {
         try {
-            axios.put("http://localhost:8080/reset-password", {
+            axios.put("/api/reset-password", {
                 "newPassword" : newPw
             }, {
                 headers: {

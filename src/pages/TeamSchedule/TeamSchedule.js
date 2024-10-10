@@ -23,7 +23,7 @@ const TeamSchedule = () => {
     const nextId = useRef(1);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/user/mypage/studying", {
+        axios.get("/api/user/mypage/studying", {
             withCredentials: true, headers: {
                 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
             }
@@ -49,7 +49,7 @@ const TeamSchedule = () => {
     const [schedules, setSchedules] = useState({});
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/schedule/${studyId}`, {
+        axios.get(`/api/schedule/${studyId}`, {
             params: {
                 year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1,
             }, withCredentials: true, headers: {
@@ -82,7 +82,7 @@ const TeamSchedule = () => {
         const schedule = {
             id: nextId.current, title: title, startDate: formattedDate, color: color,
         };
-        axios.post("http://localhost:8080/schedule", schedule, {
+        axios.post("/api/schedule", schedule, {
             params: {
                 studyId: studyIdAsNumber
             }, withCredentials: true, headers: {
@@ -102,7 +102,7 @@ const TeamSchedule = () => {
         console.log("title:", newTitle);
         console.log("COLOR:", newColor);
 
-        axios.put(`http://localhost:8080/schedule/${id}`, {}, {
+        axios.put(`/api/schedule/${id}`, {}, {
             params: {
                 title: newTitle, color: newColor,
             }, withCredentials: true, headers: {
@@ -122,7 +122,7 @@ const TeamSchedule = () => {
 
 
     const onRemove = (id) => {
-        axios.delete(`http://localhost:8080/schedule/${id}`, {
+        axios.delete(`/api/schedule/${id}`, {
             withCredentials: true, headers: {
                 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
             }

@@ -65,7 +65,7 @@ const NoticeInsert = () => {
         
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("http://localhost:8080/notice",
+        const response = axios.post("/api/notice",
             {
                 title:formData.title,
                 content:formData.content,

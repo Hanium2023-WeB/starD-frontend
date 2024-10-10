@@ -39,7 +39,7 @@ const Notice = () => {
     // TODO 권한 조회
     useEffect(() => {
         axios
-            .get("http://localhost:8080/member/auth", {
+            .get("/api/member/auth", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -62,7 +62,7 @@ const Notice = () => {
     }, [accessToken]);
 
     const fetchNotices = (pageNumber) => {
-        axios.get("http://localhost:8080/notice", {
+        axios.get("/api/notice", {
             params: {
                 page: pageNumber,
             },
@@ -81,7 +81,7 @@ const Notice = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/notice", {
+        axios.get("/api/notice", {
             params: {
                 page: 1,
             }

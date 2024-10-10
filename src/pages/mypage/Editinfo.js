@@ -46,7 +46,7 @@ const Editinfo = ({sideheader}) => {
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.get("http://localhost:8080/user/mypage/update", {
+        axios.get("/api/user/mypage/update", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -102,7 +102,7 @@ const Editinfo = ({sideheader}) => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("http://localhost:8080/user/mypage/check/nickname", null, {
+        axios.post("/api/user/mypage/check/nickname", null, {
             params: {nickname: nickname},
             withCredentials: true,
             headers: {
@@ -145,7 +145,7 @@ const Editinfo = ({sideheader}) => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("http://localhost:8080/user/mypage/update/nickname", null, {
+        axios.post("/api/user/mypage/update/nickname", null, {
             params: {nickname: nickname},
             withCredentials: true,
             headers: {
@@ -179,7 +179,7 @@ const Editinfo = ({sideheader}) => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("http://localhost:8080/user/mypage/update/email", null, {
+        axios.post("/api/user/mypage/update/email", null, {
             params: {email: email},
             withCredentials: true,
             headers: {
@@ -218,7 +218,7 @@ const Editinfo = ({sideheader}) => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("http://localhost:8080/user/mypage/update/password", null, {
+        axios.post("/api/user/mypage/update/password", null, {
             params: {password: password, newPassword: newPassword},
             withCredentials: true,
             headers: {
@@ -254,7 +254,7 @@ const Editinfo = ({sideheader}) => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("http://localhost:8080/user/mypage/update/phone", null, {
+        axios.post("/api/user/mypage/update/phone", null, {
             params: {phone: phone},
             withCredentials: true,
             headers: {
@@ -288,7 +288,7 @@ const Editinfo = ({sideheader}) => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("http://localhost:8080/user/mypage/update/address", null, {
+        axios.post("/api/user/mypage/update/address", null, {
             params: {city: city, district: district},
             withCredentials: true,
             headers: {

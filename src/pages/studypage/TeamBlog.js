@@ -87,7 +87,7 @@ const TeamBlog = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/v2/studies/${id}/study-member`, {
+        axios.get(`/api/api/v2/studies/${id}/study-member`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -106,7 +106,7 @@ const TeamBlog = () => {
             });
 
 
-        axios.get(`http://localhost:8080/api/v2/studies/${id}`, {
+        axios.get(`/api/api/v2/studies/${id}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -126,7 +126,7 @@ const TeamBlog = () => {
     }, [accessToken]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/todo/${studyIdAsNumber}`, {
+        axios.get(`/api/todo/${studyIdAsNumber}`, {
             params: {
                 year: Year, month: Month,
             }, headers: {
@@ -159,7 +159,7 @@ const TeamBlog = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/schedule/${studyIdAsNumber}`, {
+        axios.get(`/api/schedule/${studyIdAsNumber}`, {
             params: {
                 year: Year, month: Month,
             }, withCredentials: true, headers: {

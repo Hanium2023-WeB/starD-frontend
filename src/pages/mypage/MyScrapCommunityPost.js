@@ -56,7 +56,7 @@ const MyScrapCommunityPost = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:8080/com")
+        axios.get("/api/com")
             .then((res) => {
                 setPosts(res.data);
             })
@@ -66,7 +66,7 @@ const MyScrapCommunityPost = () => {
     }, [posts]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/scrap/post", {
+        axios.get("/api/scrap/post", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`

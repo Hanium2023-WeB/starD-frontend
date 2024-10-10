@@ -34,7 +34,7 @@ const PostDetail = () => {
 
     useEffect(() => {
         if (accessToken && isLoggedInUserId) {
-            axios.get(`http://localhost:8080/star/post/${id}`, {
+            axios.get(`/api/star/post/${id}`, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {
@@ -49,7 +49,7 @@ const PostDetail = () => {
                     console.log("공감 불러오기 실패", error);
                 });
 
-            axios.get(`http://localhost:8080/scrap/post/${id}`, {
+            axios.get(`/api/scrap/post/${id}`, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {
@@ -79,7 +79,7 @@ const PostDetail = () => {
         }
 
         if (initiallyLikeStates && initiallyScrapStates) {
-            axios.get(`http://localhost:8080/com/${id}`, config)
+            axios.get(`/api/com/${id}`, config)
                 .then((res) => {
                     setPostItem(res.data);
                     if (res.data.member.id === isLoggedInUserId) { // 자신의 글인지
@@ -100,7 +100,7 @@ const PostDetail = () => {
         }
 
         if (likeStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`http://localhost:8080/star/post/${id}`, {
+            axios.delete(`/api/star/post/${id}`, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {
@@ -117,7 +117,7 @@ const PostDetail = () => {
 
             setLikeStates(false);
         } else {
-            axios.post(`http://localhost:8080/star/post/${id}`, null, {
+            axios.post(`/api/star/post/${id}`, null, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {
@@ -144,7 +144,7 @@ const PostDetail = () => {
         }
 
         if (scrapStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`http://localhost:8080/scrap/post/${id}`, {
+            axios.delete(`/api/scrap/post/${id}`, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {
@@ -161,7 +161,7 @@ const PostDetail = () => {
 
             setScrapStates(false);
         } else {
-            axios.post(`http://localhost:8080/scrap/post/${id}`, null, {
+            axios.post(`/api/scrap/post/${id}`, null, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {
@@ -194,7 +194,7 @@ const PostDetail = () => {
         console.log("수정 예정 : " + updatedPost.id + ", " + updatedPost.title + ", " + updatedPost.content
             + ", " + updatedPost.category);
 
-        axios.post(`http://localhost:8080/com/${id}`, {
+        axios.post(`/api/com/${id}`, {
             title: updatedPost.title,
             content: updatedPost.content,
             category: updatedPost.category
@@ -227,7 +227,7 @@ const PostDetail = () => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
 
-            axios.delete(`http://localhost:8080/com/${id}`, {
+            axios.delete(`/api/com/${id}`, {
                 params: { id: id },
                 withCredentials: true,
                 headers: {

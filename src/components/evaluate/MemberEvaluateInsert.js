@@ -58,7 +58,7 @@ const MemberEvaluateInsert = ({studyId, members, completeEvaluation}) => {
 
         console.log(memberId + ", " + score + ", " + reason);
 
-        const response = axios.post("http://localhost:8080/rate", null, {
+        const response = axios.post("/api/rate", null, {
             params: {
                 studyId: studyId,
                 targetId: memberId,

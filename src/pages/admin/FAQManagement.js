@@ -26,7 +26,7 @@ const FAQManagement = () => {
 
     //페이지 수마다 가져오기
     const fetchQnaAndFaq = (pageNumber) => {
-        axios.get("http://localhost:8080/faq", {
+        axios.get("/api/faq", {
             params: {
                 page: pageNumber,
             },
@@ -43,7 +43,7 @@ const FAQManagement = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:8080/faq", {
+        axios.get("/api/faq", {
             params: {
                 page: 1,
             }
@@ -64,7 +64,7 @@ const FAQManagement = () => {
 
     //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
     useEffect(() => {
-        axios.get("http://localhost:8080/reports/members", {
+        axios.get("/api/reports/members", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -86,7 +86,7 @@ const FAQManagement = () => {
         const confirmWithdraw = window.confirm("정말로 강제 탈퇴 시키겠습니까?");
 
         if (confirmWithdraw) {
-            axios.post(`http://localhost:8080/reports/members/${member.id}`, null,
+            axios.post(`/api/reports/members/${member.id}`, null,
                 {
                     withCredentials: true,
                     headers: {

@@ -20,7 +20,7 @@ const NoticeManagement = () => {
     const [posts, setPosts] = useState([]);
 
     const fetchNotices = (pageNumber) => {
-        axios.get("http://localhost:8080/notice", {
+        axios.get("/api/notice", {
             params: {
                 page: pageNumber,
             },
@@ -40,7 +40,7 @@ const NoticeManagement = () => {
 
 
     useEffect(() => {
-        axios.get("http://localhost:8080/notice", {
+        axios.get("/api/notice", {
             params: {
                 page: 1,
             }
@@ -61,7 +61,7 @@ const NoticeManagement = () => {
 
     //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
     useEffect(() => {
-        axios.get("http://localhost:8080/reports/members", {
+        axios.get("/api/reports/members", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -83,7 +83,7 @@ const NoticeManagement = () => {
         const confirmWithdraw = window.confirm("정말로 강제 탈퇴 시키겠습니까?");
 
         if (confirmWithdraw) {
-            axios.post(`http://localhost:8080/reports/members/${member.id}`, null,
+            axios.post(`/api/reports/members/${member.id}`, null,
                 {
                     withCredentials: true,
                     headers: {

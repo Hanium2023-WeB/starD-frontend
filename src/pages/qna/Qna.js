@@ -53,7 +53,7 @@ const Qna = () => {
     // TODO 권한 조회
     useEffect(() => {
         axios
-            .get("http://localhost:8080/member/auth", {
+            .get("/api/member/auth", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -76,7 +76,7 @@ const Qna = () => {
     }, [accessToken]);
 
     const fetchQnaAndFaq = (pageNumber) => {
-        axios.get("http://localhost:8080/qna/all", {
+        axios.get("/api/qna/all", {
             params: {
                 page: pageNumber,
             },
@@ -95,7 +95,7 @@ const Qna = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/qna/all", {
+        axios.get("/api/qna/all", {
             params: {
                 page: 1,
             }

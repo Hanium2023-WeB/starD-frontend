@@ -12,7 +12,7 @@ const Report = ({ show, handleClose, onReportSubmit, targetId }) => {
     useEffect(() => {
         if (targetId) {
             axios
-                .get(`http://localhost:8080/replies/type/${targetId}`, {
+                .get(`/api/replies/type/${targetId}`, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -40,13 +40,13 @@ const Report = ({ show, handleClose, onReportSubmit, targetId }) => {
     const handleReport = () => {
         let url;
         if (type === "QNA" || type === 'COMM') {
-            url = "http://localhost:8080/reports/posts";
+            url = "/api/reports/posts";
         } else if (type === "STUDY") {
-            url = "http://localhost:8080/reports/studies";
+            url = "/api/reports/studies";
         } else if (type === "REPLY") {
-            url = "http://localhost:8080/reports/replies";
+            url = "/api/reports/replies";
         } else if (type === "STUDYPOST") {
-            url = "http://localhost:8080/reports/studyposts";
+            url = "/api/reports/studyposts";
         }
 
         let reasonToSend = selectedReason;

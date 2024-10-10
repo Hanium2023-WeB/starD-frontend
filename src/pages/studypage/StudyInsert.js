@@ -244,7 +244,7 @@ const StudyInsert = () => {
         console.log(`formData: ${JSON.stringify(formData)}`)
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("http://localhost:8080/api/v2/studies",
+        const response = axios.post("/api/api/v2/studies",
             {
                 title: studyWithTags.title,
                 field: studyWithTags.field,

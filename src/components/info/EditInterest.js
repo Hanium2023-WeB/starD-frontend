@@ -74,7 +74,7 @@ const EditInterest=({mem})=>{
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.get("http://localhost:8080/user/mypage/update/interests", {
+        axios.get("/api/user/mypage/update/interests", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -102,7 +102,7 @@ const handleSaveTag = async () => {
 
     const accessToken = localStorage.getItem('accessToken');
 
-    axios.post("http://localhost:8080/user/mypage/update/interest", null, {
+    axios.post("/api/user/mypage/update/interest", null, {
         params: { interestList: interests },
         withCredentials: true,
         headers: {

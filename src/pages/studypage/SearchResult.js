@@ -44,11 +44,11 @@ const SearchResult = () => {
             let starScrapUrl = "";
 
             if (selectOption === "제목") {
-                starScrapUrl = "http://localhost:8080/study/search/title/star-scrap";
+                starScrapUrl = "/api/study/search/title/star-scrap";
             } else if (selectOption === "내용") {
-                starScrapUrl = "http://localhost:8080/study/search/content/star-scrap";
+                starScrapUrl = "/api/study/search/content/star-scrap";
             } else {
-                starScrapUrl = "http://localhost:8080/study/search/recruiter/star-scrap";
+                starScrapUrl = "/api/study/search/recruiter/star-scrap";
             }
 
             axios.get(starScrapUrl, {
@@ -130,7 +130,7 @@ const SearchResult = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].scrap) {
-                axios.delete(`http://localhost:8080/scrap/study/${studyId}`, {
+                axios.delete(`/api/scrap/study/${studyId}`, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -145,7 +145,7 @@ const SearchResult = () => {
                         console.log("스크랩 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/scrap/study/${studyId}`, null, {
+                axios.post(`/api/scrap/study/${studyId}`, null, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -176,7 +176,7 @@ const SearchResult = () => {
             const newStudies = [...prevStudies];
             const studyId = newStudies[index].id;
             if (newStudies[index].like) {
-                axios.delete(`http://localhost:8080/star/study/${studyId}`, {
+                axios.delete(`/api/star/study/${studyId}`, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -191,7 +191,7 @@ const SearchResult = () => {
                         console.log("공감 취소 실패");
                     });
             } else {
-                axios.post(`http://localhost:8080/star/study/${studyId}`, null, {
+                axios.post(`/api/star/study/${studyId}`, null, {
                     params: {id: studyId},
                     withCredentials: true,
                     headers: {
@@ -221,11 +221,11 @@ const SearchResult = () => {
     useEffect(() => {
 
         if (selectOption === "제목")
-            base_url = "http://localhost:8080/api/v2/studies/search-by-title";
+            base_url = "/api/api/v2/studies/search-by-title";
         else if (selectOption === "내용")
-            base_url = "http://localhost:8080/api/v2/studies/search-by-content";
+            base_url = "/api/api/v2/studies/search-by-content";
         else
-            base_url = "http://localhost:8080/api/v2/studies/search-by-recruiter";
+            base_url = "/api/api/v2/studies/search-by-recruiter";
 
         const fetchStudies = (pageNumber) => {
             setLoading(true);

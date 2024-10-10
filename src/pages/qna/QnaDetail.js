@@ -35,17 +35,17 @@ const QnaDetail = () => {
 
     useEffect(() => {
         // 타입 조회
-        axios.get(`http://localhost:8080/notice/find-type/${id}`, {
+        axios.get(`/api/notice/find-type/${id}`, {
             params: { id: id }
         })
             .then((res) => {
                 setType(res.data.type);
 
                 if (res.data.type === "FAQ") {
-                    setUrl(`http://localhost:8080/faq/${id}`);
+                    setUrl(`/api/faq/${id}`);
                 }
                 else if (res.data.type === "QNA") {
-                    setUrl(`http://localhost:8080/qna/${id}`);
+                    setUrl(`/api/qna/${id}`);
                 }
 
                 setInitiallyUrlStates(true);
@@ -57,7 +57,7 @@ const QnaDetail = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/member/auth", {
+            .get("/api/member/auth", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -82,7 +82,7 @@ const QnaDetail = () => {
     useEffect(() => {
         if (accessToken && isLoggedInUserId && initiallyUrlStates) {
             console.log("TYPE: ", type);
-            axios.get(`http://localhost:8080/star/notice/${id}`, {
+            axios.get(`/api/star/notice/${id}`, {
                 params: { type : type },
                 withCredentials: true,
                 headers: {
@@ -132,7 +132,7 @@ const QnaDetail = () => {
         }
 
         if (likeStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`http://localhost:8080/star/notice/${id}`, {
+            axios.delete(`/api/star/notice/${id}`, {
                 params: { type : type },
                 withCredentials: true,
                 headers: {
@@ -149,7 +149,7 @@ const QnaDetail = () => {
 
             setLikeStates(false);
         } else {
-            axios.post(`http://localhost:8080/star/notice/${id}`, null, {
+            axios.post(`/api/star/notice/${id}`, null, {
                 params: { type : type },
                 withCredentials: true,
                 headers: {
