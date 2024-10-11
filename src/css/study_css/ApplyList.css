@@ -4,17 +4,20 @@
     min-height: 400px;
     margin-bottom: 10px;
     margin-top: 20px;
+    font-family: 'Pretendard-Regular';
 }
 .ListContent{
     display: flex;
     justify-content: center;
+    border-radius: 20px;
+    overflow: hidden;
+    width:60%;
+    margin:0 auto;
 }
 .study_apply_list {
     border-collapse: collapse;
-    border: 2px solid #b2b2b2; /* 테두리 스타일 및 두께 설정 */
-    border-radius: 10px;
     text-align: center;
-    width: 60%;
+    width: 100%;
 }
 .study_apply_list th {
     background: #dbdbdb;
@@ -25,7 +28,7 @@
 .study_apply_list th,
 .study_apply_list tr,
 .study_apply_list td {
-    font-family: 'Pretendard-Regular';
+    /*font-family: 'Pretendard-Regular';*/
     border: 1px solid #ffffff;
     width: 33%;
 }
@@ -40,14 +43,27 @@
 #apply_name{
     font-size: 15px;
     cursor: pointer;
+
 }
 #apply_name:hover{
     text-decoration: underline;
 }
+#apply_name > div{
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#apply_name img{
+    width:15px;
+    height:15px;
+    margin-right: 5px;
+}
+
 
 
 .study_apply_list td button {
-    font-family: 'Pretendard-Regular';
+    /*font-family: 'Pretendard-Regular';*/
     border-radius: 10px;
     border:1.5px solid #395b64;
 
@@ -61,6 +77,10 @@
     border:1px solid #395b64;
     background-color: white;
     color: #395b64;
+}
+.look_motive, .acceptbtn, .rejectbtn, #apply-btn{
+    font-weight: bold;
+    font-family: Pretendard-Regular;
 }
 .acceptbtn{
     border:1px solid #395b64;
@@ -109,7 +129,8 @@
     height: fit-content;
     position: absolute;
     top: 20%;
-    left: 30%;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 20px;
     background-color: white;
     border-radius: 5px;
@@ -117,7 +138,10 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-family: 'Pretendard-Regular';
+    /*font-family: 'Pretendard-Regular';*/
+}
+.background .show_motive p{
+    font-size: 14px;
 }
 .openStudy{
     display: flex;
@@ -144,18 +168,20 @@
     margin-bottom: 10px;
     font-size: 20px;
     font-weight: bold;
-    font-family: 'Pretendard-Regular';
+    /*font-family: 'Pretendard-Regular';*/
 }
 
 .isMember{
     display: flex;
     justify-content: center;
-    width: 100%;
-    margin-top: 20px;
-    font-family: 'Pretendard-Regular';
+    width: 60%;
+    border-radius: 20px;
+    overflow: hidden;
+    /*font-family: 'Pretendard-Regular';*/
+    margin:20px auto 0;
 }
 #mem{
-    font-family: 'Pretendard-Regular';
+    /*font-family: 'Pretendard-Regular';*/
     font-size: 12px;
 }
 .apply{
@@ -167,9 +193,11 @@
 #apply-btn{
     background-color: #bed2aa;
     color: white;
-    font-size: 12px;
-    padding: 10px;
+    font-size: 15px;
+    padding: 5px 20px;
     border-radius: 10px;
     border-style: none;
     margin-top: 40px;
+    cursor: pointer;
+    font-family: Pretendard-Regular;
 }

@@ -254,16 +254,18 @@ const StudyApplyList = () => {
                         {applyList.map((item, index) => (
                             <tr key={index}>
                                 <td id={"apply_name"}>
-                                    <ImageComponent getImgName = {""} imageSrc={""} />
-                                    <Link
-                                        to={`/${item.member.id}/userprofile`}
-                                        style={{
-                                            textDecoration: "none",
-                                            color: "inherit",
-                                        }}
-                                    >
-                                        {item.member.nickname}
-                                    </Link>
+                                    <div>
+                                        <ImageComponent getImgName = {""} imageSrc={""} />
+                                        <Link
+                                            to={`/${item.member.id}/userprofile`}
+                                            style={{
+                                                textDecoration: "none",
+                                                color: "inherit",
+                                            }}
+                                        >
+                                            {item.member.nickname}
+                                        </Link>
+                                    </div>
                                 </td>
                                 <td>
                                     <button className={"look_motive"} onClick={() => toggleMotivation(index)}>보기
