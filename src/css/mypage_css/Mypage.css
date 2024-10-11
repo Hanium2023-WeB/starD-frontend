@@ -232,6 +232,7 @@ li {
 	border: 0px;
 	border-radius: 5px;
 	color: white;
+	cursor: pointer;
 }
 .image-delete:hover , .save-profile:hover{
 	background-color: darkolivegreen;
@@ -257,6 +258,7 @@ li {
 }
 .self-intro-input{
 	margin-left: 0px;
+	padding:0 10px;
 }
 
 .other_profile{

@@ -5,6 +5,7 @@ import "../../css/study_css/ApplyList.css";
 import Header from "../../components/repeat_etc/Header";
 import Motive from "../../components/study/Motive";
 import axios from "axios";
+import ImageComponent from "../../components/image/imageComponent";
 
 const StudyApplyList = () => {
     const [applyList, setApplyList] = useState([]);
@@ -33,6 +34,7 @@ const StudyApplyList = () => {
             }
         })
             .then((res) => {
+                console.log(res.data.data);
                 setApplyList(res.data.data);
                 setCount(res.data.data.length);
 
@@ -252,6 +254,7 @@ const StudyApplyList = () => {
                         {applyList.map((item, index) => (
                             <tr key={index}>
                                 <td id={"apply_name"}>
+                                    <ImageComponent getImgName = {""} imageSrc={""} />
                                     <Link
                                         to={`/${item.member.id}/userprofile`}
                                         style={{

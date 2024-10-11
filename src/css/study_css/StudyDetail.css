@@ -144,6 +144,8 @@ html {
 .study_apply_reason textarea {
 	width: 100%;
 	height: 100px;
+	font-family: 'Pretendard-Regular';
+	margin-bottom: 20px;
 }
 .btn {
 	margin: 40px auto 70px;
