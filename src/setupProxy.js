@@ -5,12 +5,15 @@ module.exports = function(app){
         "/api",
         createProxyMiddleware( {
             target: 'http://localhost:8080',
+            pathRewrite: {
+                '^/api':''
+            },
             changeOrigin: true,
         })
     )
 
     app.use(
         "/ws-stomp",
-        createProxyMiddleware({ target: "http://localhost:8080", ws: true })
+        createProxyMiddleware({ target: "http://localhost:8080", pathRewrite: { '^/ws-stomp':'' }, ws: true })
     );
 };
