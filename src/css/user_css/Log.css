@@ -33,6 +33,7 @@
 	justify-content: center;
 	align-items: center;
 	position: relative;
+	margin-bottom: 20px;
 }
 .login_info p {
 	font-size: 1.7em;
@@ -41,12 +42,27 @@
 }
 .containers form{
 	position: relative;
+	display: flex;
+}
+.profile_wrapper{
+	margin-right: 50px;
+	/*position: absolute;*/
+	/*top:50%;*/
+	/*transform: translateY(-50%);*/
+}
+.profile_wrapper, .profile_content{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.profile_wrapper h2{
+	margin: 0 0 20px 0;
 }
 .input_info {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	position: relative;
+	margin-bottom: 20px;
 }
 .input_info p{
 	margin:10px 0 0;
@@ -89,7 +105,7 @@
 .signbtn {
 	display: flex;
 	justify-content: center;
-	margin-bottom: 50px;
+	margin: 50px 0;
 }
 
 .loginbtn button,
@@ -120,11 +136,12 @@
 .signup_nicname, .signup_id{
 	display: flex;
 	flex-direction: row;
-	width: 148%;
+	/*width: 148%;*/
 }
 #signup_nicname_btn{
-	width: 15%;
+	/*width: 15%;*/
 	height: 30px;
+	padding:0 10px;
 	background-color: #BBDF9F;
 	color: white;
 	font-size: 12px;

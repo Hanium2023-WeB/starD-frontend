@@ -121,7 +121,10 @@ em {
     justify-content: center;
     align-items: center;
     margin: 20px 0;
-    position: relative;
+    position: absolute;
+    left:50%;
+    bottom: -55px;
+    transform: translateX(-50%);
 }
 .check_term_of_service > span{
     display: flex;
