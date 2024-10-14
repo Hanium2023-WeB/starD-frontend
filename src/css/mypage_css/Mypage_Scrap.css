@@ -48,7 +48,11 @@
 .study_list .list_title {
 	font-size: 20px;
 	font-weight: bold;
-	margin-bottom: 10px;
+	margin-bottom: 16px;
+}
+.study_list .list_tag_wrapper{
+	display: flex;
+	margin-bottom: 5px;
 }
 .study_list .list_tag {
 	width: fit-content;
@@ -56,7 +60,7 @@
 	border: 2px solid rgb(149 149 149);
 	padding: 7px 10px;
 	border-radius: 50px;
-	margin-bottom: 5px;
+	margin-right:3px;
 }
 .study_list .list_onoff {
 	width: fit-content;

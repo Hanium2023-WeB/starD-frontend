@@ -75,7 +75,7 @@ html {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 20px;
+	margin-bottom: 12px;
 }
 .study_list .list_sub_header {
 	display: flex;
@@ -117,7 +117,6 @@ html {
 	border: 2px solid rgb(149 149 149);
 	padding: 7px 10px;
 	border-radius: 50px;
-	margin-bottom: 10px;
 }
 .study_list .list_onoff {
 	width: fit-content;
@@ -128,7 +127,7 @@ html {
 }
 .study_list .stroke {
 	border-bottom: 1px solid #c6c6c6;
-	margin: 15px 0;
+	margin: 25px 0;
 }
 
 

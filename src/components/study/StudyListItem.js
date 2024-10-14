@@ -67,7 +67,13 @@ const StudyListItem = ({studies, toggleLike, toggleScrap, d, index}) => {
                 <span>{studies.recruiter?.nickname}</span>
             </div>
             <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>
-            <div className="list_tag" onClick={GoNextDetailPage}>{studies.tags}</div>
+            <div className="list_tag_wrapper" onClick={GoNextDetailPage}>
+                {studies.tags.split(',').map((tag, idx) => (
+                    <div key={idx} className="list_tag">
+                      {tag.trim()}
+                    </div>
+                ))}
+            </div>
             <div className="list_onoff" onClick={GoNextDetailPage}>{studies.onOff}</div>
             <div className="stroke"></div>
             <div className="list_deadline">
