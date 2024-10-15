@@ -290,7 +290,13 @@ const MyOpenStudy = ({sideheader}) => {
                                 마감일 | {d.recruitmentDeadline}
                             </div>
                             <div className="list_title">{d.title}</div>
-                            <div className="list_tag">{d.field}</div>
+                            <div className="list_tag_wrapper">
+                                {d.tags.split(',').map((tag, idx) => (
+                                    <div key={idx} className="list_tag">
+                                        {tag.trim()}
+                                    </div>
+                                ))}
+                            </div>
                             <div className="list_onoff">{d.onOff}</div>
                             <div className="stroke"></div>
                             <div className="list_founder">{d.recruiter.nickname}</div>
