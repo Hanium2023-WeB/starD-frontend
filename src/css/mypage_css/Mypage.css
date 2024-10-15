@@ -214,24 +214,30 @@ li {
 	border: 1px solid #4CAF50;
 	border-radius: 5px;
 }
+.sub_container .image-upload{
+	width:150px;
+}
 .image-upload {
-	width: 200px;
 	height: 30px;
 	border-radius: 10px;
 	border: none;
 	box-shadow: none;
-	padding-left: 20px;
+	/*padding-left: 20px;*/
+	margin:0 auto 10px;
 	padding-top: 20px;
 	color: #99A98F;
 
 }
 .image-delete,.save-profile{
-	width: 75px;
-	margin-left: 20px;
+	width: 70px;
+	height:30px;
+	/*margin-left: 20px;*/
 	background-color: #99A98F;
 	border: 0px;
-	border-radius: 5px;
+	border-radius: 10px;
 	color: white;
+	cursor: pointer;
+	font-family: Pretendard-Regular;
 }
 .image-delete:hover , .save-profile:hover{
 	background-color: darkolivegreen;
@@ -245,7 +251,7 @@ li {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	margin-left: 50px;
+	margin-left: 80px;
 }
 #self-intro-p{
 	font-size: 20px;
@@ -257,6 +263,7 @@ li {
 }
 .self-intro-input{
 	margin-left: 0px;
+	padding:0 10px;
 }
 
 .other_profile{

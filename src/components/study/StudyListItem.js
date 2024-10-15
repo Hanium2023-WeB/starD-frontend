@@ -2,8 +2,10 @@ import LikeButton from "../repeat_etc/LikeButton";
 import ScrapButton from "../repeat_etc/ScrapButton";
 import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect} from "react";
+import default_profile_img from "../../images/default_profile_img.png";
 
 import axios from "axios";
+import ImageComponent from "../image/imageComponent";
 
 function calculateDateDifference(startDate, endDate) {
     const start = new Date(startDate);
@@ -27,6 +29,7 @@ function checkRecruitStatus(recruitStatus, proressStatus) {
 
 const StudyListItem = ({studies, toggleLike, toggleScrap, d, index}) => {
     console.log(studies);
+    const imgUrl = studies.recruiter.profile.imgUrl;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
     const recruitStatus = checkRecruitStatus(studies.recruitStatus, studies.progressStatus);
     const navigate = useNavigate();
@@ -59,14 +62,23 @@ const StudyListItem = ({studies, toggleLike, toggleScrap, d, index}) => {
                     </div>
                 </div>
             </div>
+            <div className="list_founder">
+                <ImageComponent getImgName = {imgUrl} imageSrc={""} />
+                <span>{studies.recruiter?.nickname}</span>
+            </div>
+            <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>
+            <div className="list_tag_wrapper" onClick={GoNextDetailPage}>
+                {studies.tags.split(',').map((tag, idx) => (
+                    <div key={idx} className="list_tag">
+                      {tag.trim()}
+                    </div>
+                ))}
+            </div>
+            <div className="list_onoff" onClick={GoNextDetailPage}>{studies.onOff}</div>
+            <div className="stroke"></div>
             <div className="list_deadline">
                 마감일 | {studies.recruitmentDeadline}
             </div>
-            <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>
-            <div className="list_tag" onClick={GoNextDetailPage}>{studies.tags}</div>
-            <div className="list_onoff" onClick={GoNextDetailPage}>{studies.onOff}</div>
-            <div className="stroke"></div>
-            <div className="list_founder">{studies.recruiter?.nickname}</div>
         </div>
     )
 }

@@ -158,8 +158,19 @@ html {
 }
 .study_list .list_deadline {
 	font-size: 13px;
-	padding-top: -10px;
 	color: #99a3af;
+	margin-top:20px;
+}
+.study_list .list_founder{
+	font-size: 13px;
+	margin-bottom: 15px;
+	display: flex;
+	align-items: center;
+}
+.study_list .list_founder img{
+	width:13px;
+	height:13px;
+	margin-right: 3px;
 }
 .study_list .list_title {
 	font-size: 20px;
@@ -168,14 +179,14 @@ html {
 .study_list .list_tag {
 	width: fit-content;
 	background-color: #ffffff;
-	border: 0.275px solid #99A98F;
+	border: 2px solid rgb(149 149 149);
 	padding: 7px 10px;
 	border-radius: 50px;
 }
 .study_list .list_onoff {
 	width: fit-content;
-	background-color: #99A98F;
-	border: 0.275px solid #99A98F;
+	background-color: rgb(149 149 149);
+	border: 2px solid rgb(149 149 149);
 	padding: 7px 10px;
 	border-radius: 50px;
 	color:#fff;

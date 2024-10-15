@@ -169,7 +169,7 @@ const StudyEdit = () => {
                         </div>
                     </div>
                     <div className="right">
-                        <div style={{marginRight: "10px"}}>
+                        <div>
                             <span>분야</span>
                             <span className="field_wrapper">
                                 <select name="field" value={updatedStudy.field} onChange={handleRadioFieldChange} disabled>
@@ -179,7 +179,7 @@ const StudyEdit = () => {
                                 </select>
                             </span>
                         </div>
-                        <div style={{marginRight: "10px"}}>
+                        <div style={{marginRight: "21px"}}>
                             <span className="onoff_title">진행 방식</span>
                             <div className="onoff">
                                 <input type="radio" value="online" name="onOff" onChange={handleRadioChange}

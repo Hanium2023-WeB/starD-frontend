@@ -6,7 +6,7 @@ const Motive=({motive, onClose})=>{
     return(
         <div className={"background"}>
             <div className={"show_motive"}>
-            <p>지원 동기</p>
+            <p style={{color:"#99a98f"}}>지원 동기</p>
             <p>{motive}</p>
             <button onClick={onClose}>확인</button>
         </div>

@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Report from "../report/Report";
 import CommentForm from "../comment/CommentForm";
 import axios from "axios";
+import ImageComponent from "../image/imageComponent";
 
 const StudyInfo = ({study, isRecruiter}) => {
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
@@ -11,6 +12,7 @@ const StudyInfo = ({study, isRecruiter}) => {
     const [reportStudyId, setReportStudyId] = useState(null);
     const [editing, setEditing] = useState(false);
     const accessToken = localStorage.getItem('accessToken');
+    const imgUrl = study.recruiter.profile.imgUrl;
     const handleOpenReportModal = (studyId) => {
         setReportStudyId(studyId);
         setShowReportModal(true);
@@ -96,17 +98,20 @@ const StudyInfo = ({study, isRecruiter}) => {
                 <h2 className="study_title">{study.title}</h2>
                 <div>
                     <div className="study_author_info">
-                        <p className="study_author">
-                            <Link
-                                to={`/${study.recruiter.id}/userprofile`}
-                                style={{
-                                    textDecoration: "none",
-                                    color: "inherit",
-                                }}
-                            >
-                                {study.recruiter.nickname}
-                            </Link>
-                        </p>
+                        <span>
+                            <ImageComponent getImgName = {imgUrl} imageSrc={""} />
+                            <p className="study_author">
+                                <Link
+                                    to={`/${study.recruiter.id}/userprofile`}
+                                    style={{
+                                        textDecoration: "none",
+                                        color: "inherit",
+                                    }}
+                                >
+                                    {study.recruiter.nickname}
+                                </Link>
+                            </p>
+                        </span>
                         <p className="study_created_date">{formatDatetime(study.recruitmentStart)}</p>
                         {(study.recruitStatus !== 'RECRUITMENT_COMPLETE') | (study.recruiter !== isLoggedInUserId)  && (
                             <>

@@ -318,7 +318,7 @@ const StudyInsert = () => {
                                 </select>
                             </span>
                         </div>
-                        <div className={"onoffline"} style={{marginRight: "10px"}}>
+                        <div className={"onoffline"} style={{marginRight: "21px"}}>
                             <span className="onoff_title">진행 방식</span>
                             <div className="onoff">
                                 <input type="radio" value="online" name="onoff" onChange={handleRadioChange}/>온라인

@@ -20,7 +20,7 @@ import communityfield from "../images/communityfield.png";
 import communityscrap from "../images/communityscrap.png";
 import axios from "axios";
 import MemoizedLink from "../MemoizedLink";
-import {EventSourcePolyfill} from 'event-source-polyfill';
+// import {EventSourcePolyfill} from 'event-source-polyfill';
 
 const CenteredDiv = styled.div`
   display: flex;
