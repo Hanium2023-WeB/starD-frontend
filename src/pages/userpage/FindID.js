@@ -83,20 +83,18 @@ const FindID = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="container_find" id="phone">
-                        <div className="input_phone">
+                    <div className="container_find">
+                        <div className="input_infos">
                             <div className="subinfos">
                                 전화번호
-                                <span id="detail">(-없이 전화번호만 입력)</span>
                             </div>
                             <div className={"inputform"}>
                                 <input
                                     ref={inputphone}
-                                    id="phonecontent"
                                     name={"phone"}
                                     value={state.phone}
                                     onChange={handleEditChange}
-                                    placeholder={"전화번호를 입력해주세요."}
+                                    placeholder={"전화번호를 -없이 입력해주세요"}
                                 ></input>
                             </div>
                             <div className={"Certification_Number"}>

@@ -5,15 +5,14 @@
     margin-bottom: 0px;
 }
 #find-id{
-    font-size: 30px;
-    font-weight: bolder;
-    margin-bottom: 0px;
+    font-size: 1.7em;
+    color: #395b64;
+    font-family: 'Pretendard-Regular';
 }
 .findwrap{
     display: flex;
     justify-content: center;
-    position: relative;
-    left: 30px;
+    margin-bottom: 70px;
 }
 .container_findwrap{
     display: flex;
@@ -23,18 +22,32 @@
 }
 
 .container_find {
-    height: 200px;
     display: flex;
     justify-content: center;
-    position: relative;
-    bottom: 20%;
-
 }
-.subinfos {
+.infos{
+    align-items: center;
+}
+.input_infos {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
-    font-size: 20px;
+    margin-bottom: 20px;
+}
+.input_infos p{
+    margin:10px 0 0;
+    font-family: "Pretendard-Regular";
+}
+.input_infos .subinfos {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    font-family: 'Pretendard-Regular';
+    text-align: center;
+}
+.input_infos .sub{
+    margin: 30px 0 50px;
 }
 
 .subinfos2 {
@@ -46,34 +59,16 @@
 #detail{
     font-size: 13px;
 }
-.input_infos {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    top: 100px;
-    justify-content: center;
-    width: 50%;
-}
 .input_infos input {
-    margin-bottom: 20px;
-    width: 82%;
-    height: 40px;
-    padding-left: 10px;
-    border-radius: 10px;
-    border: 1px solid #d9d9d9
-}
-.input_phone{
-    height: 200px;
-    width: 50%;
-}
-#phone{
-    margin-top: 60px;
-}
-.inputform{
-    height: 100px;
-    width: 600px;
-    position: relative;
-    bottom: 30px;
+    margin-bottom: 0;
+    width: 250px;
+    height: 30px;
+    padding-left: 0;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #dbdbdb;
+    box-shadow: none;
+    outline: none;
 }
 .select_country {
     position: relative;
@@ -93,16 +88,6 @@ select{
     box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
 
 }
-#phonecontent{
-    position: relative;
-    top: 30px;
-    width: 60%;
-    height: 40px;
-    border-radius: 10px;
-    border: 1px solid #d9d9d9;
-    padding-left:10px;
-}
-
 .Certification_Number1{
     left: 50px;
 }
@@ -119,21 +104,18 @@ select{
 }
 
 .Certification_Number{
-    width: 100px;
-    position: relative;
-    bottom:10px;
-    left: 125px;
+    margin:25px 0 20px;
 }
 .Certification_Number >button{
-    background-color: #7A8E6D;
+    background-color: #BBDF9F;
     color: white;
+    width: 250px;
     height: 40px;
     border-radius: 10px;
     font-family: 'Pretendard-Regular';
     font-size: 15px;
-    border-style:none ;
-    cursor: pointer;
-    width: 100px;
+    border-style: none;
+    cursor: pointer
 }
 .receive_number{
     position: relative;

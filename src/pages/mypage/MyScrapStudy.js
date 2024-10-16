@@ -220,7 +220,13 @@ const MyScrapStudy = () => {
                                         마감일 | {study.recruitmentDeadline}
                                     </div>
                                     <div className="list_title" onClick={() => GoNextDetailPage(study)}>{study.title}</div>
-                                    <div className="list_tag" onClick={() => GoNextDetailPage(study)}>{study.tags}</div>
+                                    <div className="list_tag_wrapper" onClick={GoNextDetailPage}>
+                                        {scrapStudies.tags.split(',').map((tag, idx) => (
+                                            <div key={idx} className="list_tag">
+                                                {tag.trim()}
+                                            </div>
+                                        ))}
+                                    </div>
                                     <div className="list_onoff" onClick={() => GoNextDetailPage(study)}>{study.onOff}</div>
                                     <div className="stroke"></div>
                                     <div className="list_founder">{study.recruiter?.nickname}</div>

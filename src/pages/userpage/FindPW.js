@@ -58,8 +58,8 @@ const FindPW = () => {
             <div className="findwrap">
                 <div className={"container_findwrap"}>
                     <div className="container_find" id="phone">
-                        <div className="input_phone">
-                            <div className="subinfos">
+                        <div className="input_infos infos">
+                            <div className="subinfos sub">
                                 입력한 이메일 주소로 비밀번호 재설정을 위한 인증 메일이 발송됩니다.
                                 <br/>이메일을 확인하여 12시간 이내에 비밀번호 재설정을 완료해주세요.
                             </div>
