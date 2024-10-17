@@ -57,7 +57,7 @@ svg{
    height: 90px;
 }
 .Schedulerow > .col.cell{
-    border: 1.5px solid #395b64;
+    border: 1px solid rgba(57, 91, 100, 0.25);
     width: 14%;
     height: auto;
     font-size: 1.2rem;
