@@ -309,7 +309,7 @@ const StudyInsert = () => {
                     </div>
                     <div className="right">
                         <div className={"interest"}>
-                            <span id={"inter"}>분야</span>
+                            <span>분야</span>
                             <span className="field_wrapper">
                                 <select name="field" value={formData.field} onChange={handleInputChange}>
                                     {tagoptions.map((interest, idx) =>
