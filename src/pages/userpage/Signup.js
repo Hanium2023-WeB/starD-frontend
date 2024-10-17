@@ -334,7 +334,6 @@ const Signup = () => {
     return (
         <div>
             <Header showSideCenter={false}/>
-
             <div className="containers" id="sign">
                 <div className="login_info">
                     <p>회원가입 <span style={{color: "red"}}>(STEP 1)</span></p>
@@ -459,12 +458,12 @@ const Signup = () => {
                             : <span><img src={uncheckbox} width="20px" onClick={onCheckImg}/>
                                 <p onClick={onTermToggle}>이용약관
                                     <span id={"term"} style={{color: "red", width: "150px"}}>(필수)</span></p>
-                                </span>}
-
-                        {termToggle && <Terms_of_service onClose={() => {
-                            setTermToggle(false);
-                        }} CheckImg={CheckImg} onCheckImgs={onCheckImgs}/>}
+                                </span>
+                        }
                     </div>
+                    {termToggle && <Terms_of_service onClose={() => {
+                        setTermToggle(false);
+                    }} CheckImg={CheckImg} onCheckImgs={onCheckImgs}/>}
                 </form>
                 <div className="signbtn">
                     <button type="submit">다음</button>

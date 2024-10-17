@@ -59,8 +59,11 @@ width: 600px;
     border-radius: 10px;
     padding: 10px;
     width: 105%;
+    cursor: pointer;
 }
-
+.HomeDashBoard .list_deadline{
+    margin-top: 10px !important;
+}
 .dashboard_header{
     display: flex;
     flex-direction: row;
@@ -83,4 +86,8 @@ width: 600px;
 .dashboardsubdetail{
     display: flex;
     flex-direction: row;
+    align-items: center;
+}
+.dashboardsubdetail .list_onoff{
+    margin-bottom: 0 !important;
 }

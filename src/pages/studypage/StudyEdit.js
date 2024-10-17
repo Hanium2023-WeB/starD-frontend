@@ -142,7 +142,7 @@ const StudyEdit = () => {
     },[updatedStudy,study, navigate]);
     const studyeditform = () => {
         return (
-            <form className="study_open_form">
+            <form className="study_open_form study_edit_form">
                 <div>
                     <div className="left">
                         <div>

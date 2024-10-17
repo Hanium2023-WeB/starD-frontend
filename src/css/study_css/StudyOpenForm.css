@@ -25,9 +25,6 @@ html {
 .interest,.deadline,.onoffline{
     margin-left: 60px;
 }
-#inter{
-    margin-right: 10px;
-}
 .study_open_form {
     font-family: 'Pretendard-Regular';
     /*width: 120%;*/
@@ -60,7 +57,10 @@ html {
     text-align: right;
 }
 .study_open_form .left{
-    margin-right: 94px;
+    margin-right: 33px;
+}
+.study_edit_form .left{
+    margin-right:93px;
 }
 .study_open_form .left > div,
 .study_open_form .right > div{
@@ -74,7 +74,7 @@ html {
 }
 .study_open_form .right .onoffline {
     position: relative;
-    right: 7px;
+    /*right: 7px;*/
 }
 
 .study_open_form .right input[name="onoff"],
@@ -142,6 +142,8 @@ html {
     border-radius: 50px;
     font-family: 'Pretendard-Regular';
     cursor: pointer;
+}
+.study_edit_form .btn .recruit_btn{
     margin-right: 10px;
 }
 #gugun1, #sido1{
