@@ -9,7 +9,7 @@
   .todo_container{
     display: flex;
     flex-direction: column;
-    width: 45%;
+    width: 70%;
     margin-top: 30px;
   }
   .TodoList{
@@ -17,7 +17,15 @@
   }
   .today{
     font-size: 20px;
-    padding-bottom: 10px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .today input{
+    margin-bottom: 0;
+    padding: 0 10px;
+    width:150px;
   }
   .TodoList span{
     font-size: 15px;
