@@ -346,7 +346,7 @@ const TeamToDoList = () => {
                             <input
                                 type="date"
                                 placeholder={"날짜를 선택해주세요."}
-                                value={selectedDate.toISOString().substring(0, 10)} // 날짜를 yyyy-mm-dd 형식으로 표시
+                                value={new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000)).toISOString().substring(0, 10)}
                                 onChange={(e) => handleDateClick(e.target.value)} // 선택된 날짜를 handleDateClick으로 전달
                             />
                         </div>

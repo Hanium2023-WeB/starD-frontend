@@ -2,10 +2,10 @@ import cn from 'classnames';
 import ToDoList from "../../pages/mypage/ToDoList";
 import checkbox from "../../images/check.png";
 import uncheckbox from "../../images/unchecked.png";
-import editicon from "../../images/edit.png";
-import removeicon from "../../images/remove.png";
 import ToDoListItems from "../../css/todo_css/ToDoListItem.css";
 import React, {useEffect, useState} from "react";
+import { TbTriangleInvertedFilled } from "react-icons/tb";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 //할 일 보여주는 컴포넌트
 const TeamToDoListItem = ({
@@ -19,51 +19,102 @@ const TeamToDoListItem = ({
                               Assignees,
                               Member
                           }) => {
+    const [showDetails, setShowDetails] = useState(false); // 토글 상태를 관리하는 상태값
+    const [allChecked, setAllChecked] = useState(false); // 모든 담당자가 체크했는지 여부
+
+    const toggleDetails = () => setShowDetails(!showDetails); // 토글 버튼 클릭 시 상태 변경
+    
+    const Assignee = todo.assignees.map((item) => item.member.nickname);
 
     useEffect(() => {
-        console.log("TODO changed:", todo);
-    }, [todo]);
+        const allChecked = todos.every((todo) => todo.toDoStatus === true);
+        setAllChecked(allChecked);
+    }, [todos]);
+    // useEffect(() => {
+    //     console.log("TODO changed:", todo);
+    // }, [todo]);
+    //
+    // console.log('todo:', todo);
+    // console.log('todos:', todos);
 
-    console.log('todo:', todo);
-    console.log('todos:', todos);
+    // const TODO = todos[0];
+    // const [selectedTodo, setSelectedTodo] = useState(null);
+    //
+    //
+    // const loggedInUserId = localStorage.getItem('isLoggedInUserId');
+    // const currentUserTodoIndex = todos.findIndex(todo => todo.member.id === loggedInUserId);
+    //
+    // // 만약 현재 로그인한 사용자의 할 일이 존재한다면 해당 할 일의 상태를 전달합니다.
+    // const currentUserTodoStatus = currentUserTodoIndex !== -1 ? todos[currentUserTodoIndex].toDoStatus : false;
+    //
+    // console.log("currentUserTodoIndex: ", currentUserTodoIndex);
+    // console.log("상태..?: ", currentUserTodoStatus);
+    //
+    // // 모든 담당자의 toDoStatus가 true인지 확인
+    // const allTodoStatusTrue = todos.every(todo => todo.toDoStatus === true);
+    // console.log("모든 할 일의 상태가 true인가?: ", allTodoStatusTrue);
+    //
+    // console.log('TODO:', TODO.toDo.id);
+    // console.log("넘어온 담당자 닉네임들", Assignee);
 
-    const Assignee = todo.assignees.map((item) => item.member.nickname);
-    const TODO = todos[0];
-    const [selectedTodo, setSelectedTodo] = useState(null);
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    return (
+        <li key={todo.id} className="TodoListItem">
+            <div className="TodoHeader">
+                {/* 토글 버튼 왼쪽에 배치 */}
+                <TbTriangleInvertedFilled onClick={toggleDetails}/>
+                {/* 변환된 날짜 출력 */}
+                <div className="TodoDate">
+                    {formatDate(selectedDate)}
+                </div>
+                {/* 할 일 오른쪽에 배치 */}
+                <div className="Todo">
+                    {todo.task}
+                </div>
+
+                {/* 수정 및 삭제 버튼 */}
+                <div className="Edit" onClick={() => {
+                    onInsertToggle();
+                    onChangeSelectedTodo(todo);
+                }}>
+                    <FaEdit />
+                </div>
+                <div className="Remove" onClick={() => onRemove(TODO.toDo.id)}>
+                    <FaTrashAlt />
+                </div>
+            </div>
+
+            {/* 토글된 상태일 때만 담당자와 체크 박스 출력 */}
+            {showDetails && (
+                <div className="TodoContent">
+                    {Assignee.map((assignee, index) => (
+                        <div key={index} className="TodoRows" style={{ display: 'flex', alignItems: 'center' }}>
+                            <p className="assignee">{assignee}</p>
+                            <div
+                                className={cn('checkbox', { checked: allTodoStatusTrue })}
+                                onClick={() => onToggle(todo.assignees, TODO.toDo.id, currentUserTodoIndex, currentUserTodoStatus, allTodoStatusTrue)}
+                            >
+                                {allTodoStatusTrue ? (
+                                    <img src={checkbox} width="20px" />
+                                ) : (
+                                    <img src={uncheckbox} width="20px" />
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
 
-    const loggedInUserId = localStorage.getItem('isLoggedInUserId');
-    const currentUserTodoIndex = todos.findIndex(todo => todo.member.id === loggedInUserId);
-
-    // 만약 현재 로그인한 사용자의 할 일이 존재한다면 해당 할 일의 상태를 전달합니다.
-    const currentUserTodoStatus = currentUserTodoIndex !== -1 ? todos[currentUserTodoIndex].toDoStatus : false;
-
-    console.log("currentUserTodoIndex: ", currentUserTodoIndex);
-    console.log("상태..?: ", currentUserTodoStatus);
-
-    // 모든 담당자의 toDoStatus가 true인지 확인
-    const allTodoStatusTrue = todos.every(todo => todo.toDoStatus === true);
-    console.log("모든 할 일의 상태가 true인가?: ", allTodoStatusTrue);
-
-    console.log('TODO:', TODO.toDo.id);
-    console.log("넘어온 담당자 닉네임들", Assignee);
-    return (<li key={todo.id} className="TodoListItem">
-        {Assignee.map((assignee, index) => (<p key={index}>{assignee}</p>))}
-        <div className={cn('checkbox', {checked: allTodoStatusTrue})}
-             onClick={() => onToggle(todo.assignees, TODO.toDo.id, currentUserTodoIndex, currentUserTodoStatus,allTodoStatusTrue)}>
-            {allTodoStatusTrue ? <img src={checkbox} width="20px"/> : <img src={uncheckbox} width="20px"/>}
-            <div className="text">{todo.task}</div>
-        </div>
-        <div className="Edit" onClick={() => {
-            onInsertToggle();
-            onChangeSelectedTodo(todo);
-        }}>
-            <img src={editicon} width="20px"/>
-        </div>
-        <div className="Remove" onClick={() => onRemove(TODO.toDo.id)}>
-            <img src={removeicon} width="20px"/>
-        </div>
-    </li>);
+        </li>
+    );
 };
 
 export default TeamToDoListItem;
