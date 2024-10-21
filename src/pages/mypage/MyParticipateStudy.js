@@ -318,14 +318,20 @@ const MyParticipateStudy = ({sideheader}) => {
                             </div>
                         </div>
                         <div className={"contnet"}>
+                            <div className="list_founder">{d.study.recruiter.nickname}</div>
+                            <div className="list_title">{d.study.title}</div>
+                            <div className="list_tag_wrapper">
+                                {d.study.tags.split(',').map((tag, idx) => (
+                                    <div key={idx} className="list_tag">
+                                        {tag.trim()}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="list_onoff">{d.study.onOff}</div>
+                            <div className="stroke"></div>
                             <div className="list_deadline">
                                 마감일 | {d.study.recruitmentDeadline}
                             </div>
-                            <div className="list_title">{d.study.title}</div>
-                            <div className="list_tag">{d.study.field}</div>
-                            <div className="list_onoff">{d.study.onOff}</div>
-                            <div className="stroke"></div>
-                            <div className="list_founder">{d.study.recruiter.nickname}</div>
                             <div className="buttons">
                                 <button id="go-teamblog"onClick={() => goNextTeamBlog(d)} >팀블로그 가기</button>
                                 {d.study.progressStatus === "WRAP_UP" ? (

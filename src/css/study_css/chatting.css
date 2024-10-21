@@ -3,13 +3,13 @@
 }
 
 .chat_wrap {
-    height: 667.5px;
+    height: 687.5px;
     border: 1px solid black;
     border-radius: 5px;
 }
 
 .chattingbox {
-    height: 500px;
+    height: 565px;
     overflow-y: auto;
     padding: 10px;
     overflow-x: hidden;
@@ -84,9 +84,10 @@ label{
 .input_chat input{
     width: 50%;
     height: 25px;
+    padding-left: 10px;
 }
 .input_chat input::placeholder{
-    padding-left: 10px;
+
 }
 .input_chat button{
     width: 15%;

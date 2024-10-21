@@ -14,24 +14,27 @@
     /*font-family: 'Pretendard-Regular';*/
 }
 /*담당자 선택란*/
-.select_assignee, .selected-assignees{
+.select_assignee{
     display: flex;
+    align-items: center;
     width: 90%;
-
     border-radius: 2px;
+    margin-bottom: 20px;
 }
-.select_assignee > p .selected-assignees > p{
-    padding: 2px;
-    margin:  0px;
-    font-size: 12px;
+.select_assignee > p, .selected-assignees > p{
+    margin: 2px;
+    font-size: 18px;
+    font-weight: bold;
 }
 .assignees{
     display: flex;
-    margin-left: 10px;
-    padding: 0px;
+    font-size: 18px;
+    margin-left: 20px;
+    padding: 4px;
     cursor: pointer;
-    background-color: rgba(242, 241, 238, 0.6);
+    /*background-color: rgba(242, 241, 238, 0.6);*/
     height: fit-content;
+    border-radius: 10px;
 }
 
 .selected-assignees button{

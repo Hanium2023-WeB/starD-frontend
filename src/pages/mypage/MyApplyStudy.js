@@ -9,6 +9,7 @@ import LikeButton from "../../components/repeat_etc/LikeButton";
 import ScrapButton from "../../components/repeat_etc/ScrapButton";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
+import ImageComponent from "../../components/image/imageComponent";
 
 const MyApplyStudy = ({sideheader}) => {
 
@@ -23,6 +24,7 @@ const MyApplyStudy = ({sideheader}) => {
     const [itemsPerPage, setItemsPerPage] = useState(9);
     const [scrapTwoStates, setScrapTwoStates] = useState([]);
     const [likeTwoStates, setLikeTwoStates] = useState([]);
+    const [imgUrl, setImgUrl] = useState("");
 
     useEffect(() => {
         if (accessToken && isLoggedInUserId) {
@@ -135,7 +137,7 @@ const MyApplyStudy = ({sideheader}) => {
             }
         })
             .then((res) => {
-                console.log("전송 성공 : ", res.data);
+                console.log("전송 성공 : ", res.data.content);
                 const studyList = res.data.content;
                 const updateStudies = res.data.content.map((study, index) => {
                     study.like = likeStates[index];
@@ -143,6 +145,7 @@ const MyApplyStudy = ({sideheader}) => {
                     return study;
                 });
                 setStudies(updateStudies);
+                setImgUrl(res.data.content.member.profile.imgUrl);
                 localStorage.setItem("ApplyStudy",JSON.stringify(res.data.content));
             })
             .catch((error) => {
@@ -282,14 +285,23 @@ const MyApplyStudy = ({sideheader}) => {
                                 color: "inherit",
                             }}
                         >
+                            <div className="list_founder">
+                                <ImageComponent getImgName = {imgUrl} imageSrc={""} />
+                                <span>{d.study.recruiter.nickname}</span>
+                            </div>
+                            <div className="list_title">{d.study.title}</div>
+                            <div className="list_tag_wrapper">
+                                {d.study.tags.split(',').map((tag, idx) => (
+                                    <div key={idx} className="list_tag">
+                                        {tag.trim()}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="list_onoff">{d.study.onOff}</div>
+                            <div className="stroke"></div>
                             <div className="list_deadline">
                                 마감일 | {d.study.recruitmentDeadline}
                             </div>
-                            <div className="list_title">{d.study.title}</div>
-                            <div className="list_tag">{d.study.field}</div>
-                            <div className="list_onoff">{d.study.onOff}</div>
-                            <div className="stroke"></div>
-                            <div className="list_founder">{d.study.recruiter.nickname}</div>
                         </Link>
                     </div>
                 ))}

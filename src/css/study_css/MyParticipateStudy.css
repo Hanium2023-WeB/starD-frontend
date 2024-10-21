@@ -109,10 +109,11 @@ html {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	margin-bottom: 13px;
 }
-.study .study_list .list_title{
-	margin-bottom: 20px;
-}
+/*.study .study_list .list_title{*/
+/*	margin-bottom: 20px;*/
+/*}*/
 .scrap_study_list .list_title{
 	margin-bottom: 13px;
 }
