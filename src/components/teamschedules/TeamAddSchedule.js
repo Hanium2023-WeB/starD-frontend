@@ -54,16 +54,15 @@ const TeamAddSchedule = ({studyId,studies,studyTitles, selectedDate, onInsert, o
 
           </div>
           <div className="selectDay">
-            <div className="selectstartDay">
               <p>시작 날짜:</p>
               <DatePicker
+                  className="datePicker"
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   dateFormat="yyyy-MM-dd"
                   placeholder="시작 날짜 선택"
                   disabled={progressStatus === 'DISCONTINUE'}
               />
-            </div>
           </div>
           <div className="selecttitle">
             <p>일정 이름:</p>

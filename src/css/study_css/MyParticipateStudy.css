@@ -111,6 +111,9 @@ html {
 	text-overflow: ellipsis;
 	margin-bottom: 13px;
 }
+.dashboard_sub_header .list_title{
+	margin-bottom: 0;
+}
 /*.study .study_list .list_title{*/
 /*	margin-bottom: 20px;*/
 /*}*/

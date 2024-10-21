@@ -1,18 +1,21 @@
+/* 전체 배경 설정 */
 .background {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
     z-index: 9999;
     background-color: rgba(0, 0, 0, 0.548);
-  }
-  .background .Scheduleedit_insert {
+}
+
+.background .Scheduleedit_insert {
     width: 40%;
     height: 70%;
     position: absolute;
-    top: 18%;
-    left: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 20px;
     background-color: white;
     border-radius: 5px;
@@ -20,157 +23,159 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-  }
-
-  .Scheduleedit_insert .meeting_btn{
-    width: fit-content;
-    display: flex;
-    flex-direction: row;
-  
-  }
-  .meeting_btn > li{
-    display: flex;
-    flex-direction: row;
-    
-  }
-#add, #cancel, #del{
-  background-color: #395b64;
-  color: white;
-  border-radius: 5px;
-  border-style: none;
-  margin:2px;
 }
-  .background .Scheduleedit_insert input {
+
+@media (max-width: 800px) {
+    .background .Scheduleedit_insert {
+        width: 70%;
+    }
+}
+
+/* 제목 스타일 */
+.background .Scheduleedit_insert h2 {
+    background: none;
+}
+
+/* 입력 필드 스타일 */
+.background .Scheduleedit_insert input {
     width: fit-content;
-    height: 40px;
     border-radius: 10px;
 }
-.background .Scheduleedit_insert h2{
-  background: none;
-}
 
-  .selectDay{
+/* 버튼 스타일 */
+.meeting_btn {
+    margin-top: 20px;
     width: fit-content;
-      margin-bottom: 30px;
-  }
-  .selectstartDay, .selectendDay , .selecttitle, .selectcontent ,.selectstudy , .selectcolor{
     display: flex;
     flex-direction: row;
-    margin-top: 10px;
-  }
-  
- .selectstudy p,.selectDay p ,.selecttitle p {
-    margin-bottom: 0;
-    width: 130px;
-    position: relative;
-    top: 10px;
-    left: 4px;
- }
+}
+
+.meeting_btn > li {
+    display: flex;
+    flex-direction: row;
+}
+
+#add, #cancel, #del {
+    background-color: #395b64;
+    color: white;
+    border-radius: 5px;
+    border-style: none;
+    margin: 2px;
+    padding: 7px 12px;
+    font-family: Pretendard-Regular;
+    cursor: pointer;
+}
+
+/* 날짜 선택 관련 */
+.selectDay {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
 .selectDay p {
     margin-bottom: 0;
-    width: 90px;
     position: relative;
-    top: 20px;
-    left: 4px;
+    top: 17px;
 }
-.selecttitle p {
-    margin-bottom: 0;
-    width: 100px;
-    position: relative;
-    top: 10px;
-    left: 8px;
+
+/* 제목, 일정 끝나는 날, 스터디 선택 영역 */
+.selecttitle, .selectendDay, .selectstudy, .selectcontent, .selectcolor {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
-  .selectendDay, .selectstudy{
-    position: relative;
-    right: 10px;
+
+.selectendDay, .selectstudy {
     margin-top: 30px;
     margin-bottom: 20px;
-  }
-  .selectstudy {
-    width: fit-content;
-    position: relative;
-    right: 26px;
-    margin-bottom: 13px;
-    }
-    .selectstudy > select ,  .selectstudy > select >option{
-        width: 100%;
-        height: 40px;
-        margin-left: 9px;
-        border-radius: 10px;
-        border: 1px solid #d9d9d9;
-background: #fff;
-box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
-
-    }
-  .selecttitle, .selectcontent{
-    position: relative;
-    right: 4px;
-      margin-bottom: 20px;
 }
-.selectcontent{
+
+.selectstudy {
+    width: fit-content;
+    margin-bottom: 13px;
+}
+
+.selectstudy p, .selectDay p, .selecttitle p {
+    margin-bottom: 0;
+    margin-right: 20px;
+}
+
+.selectstudy > select, .selectstudy > select > option {
+    height: 40px;
+    margin-left: 9px;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* 내용 입력 영역 */
+.selectcontent {
     margin-left: 125px;
-    width: 60%;
     height: 100px;
     margin-top: 5px;
 }
+
 .selectcontent > textarea {
-width: 40%;
-height: 50px;
-margin-left: 20px;
-border-radius: 10px;
-border: 1px solid #d9d9d9;
-background: #fff;
-box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
-padding: 10px;
+    width: 40%;
+    height: 50px;
+    margin-left: 20px;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
+    padding: 10px;
 }
-.react-datepicker button{
-  width: 20%;
-}
-  .react-datepicker-wrapper {
-    display: inline-block;
-    padding: 0;
-    border: 0;
-    width: fit-content;
-    height: 10px;
-}
-.react-datepicker__navigation-icon {
-  width: 20px;
-}
-.selectcolor{
-    position: relative;
-    left: 20px;
-    margin-top: 0px;
+
+/* 색상 선택 관련 */
+.selectcolor {
+    margin-top: 20px;
     margin-bottom: 10px;
     height: 100px;
 }
 
-.selectcolor p{
-    margin-right: 50px;
-    position: relative;
-    left: 30px;
+.selectcolor p {
+    margin-right: 20px;
 }
-.circle-picker > span{
+
+.circle-picker > span {
     width: 30px;
     height: 30px;
     padding: 3px;
     position: relative;
     bottom: 6px;
 }
-  .react-datepicker__input-container {
-    position: relative;
+
+/* 날짜 선택기 관련 */
+.react-datepicker button {
+    width: 20%;
+}
+
+.react-datepicker-wrapper {
+    display: inline-block;
+    padding: 0;
+    border: 0;
+    width: fit-content;
+    height: 10px;
+}
+
+.react-datepicker__navigation-icon {
+    width: 20px;
+}
+
+.react-datepicker__input-container {
     display: inline-block;
     width: 100%;
     height: 10px;
 }
-.todoedit_insert input, .todoedit_insert select, .todoedit_insert textarea{ 
-box-shadow: none;
-}
-.todoedit_insert button{
-    height: 22px;
-}
-@media (max-width: 800px) {
-    .background .Scheduleedit_insert {
-        width: 70%;
-    }
 
+/* 투두 입력 창 */
+.todoedit_insert input, .todoedit_insert select, .todoedit_insert textarea {
+    box-shadow: none;
+}
+
+.todoedit_insert button {
+    height: 22px;
 }

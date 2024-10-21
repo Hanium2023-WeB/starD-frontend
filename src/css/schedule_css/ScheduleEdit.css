@@ -42,10 +42,6 @@
 .background .Scheduleedit_insert h2{
 background: none;
 }
-
-.selectDay{
-  width: fit-content;
-}
 .selectstartDay, .selectendDay , .selecttitle, .selectcontent ,.selectstudy , .selectcolor{
   display: flex;
   flex-direction: row;

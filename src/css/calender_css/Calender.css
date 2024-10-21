@@ -19,8 +19,8 @@
     width: 100%;
 }
 .col.col-end{
-    width: 60%;
-    margin-left: 60%;
+    display: flex;
+    cursor: pointer;
 }
 svg{
     font-size: 1.5rem;
@@ -52,7 +52,7 @@ span.text.not-valid{
 }
 .col.cell.disabled{
    color: gray;
-   border: 1.5px solid gray;
+   border: 1px solid gray;
 }
 .todoImage{
     position: relative;
