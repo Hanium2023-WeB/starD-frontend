@@ -16,11 +16,10 @@ const TeamToDoListItem = ({
                               onChangeSelectedTodo,
                               onInsertToggle,
                               selectedDate,
-                              Assignees,
-                              Member
+                              onAllCheckedChange,
+                              isAllChecked, // props로 전달받은 allChecked 상태
                           }) => {
     const [showDetails, setShowDetails] = useState(false); // 토글 상태를 관리하는 상태값
-    const [allChecked, setAllChecked] = useState(false); // 모든 담당자가 체크했는지 여부
     console.log(todo);
     console.log(todos);
     const toggleDetails = () => setShowDetails(!showDetails); // 토글 버튼 클릭 시 상태 변경
@@ -29,8 +28,9 @@ const TeamToDoListItem = ({
 
     useEffect(() => {
         const allChecked = todos.every((todo) => todo.toDoStatus === true);
-        setAllChecked(allChecked);
+        onAllCheckedChange(todo.id, allChecked); // allChecked 상태 변경
     }, [todos]);
+
     // useEffect(() => {
     //     console.log("TODO changed:", todo);
     // }, [todo]);
@@ -67,10 +67,10 @@ const TeamToDoListItem = ({
     };
 
     return (
-        <li key={todo.id} className="TodoListItem" style={{ textDecoration: allChecked ? 'line-through' : 'none' }}>
+        <li key={todo.id} className="TodoListItem" style={{ textDecoration: isAllChecked ? 'line-through' : 'none' }}>
             <div className="TodoHeader">
                 {/* 토글 버튼 왼쪽에 배치 */}
-                <TbTriangleInvertedFilled onClick={toggleDetails}/>
+                <TbTriangleInvertedFilled onClick={toggleDetails} style={{cursor:"pointer"}}/>
                 {/* 변환된 날짜 출력 */}
                 <div className="TodoDate">
                     {formatDate(selectedDate)}
