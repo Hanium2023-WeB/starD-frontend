@@ -21,9 +21,10 @@ const TeamToDoListItem = ({
                           }) => {
     const [showDetails, setShowDetails] = useState(false); // 토글 상태를 관리하는 상태값
     const [allChecked, setAllChecked] = useState(false); // 모든 담당자가 체크했는지 여부
-
+    console.log(todo);
+    console.log(todos);
     const toggleDetails = () => setShowDetails(!showDetails); // 토글 버튼 클릭 시 상태 변경
-    
+
     const Assignee = todo.assignees.map((item) => item.member.nickname);
 
     useEffect(() => {
@@ -41,16 +42,16 @@ const TeamToDoListItem = ({
     // const [selectedTodo, setSelectedTodo] = useState(null);
     //
     //
-    // const loggedInUserId = localStorage.getItem('isLoggedInUserId');
+    const loggedInUserId = localStorage.getItem('isLoggedInUserId');
     // const currentUserTodoIndex = todos.findIndex(todo => todo.member.id === loggedInUserId);
     //
-    // // 만약 현재 로그인한 사용자의 할 일이 존재한다면 해당 할 일의 상태를 전달합니다.
+    // 만약 현재 로그인한 사용자의 할 일이 존재한다면 해당 할 일의 상태를 전달합니다.
     // const currentUserTodoStatus = currentUserTodoIndex !== -1 ? todos[currentUserTodoIndex].toDoStatus : false;
     //
     // console.log("currentUserTodoIndex: ", currentUserTodoIndex);
     // console.log("상태..?: ", currentUserTodoStatus);
     //
-    // // 모든 담당자의 toDoStatus가 true인지 확인
+    // 모든 담당자의 toDoStatus가 true인지 확인
     // const allTodoStatusTrue = todos.every(todo => todo.toDoStatus === true);
     // console.log("모든 할 일의 상태가 true인가?: ", allTodoStatusTrue);
     //
@@ -66,7 +67,7 @@ const TeamToDoListItem = ({
     };
 
     return (
-        <li key={todo.id} className="TodoListItem">
+        <li key={todo.id} className="TodoListItem" style={{ textDecoration: allChecked ? 'line-through' : 'none' }}>
             <div className="TodoHeader">
                 {/* 토글 버튼 왼쪽에 배치 */}
                 <TbTriangleInvertedFilled onClick={toggleDetails}/>
@@ -86,22 +87,30 @@ const TeamToDoListItem = ({
                 }}>
                     <FaEdit />
                 </div>
-                <div className="Remove" onClick={() => onRemove(TODO.toDo.id)}>
+                <div className="Remove" onClick={() => onRemove(todo.id)}>
                     <FaTrashAlt />
                 </div>
             </div>
 
-            {/* 토글된 상태일 때만 담당자와 체크 박스 출력 */}
+            {/* 담당자 리스트와 체크박스 */}
             {showDetails && (
                 <div className="TodoContent">
                     {Assignee.map((assignee, index) => (
-                        <div key={index} className="TodoRows" style={{ display: 'flex', alignItems: 'center' }}>
+                        <div key={index} className="TodoRows">
                             <p className="assignee">{assignee}</p>
                             <div
-                                className={cn('checkbox', { checked: allTodoStatusTrue })}
-                                onClick={() => onToggle(todo.assignees, TODO.toDo.id, currentUserTodoIndex, currentUserTodoStatus, allTodoStatusTrue)}
+                                className={cn('checkbox', { checked: todos[index].toDoStatus })}
+                                onClick={() => {
+                                    // 현재 사용자가 담당자인 경우에만 체크를 토글
+                                    if (todo.assignees[index].member.id === loggedInUserId) {
+                                        onToggle(assignee, todo.id, todos[index].toDoStatus);
+                                    } else {
+                                        // 체크가 불가능함을 알리는 메시지를 표시할 수 있습니다.
+                                        alert("본인만 체크할 수 있습니다.");
+                                    }
+                                }}
                             >
-                                {allTodoStatusTrue ? (
+                                {todos[index].toDoStatus ? (
                                     <img src={checkbox} width="20px" />
                                 ) : (
                                     <img src={uncheckbox} width="20px" />
@@ -111,8 +120,6 @@ const TeamToDoListItem = ({
                     ))}
                 </div>
             )}
-
-
         </li>
     );
 };

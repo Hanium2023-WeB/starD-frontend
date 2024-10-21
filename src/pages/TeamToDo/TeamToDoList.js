@@ -199,7 +199,7 @@ const TeamToDoList = () => {
 
 
     //체크
-    const onToggle = useCallback(async (assignees, toDoId, currentUserTodoIndex, todo_status, allTodoStatusTrue) => {
+    const onToggle = useCallback(async (assignees, toDoId, currentUserTodoIndex, todo_status) => {
         console.log("id::", toDoId);
         if (currentUserTodoIndex == -1) {
             alert("당신의 할 일이 아닙니다.");
@@ -253,10 +253,7 @@ const TeamToDoList = () => {
                     }).catch((error) => {
                         console.log('스터디별 투두리스트 가져오기 실패:', error);
                     })
-                    if (!allTodoStatusTrue) {
-                        alert("모든 담당자가 할 일을 끝내야만 체크표시가 됩니다.");
-                    }
-                    
+
                     setTodoswithAssignee((prevTodos) => {
                         const updatedTodos = {...prevTodos};
                         Object.keys(updatedTodos).forEach((dateKey) => {
