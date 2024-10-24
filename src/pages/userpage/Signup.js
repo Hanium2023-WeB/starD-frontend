@@ -336,7 +336,7 @@ const Signup = () => {
             <Header showSideCenter={false}/>
             <div className="containers" id="sign">
                 <div className="login_info">
-                    <p>회원가입 <span style={{color: "red"}}>(STEP 1)</span></p>
+                    <p>회원가입</p>
                 </div>
                 <form onSubmit={handleSubmit}>
                     {/*<div className={"profile_wrapper"}>*/}

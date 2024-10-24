@@ -9,6 +9,7 @@ import SearchBar from "../../components/teamcommunity/TeamCommSearchBar";
 
 import {useLocation} from "react-router-dom";
 import axios from "axios";
+import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 
 const TeamCommunity = () => {
     const [posts, setPosts] = useState([]);
@@ -17,7 +18,7 @@ const TeamCommunity = () => {
     const isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
 
     const location = useLocation();
-    const {studyId,progressStatus} = location.state;
+    const {studyIdAsNumber,progressStatus} = location.state;
 
     const handleMoveToPostInsert = (e) => {
         if(progressStatus ==="DISCONTINUE"){
@@ -31,7 +32,7 @@ const TeamCommunity = () => {
 
     useEffect(() => {
         axios.get("/api/study/post", {
-            params: { studyId: studyId },
+            params: { studyId: studyIdAsNumber },
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -51,15 +52,16 @@ const TeamCommunity = () => {
             <div className="container">
                 <Category/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
+                    <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} progressStatus={progressStatus}/>
                     <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 커뮤니티</p>
                     <Backarrow subname={"TEAM COMMUNITY LIST"}/>
                     {showPostInsert && (
-                        <PostInsert studyId={studyId}/>
+                        <PostInsert studyId={studyIdAsNumber}/>
                     )}
                     {!showPostInsert && (
                         <div>
                             <div className="community_header">
-                                <SearchBar studyId={studyId} />
+                                <SearchBar studyId={studyIdAsNumber} />
                                 <button onClick={handleMoveToPostInsert} className="new_post_btn">
                                     새 글 작성
                                 </button>

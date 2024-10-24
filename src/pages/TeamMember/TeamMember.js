@@ -7,13 +7,14 @@ import "../../css/study_css/MyParticipateStudy.css"; // 추후 변경
 
 import {useLocation} from "react-router-dom";
 import axios from "axios";
+import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 
 const TeamCommunity = () => {
     const accessToken = localStorage.getItem('accessToken');
     const isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
 
     const location = useLocation();
-    const {studyId, Member} = location.state;
+    const {studyIdAsNumber, Member} = location.state;
     const [member, setMember] = useState(Member);
     const [allow, setAllow] = useState(null); // 사용자 동의 여부 저장
 
@@ -26,7 +27,7 @@ const TeamCommunity = () => {
     };
 
     useEffect(() => {
-        axios.get(`/api/api/v2/studies/discontinue/${studyId}`, {
+        axios.get(`/api/api/v2/studies/discontinue/${studyIdAsNumber}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -47,9 +48,9 @@ const TeamCommunity = () => {
         const confirmDelete = window.confirm("스터디 중단을 동의하시겠습니까?");
 
         if (confirmDelete) {
-            axios.post(`/api/api/v2/studies/discontinue/${studyId}`, null, {
+            axios.post(`/api/api/v2/studies/discontinue/${studyIdAsNumber}`, null, {
                 params: {
-                    studyId: studyId,
+                    studyId: studyIdAsNumber,
                 },
                 withCredentials: true,
                 headers: {
@@ -75,6 +76,7 @@ const TeamCommunity = () => {
             <div className="container">
                 <Category/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
+                    <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member}/>
                     <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 스터디원</p>
                     <Backarrow subname={"TEAM MEMBER LIST"}/>
 
