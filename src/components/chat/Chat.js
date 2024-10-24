@@ -239,8 +239,8 @@ const Chat = (props) => {
                                 ) : (
                                     <td className={"message-detail"} id={"other-chats"}>
                                                 <span>
-                                            {greeting.member ? greeting.member.nickname : 'Unknown'}: {greeting.message} [
-                                                    <br/><p id={"entry-time"}>   {formatDatetime(greeting.createdAt)}]</p>
+                                            {greeting.member ? greeting.member.nickname : 'Unknown'}: {greeting.message}
+                                                    <br/><p id={"entry-time"}>[{formatDatetime(greeting.createdAt)}]</p>
                                                        </span>
                                     </td>
                                 )

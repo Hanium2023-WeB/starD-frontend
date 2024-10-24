@@ -10,6 +10,8 @@ import TeamToDoEdit from "../../components/teamtodo/TeamToDoEdit";
 import TeamToDoListItem from "../../components/teamtodo/TeamToDoListItem";
 import TeamToDoList_css from "../../css/todo_css/TeamToDoList.css";
 import Category from "../../components/repeat_etc/Category";
+import TeamBlog from "../studypage/TeamBlog";
+import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 
 const TeamToDoList = () => {
     const [selectedTodo, setSelectedTodo] = useState(null);
@@ -20,19 +22,19 @@ const TeamToDoList = () => {
     let Month = selectedDate.getMonth() + 1;
     const Dates = selectedDate.getDate();
     const location = useLocation();
-    const {studyId, Member, selecteStudy, progressStatus} = location.state;
+    const {studyIdAsNumber, Member, selecteStudy, progressStatus} = location.state || {};
     const [studies, setStudy] = useState([]);
     const [studyMems, setStudyMems] = useState([]);
     const [member, setMember] = useState(Member);
     const [Assignees, setAssignees] = useState([]);
-    const studyIdAsNumber = parseFloat(studyId);
+    // const studyIdAsNumber = parseFloat(studyId);
+    const [selectedAssigneeIds, setSelectedAssigneeIds] = useState([]); // 선택된 담당자 ID 추적
+    const [showIncomplete, setShowIncomplete] = useState(true); // 미완료 보여주기 상태
+    const [showCompleted, setShowCompleted] = useState(false); // 완료 보여주기 상태
+    const [allCheckedStates, setAllCheckedStates] = useState({}); // allChecked 상태를 저장할 객체
 
-    console.log("studyId:", studyId);
+    console.log("studyId:", studyIdAsNumber);
     console.log("ss:", progressStatus);
-
-    useEffect(() => {
-        const {studyId, Member, selecteStudy, progressStatus} = location.state;
-    }, []);
     const onInsertToggle = () => {
         if (selectedTodo) {
             setSelectedTodo(null);
@@ -49,20 +51,22 @@ const TeamToDoList = () => {
     const nextId = useRef(1);
 
     const dateKey = selectedDate.toDateString();
-    ;
 
     //담당자 추가 핸들러
     const handleAddAssignees = (e) => {
         const assignId = e.target.getAttribute('data-assign-id');
         const assignNicName = e.target.getAttribute('data-assign-name');
-        console.log("assignName : ", assignNicName);
-        const updatedAssignees = [...Assignees, {id: assignId, nickname: assignNicName}];
-        console.log("updatedAssignees : ", updatedAssignees);
-        setAssignees(updatedAssignees);
 
-        const updatedMember = member.filter((item) => item.member.nickname !== assignNicName); //지정된 멤버 제외 남은 멤버
-        console.log("updatedMember : ", updatedMember);
-        setMember(updatedMember);
+        // 선택된 담당자 상태 업데이트
+        if (selectedAssigneeIds.includes(assignId)) {
+            // 이미 선택된 담당자라면, 선택 해제
+            setSelectedAssigneeIds((prev) => prev.filter((id) => id !== assignId));
+            setAssignees((prev) => prev.filter((assignee) => assignee.id !== assignId));
+        } else {
+            // 새로운 담당자 선택
+            setSelectedAssigneeIds((prev) => [...prev, assignId]);
+            setAssignees((prev) => [...prev, {id: assignId, nickname: assignNicName}]);
+        }
     };
 
     //담당자 삭제 핸들러
@@ -128,7 +132,17 @@ const TeamToDoList = () => {
 
     }, [selectedDate, studies, todoswithAssignee]);
 
-    const filteredTodos = todoswithAssignee[dateKey] || [];
+    const filteredTodos = Object.values(todoswithAssignee[dateKey] || []).filter((todo) => {
+        const isCompleted = todo.assignees.some(assignee => assignee.toDoStatus); // 하나라도 완료인 경우 true
+        console.log(isCompleted);
+        if (showIncomplete && !isCompleted) {
+            return true; // 미완료인 경우
+        }
+        if (showCompleted && isCompleted) {
+            return true; // 완료인 경우
+        }
+        return false; // 둘 다 아니면 제외
+    });
 
 //할 일 삭제
     const onRemove = useCallback(
@@ -195,7 +209,7 @@ const TeamToDoList = () => {
 
 
     //체크
-    const onToggle = useCallback(async (assignees, toDoId, currentUserTodoIndex, todo_status, allTodoStatusTrue) => {
+    const onToggle = useCallback(async (assignees, toDoId, currentUserTodoIndex, todo_status) => {
         console.log("id::", toDoId);
         if (currentUserTodoIndex == -1) {
             alert("당신의 할 일이 아닙니다.");
@@ -249,10 +263,7 @@ const TeamToDoList = () => {
                     }).catch((error) => {
                         console.log('스터디별 투두리스트 가져오기 실패:', error);
                     })
-                    if (!allTodoStatusTrue) {
-                        alert("모든 담당자가 할 일을 끝내야만 체크표시가 됩니다.");
-                    }
-                    
+
                     setTodoswithAssignee((prevTodos) => {
                         const updatedTodos = {...prevTodos};
                         Object.keys(updatedTodos).forEach((dateKey) => {
@@ -283,13 +294,25 @@ const TeamToDoList = () => {
 
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
-    const prevMonth = () => {
-        setCurrentMonth(subMonths(currentMonth, 1));
+    // 미완료 버튼 클릭 핸들러
+    const handleShowIncomplete = () => {
+        setShowIncomplete(true);
+        setShowCompleted(false);
     };
 
-    const nextMonth = () => {
-        setCurrentMonth(addMonths(currentMonth, 1));
+    // 완료 버튼 클릭 핸들러
+    const handleShowCompleted = () => {
+        setShowIncomplete(false);
+        setShowCompleted(true);
     };
+
+    const handleAllCheckedChange = (todoId, isChecked) => {
+        setAllCheckedStates((prev) => ({
+            ...prev,
+            [todoId]: isChecked, // 해당 todoId에 대한 allChecked 상태 업데이트
+        }));
+    };
+
     useEffect(() => {
         Month = format(currentMonth, "M")
     }, [currentMonth]);
@@ -333,43 +356,63 @@ const TeamToDoList = () => {
         <div className="container">
             <Category/>
             <div className="main_container">
+                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
                 <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 투두 리스트 </p>
                 <Backarrow subname={"팀 투두 리스트"}/>
                 <div className="sub_container" id="todo_sub">
                     <div className="todo_container">
+                        <div className="todo_status">
+                            <div
+                                onClick={handleShowIncomplete}
+                                style={{
+                                    backgroundColor: showIncomplete ? "#99a98f" : "#F2F1EE99", // 미완료 버튼 색상
+                                    color: showIncomplete ? "white" : "black"
+                                }}
+                            >
+                                미완료
+                            </div>
+                            <div
+                                onClick={handleShowCompleted}
+                                style={{
+                                    backgroundColor: showCompleted ? "#99a98f" : "#F2F1EE99", // 완료 버튼 색상
+                                    color: showCompleted ? "white" : "black"
+                                }}
+                            >
+                                완료
+                            </div>
+                        </div>
                         <div className="today">
-                            {" "}
-                            <span>{`오늘은 ${Year}년 ${Month}월 ${Dates}일입니다.`}</span>
+                            <h3>{`${Year}년 ${Month}월 ${Dates}의 투두입니다.`}</h3>
+                            <input
+                                type="date"
+                                placeholder={"날짜를 선택해주세요."}
+                                value={new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000)).toISOString().substring(0, 10)}
+                                onChange={(e) => handleDateClick(e.target.value)} // 선택된 날짜를 handleDateClick으로 전달
+                            />
                         </div>
                         <div className={"select_assignee"}>
                             <p>담당자</p>
-                            {Array.isArray(member) && member.length > 0 && member.map((item, index) => (
-                                <div className={"assignees"} key={index}>
-                                    <div
-                                        className="assignee-name"
-                                        data-assign-id={item.member.id}
-                                        data-assign-name={item.member.nickname}
-                                        value={item}
-                                        onClick={handleAddAssignees}>
-                                        {item.member.nickname}
+                            {Array.isArray(member) && member.length > 0 && member.map((item, index) => {
+                                const isSelected = selectedAssigneeIds.includes(item.member.id); // 선택 여부 확인
+                                return (
+                                    <div key={index}>
+                                        <div
+                                            className="assignees"
+                                            data-assign-id={item.member.id}
+                                            data-assign-name={item.member.nickname}
+                                            onClick={handleAddAssignees}
+                                            style={{
+                                                backgroundColor: isSelected ? "#99a98f" : "rgba(242, 241, 238, 0.6)", // 선택된 경우 배경색 변경
+                                                color: isSelected ? "white" : "black" // 선택된 경우 텍스트 색상 변경
+                                            }}
+                                        >
+                                            {item.member.nickname}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
-                        <div className={"selected-assignees"}>
-                            <p>선택한 담당자</p>
-                            {Assignees.map((assignee, index) => (
-                                <div className={"assignees"}>
-                                    <div key={index}>{assignee.nickname}</div>
-                                    <button id={"delete_assignees"} value={assignee.id}
-                                            onClick={handleRemoveAssignees}>x
-                                    </button>
-                                </div>
-                            ))}
-
-
-                        </div>
-                        <TeamToDoInsert onInsert={onInsert} dueDate={selectedDate} Inserttodostudyid={studyId}
+                        <TeamToDoInsert onInsert={onInsert} dueDate={selectedDate} Inserttodostudyid={studyIdAsNumber}
                                         studyidasnumber={studyIdAsNumber} Assignees={Assignees}
                                         progressStatus={progressStatus}/>
                         <ul className="TodoList">
@@ -387,8 +430,8 @@ const TeamToDoList = () => {
                                         onChangeSelectedTodo={onChangeSelectedTodo}
                                         onInsertToggle={onInsertToggle}
                                         selectedDate={selectedDate}
-                                        Assignees={Assignees}
-                                        Member={Member}
+                                        onAllCheckedChange={handleAllCheckedChange} // 상태 변경 함수 전달
+                                        isAllChecked={allCheckedStates[todo.id]} // 현재 allChecked 상태 전달
                                         onClose={() => {
                                             setInsertToggle((prev) => !prev);
                                         }}
@@ -401,8 +444,6 @@ const TeamToDoList = () => {
                             setInsertToggle((prev) => !prev);
                         }}/>)}
                     </div>
-                    <Calender todo={todoswithAssignee} onDateClick={handleDateClick} prevMonth={prevMonth}
-                              nextMonth={nextMonth} currentMonth={currentMonth}/>
                 </div>
             </div>
         </div>

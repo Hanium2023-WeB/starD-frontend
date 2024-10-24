@@ -42,7 +42,7 @@
 }
 .containers form{
 	position: relative;
-	display: flex;
+	/*display: flex;*/
 }
 .profile_wrapper{
 	margin-right: 50px;

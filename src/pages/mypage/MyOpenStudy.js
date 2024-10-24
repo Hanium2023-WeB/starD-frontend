@@ -11,6 +11,7 @@ import Paging from "../../components/repeat_etc/Paging";
 import Pagination from "../../css/study_css/Pagination.css";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
+import ImageComponent from "../../components/image/imageComponent";
 
 const MyOpenStudy = ({sideheader}) => {
     const [studies, setStudies] = useState([]);
@@ -25,6 +26,7 @@ const MyOpenStudy = ({sideheader}) => {
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
+    const [imgUrl, setImgUrl] = useState("");
     useEffect(() => {
         if (accessToken && isLoggedInUserId) {
             axios.get("/api/mypage/study/star-scrap", { // 공감
@@ -150,7 +152,7 @@ const MyOpenStudy = ({sideheader}) => {
                 });
 
                 setStudies(updateStudies);
-
+                setImgUrl(res.data.content.recruiter.profile.imgUrl);
 				setItemsPerPage(res.data.pageable.pageSize);
 				setCount(res.data.totalElements);
             })
@@ -286,8 +288,9 @@ const MyOpenStudy = ({sideheader}) => {
                                 color: "inherit",
                             }}
                         >
-                            <div className="list_deadline">
-                                마감일 | {d.recruitmentDeadline}
+                            <div className="list_founder">
+                                <ImageComponent getImgName = {imgUrl} imageSrc={""} />
+                                <span>{d.recruiter.nickname}</span>
                             </div>
                             <div className="list_title">{d.title}</div>
                             <div className="list_tag_wrapper">
@@ -299,7 +302,9 @@ const MyOpenStudy = ({sideheader}) => {
                             </div>
                             <div className="list_onoff">{d.onOff}</div>
                             <div className="stroke"></div>
-                            <div className="list_founder">{d.recruiter.nickname}</div>
+                            <div className="list_deadline">
+                                마감일 | {d.recruitmentDeadline}
+                            </div>
                         </Link>
                     </div>
                 ))}

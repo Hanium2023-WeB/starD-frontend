@@ -336,18 +336,18 @@ const Signup = () => {
             <Header showSideCenter={false}/>
             <div className="containers" id="sign">
                 <div className="login_info">
-                    <p>회원가입 <span style={{color: "red"}}>(STEP 1)</span></p>
+                    <p>회원가입</p>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div className={"profile_wrapper"}>
-                        <h2>프로필 사진</h2>
-                        <div className={"profile_content"}>
-                            <ImageComponent getImgName = {uploadImgUrl} imgsrc={imageSrc} />
-                            <input className="image-upload" type="file" accept="image/*"
-                                   onChange={onchangeImageUpload}/>
-                            <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>
-                        </div>
-                    </div>
+                    {/*<div className={"profile_wrapper"}>*/}
+                    {/*    <h2>프로필 사진</h2>*/}
+                    {/*    <div className={"profile_content"}>*/}
+                    {/*        <ImageComponent getImgName = {uploadImgUrl} imgsrc={imageSrc} />*/}
+                    {/*        <input className="image-upload" type="file" accept="image/*"*/}
+                    {/*               onChange={onchangeImageUpload}/>*/}
+                    {/*        <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                     <div style={{position:"relative"}}>
                         <div className="input_info" style={{left: "31px"}}>
                             <div className="subinfo">아이디<span className="require_info">*</span></div>
@@ -464,10 +464,11 @@ const Signup = () => {
                     {termToggle && <Terms_of_service onClose={() => {
                         setTermToggle(false);
                     }} CheckImg={CheckImg} onCheckImgs={onCheckImgs}/>}
+                    <div className="signbtn">
+                        <button type="submit">다음</button>
+                    </div>
                 </form>
-                <div className="signbtn">
-                    <button type="submit">다음</button>
-                </div>
+
             </div>
         </div>
     );

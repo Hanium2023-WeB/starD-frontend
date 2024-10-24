@@ -1,25 +1,45 @@
 .TodoListItem {
-    display: flex;
-    flex-direction: row;
+    /*display: flex;*/
+    /*flex-direction: row;*/
     width: 100%;
     padding: 10px;
+}
+.TodoHeader{
+    display: flex;
+    align-items: center;
+}
+.TodoHeader .TodoDate{
+    font-size: 17px;
+    font-weight: bold;
+}
+.TodoHeader .Todo{
+    margin-left:30px;
+    font-size: 17px;
+}
+.TodoContent{
+    margin:10px 0 0 40px;
+}
+.TodoContent .TodoRows{
+    display: flex;
+    align-items: center;
+    margin-top:10px;
+}
+.TodoContent .TodoRows .assignee{
+    margin-bottom: 0;
+    font-size: 13px;
 }
 
 .checkbox {
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 10px;
+    margin-left: 10px;
     width: 78%;
 }
 
 .checkbox img {
     font-size: 1rem;
 }
-/* .checkbox.checked{
-    background-color:rgb(173, 216, 230, 0.1);
-    
-} */
 .checkbox.checked .text {
     color: #adb5bd;
     text-decoration: line-through;
@@ -31,7 +51,12 @@
     margin-left: 10px;
 }
 
+.Edit{
+    margin-left: 20px;
+}
+.Remove {
+    margin-left: 5px;
+}
 .Edit, .Remove{
-    position: relative;
-    top: 10px;
+    cursor: pointer;
 }

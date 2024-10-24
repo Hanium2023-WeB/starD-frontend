@@ -5,15 +5,30 @@ import ScheduleAdd from "../../css/schedule_css/ScheduleAdd.css";
 import { CirclePicker } from "react-color";
 
 const TeamAddSchedule = ({studyId,studies,studyTitles, selectedDate, onInsert, onClose,progressStatus }) => {
-  const localDate = new Date(selectedDate);
-  const localDateString = localDate.toLocaleDateString();
-  const [startDate, setStartDate] = useState(new Date(selectedDate));
-  const [endDate, setEndDate] = useState(new Date(selectedDate));
+    const localDate = new Date(selectedDate);
+    const localDateString = localDate.toLocaleDateString();const [startDate, setStartDate] = useState(new Date(selectedDate));
+    const [endDate, setEndDate] = useState(new Date(selectedDate));
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [color, setColor] = useState("");
   const [InsertToDoTitle, setInsertToDoTitle] = useState("")
   const studyIdAsNumber = parseFloat(studyId);
+    const customColors = [
+        "#ffbdc5", // 파스텔 핑크
+        "#FFDFBA", // 파스텔 오렌지
+        "#FFFFBA", // 밝은 노랑
+        "#BAFFC9", // 파스텔 민트
+        "#BAE1FF", // 파스텔 하늘색
+        "#ffddfa", // 라벤더 핑크
+        "#C4FAF8", // 밝은 민트블루
+        "#A8E6CF", // 부드러운 민트
+        "#FFAAA5", // 연한 코랄
+        "#C1C1E7", // 연보라
+        "#B5EAD7", // 연한 녹색
+        "#FFF5BA", // 밝은 레몬색
+        "#D1E8E2", // 밝은 청록색
+        "#FFCCF9", // 연한 보라핑크
+    ];
   const onChangeTitle = useCallback((e) => {
     setTitle(e.target.value);
   }, []);
@@ -54,16 +69,15 @@ const TeamAddSchedule = ({studyId,studies,studyTitles, selectedDate, onInsert, o
 
           </div>
           <div className="selectDay">
-            <div className="selectstartDay">
               <p>시작 날짜:</p>
               <DatePicker
+                  className="datePicker"
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   dateFormat="yyyy-MM-dd"
                   placeholder="시작 날짜 선택"
                   disabled={progressStatus === 'DISCONTINUE'}
               />
-            </div>
           </div>
           <div className="selecttitle">
             <p>일정 이름:</p>
@@ -76,7 +90,7 @@ const TeamAddSchedule = ({studyId,studies,studyTitles, selectedDate, onInsert, o
           </div>
           <div className="selectcolor">
             <p>표시 색상:</p>
-            <CirclePicker color={color} onChange={onChangeColor}/>
+            <CirclePicker colors={customColors} color={color} onChange={onChangeColor}/>
           </div>
           <ul className="meeting_btn">
             <li>
