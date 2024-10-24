@@ -115,6 +115,7 @@ const TeamBlog = () => {
         }).then((res) => {
             setStudyItem(res.data);
             console.log("스터디 세부 데이터 가져오기 성공:", res.data);
+            console.log(res.data.title);
             if(res.data.progressStatus == "DISCONTINUE"){
                 alert("중단된 스터디 입니다. 수정은 불가하며 읽기만 가능합니다.");
                 setProgressStatus(res.data.progressStatus);
@@ -192,9 +193,9 @@ const TeamBlog = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className={"main_content"}>
-                <Category/>
+                <TeamBlogGnb  studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={studyItem} progressStatus={progressStatus}/>
                 <div className="team_blog">
-                    <p id={"entry-path"}> 스터디 참여 내역 > 팀 블로그 </p>
+                    <p id={"entry-path"} style={{marginTop:"50px"}}> 스터디 참여 내역 > 팀 블로그 </p>
                     <Backarrow subname={"STUDY TEAM BLOG"}/>
                     <div className="img_wrapper">
                         <div className="team_info">
@@ -202,7 +203,6 @@ const TeamBlog = () => {
                             <h3 className="study_duration">{studyItem.activityStart} ~ {studyItem.activityDeadline}</h3>
                         </div>
                     </div>
-                    <TeamBlogGnb  studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={studyItem} progressStatus={progressStatus}/>
                     <div className="content">
                         <div className={"content-left"}>
                             <div className={"todoAndSchedule"}>

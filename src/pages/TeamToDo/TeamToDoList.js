@@ -354,9 +354,8 @@ const TeamToDoList = () => {
     return (<div>
         <Header showSideCenter={true}/>
         <div className="container">
-            <Category/>
+            <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
             <div className="main_container">
-                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
                 <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 투두 리스트 </p>
                 <Backarrow subname={"팀 투두 리스트"}/>
                 <div className="sub_container" id="todo_sub">
