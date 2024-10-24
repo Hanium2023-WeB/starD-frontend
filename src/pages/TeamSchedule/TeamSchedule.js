@@ -7,6 +7,7 @@ import TeamRenderScheduleCells from "../../components/teamschedules/TeamRenderSc
 import TeamAddSchedule from "../../components/teamschedules/TeamAddSchedule";
 import TeamScheduleCalender from "../../components/teamschedules/TeamScheduleCalender";
 import {useLocation} from "react-router-dom";
+import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 
 const TeamSchedule = () => {
     const [meetings, setMeetings] = useState({});
@@ -14,7 +15,7 @@ const TeamSchedule = () => {
     const [addToggle, setAddToggle] = useState(false);
     const accessToken = localStorage.getItem('accessToken');
     const location = useLocation();
-    const {studyId, Member, selecteStudy,progressStatus} = location.state;
+    const {studyIdAsNumber, Member, selecteStudy,progressStatus} = location.state;
 
     const [studies, setStudy] = useState([]);
     const [studyTitles, setStudyTitles] = useState([]);
@@ -49,7 +50,7 @@ const TeamSchedule = () => {
     const [schedules, setSchedules] = useState({});
 
     useEffect(() => {
-        axios.get(`/api/schedule/${studyId}`, {
+        axios.get(`/api/schedule/${studyIdAsNumber}`, {
             params: {
                 year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1,
             }, withCredentials: true, headers: {
@@ -63,7 +64,7 @@ const TeamSchedule = () => {
         }).catch((error) => {
             console.error("스터디별 일정 가져오기 실패", error.response.data);
         });
-    }, [studyId]);
+    }, [studyIdAsNumber]);
 
     const handleToggle = (day) => {
         setSelectedDate(new Date(day));
@@ -142,11 +143,12 @@ const TeamSchedule = () => {
         <div className="container">
             <Category/>
             <div className="main_schedule_container">
+                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
                 <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 스터디 일정</p>
                 <Backarrow subname={"팀 스터디 모임 일정"}/>
                 <div className="sub_container" id="todo_sub">
                     <TeamScheduleCalender
-                        studyId = {studyId}
+                        studyId = {studyIdAsNumber}
                         studies={studies}
                         studyTitles={studyTitles}
                         onDateClick={handleToggle}
@@ -157,7 +159,7 @@ const TeamSchedule = () => {
                     />
                 </div>
                 {addToggle && (<TeamAddSchedule
-                    studyId = {studyId}
+                    studyId = {studyIdAsNumber}
                     studies={studies}
                     studyTitles={studyTitles}
                     selectedDate={selectedDate}

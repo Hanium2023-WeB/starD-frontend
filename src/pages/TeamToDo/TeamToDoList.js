@@ -10,6 +10,8 @@ import TeamToDoEdit from "../../components/teamtodo/TeamToDoEdit";
 import TeamToDoListItem from "../../components/teamtodo/TeamToDoListItem";
 import TeamToDoList_css from "../../css/todo_css/TeamToDoList.css";
 import Category from "../../components/repeat_etc/Category";
+import TeamBlog from "../studypage/TeamBlog";
+import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 
 const TeamToDoList = () => {
     const [selectedTodo, setSelectedTodo] = useState(null);
@@ -20,23 +22,19 @@ const TeamToDoList = () => {
     let Month = selectedDate.getMonth() + 1;
     const Dates = selectedDate.getDate();
     const location = useLocation();
-    const {studyId, Member, selecteStudy, progressStatus} = location.state;
+    const {studyIdAsNumber, Member, selecteStudy, progressStatus} = location.state || {};
     const [studies, setStudy] = useState([]);
     const [studyMems, setStudyMems] = useState([]);
     const [member, setMember] = useState(Member);
     const [Assignees, setAssignees] = useState([]);
-    const studyIdAsNumber = parseFloat(studyId);
+    // const studyIdAsNumber = parseFloat(studyId);
     const [selectedAssigneeIds, setSelectedAssigneeIds] = useState([]); // 선택된 담당자 ID 추적
     const [showIncomplete, setShowIncomplete] = useState(true); // 미완료 보여주기 상태
     const [showCompleted, setShowCompleted] = useState(false); // 완료 보여주기 상태
     const [allCheckedStates, setAllCheckedStates] = useState({}); // allChecked 상태를 저장할 객체
 
-    console.log("studyId:", studyId);
+    console.log("studyId:", studyIdAsNumber);
     console.log("ss:", progressStatus);
-
-    useEffect(() => {
-        const {studyId, Member, selecteStudy, progressStatus} = location.state;
-    }, []);
     const onInsertToggle = () => {
         if (selectedTodo) {
             setSelectedTodo(null);
@@ -358,6 +356,7 @@ const TeamToDoList = () => {
         <div className="container">
             <Category/>
             <div className="main_container">
+                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
                 <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 투두 리스트 </p>
                 <Backarrow subname={"팀 투두 리스트"}/>
                 <div className="sub_container" id="todo_sub">
@@ -413,7 +412,7 @@ const TeamToDoList = () => {
                                 );
                             })}
                         </div>
-                        <TeamToDoInsert onInsert={onInsert} dueDate={selectedDate} Inserttodostudyid={studyId}
+                        <TeamToDoInsert onInsert={onInsert} dueDate={selectedDate} Inserttodostudyid={studyIdAsNumber}
                                         studyidasnumber={studyIdAsNumber} Assignees={Assignees}
                                         progressStatus={progressStatus}/>
                         <ul className="TodoList">

@@ -67,7 +67,7 @@ const TeamToDoListItem = ({
     };
 
     return (
-        <li key={todo.id} className="TodoListItem" style={{ textDecoration: isAllChecked ? 'line-through' : 'none' }}>
+        <li key={todo.id} className="TodoListItem">
             <div className="TodoHeader">
                 {/* 토글 버튼 왼쪽에 배치 */}
                 <TbTriangleInvertedFilled onClick={toggleDetails} style={{cursor:"pointer"}}/>
@@ -76,7 +76,7 @@ const TeamToDoListItem = ({
                     {formatDate(selectedDate)}
                 </div>
                 {/* 할 일 오른쪽에 배치 */}
-                <div className="Todo">
+                <div className="Todo" style={{ textDecoration: isAllChecked ? 'line-through' : 'none' }}>
                     {todo.task}
                 </div>
 

@@ -17,6 +17,7 @@ import TeamSchedule from "../TeamSchedule/TeamSchedule";
 import TeamCommunity from "../TeamCommunity/TeamCommunity";
 import TeamMember from "../TeamMember/TeamMember"
 import Backarrow from "../../components/repeat_etc/Backarrow";
+import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 
 
 const TeamBlog = () => {
@@ -49,7 +50,7 @@ const TeamBlog = () => {
         navigate(`/${studyIdAsNumber}/teamblog/TeamToDoList`,
             {
                 state: {
-                    studyId: studyId,
+                    studyIdAsNumber: studyIdAsNumber,
                     Member: Member,
                     selectStudy: studyItem,
                     progressStatus:progressStatus,
@@ -59,7 +60,7 @@ const TeamBlog = () => {
     const ShowAllSchedule = () => {
         navigate(`/${studyIdAsNumber}/teamblog/TeamSchedule`, {
             state: {
-                studyId: studyId,
+                studyIdAsNumber: studyIdAsNumber,
                 Member: Member,
                 selectStudy: studyItem,
                 progressStatus:progressStatus,
@@ -70,7 +71,7 @@ const TeamBlog = () => {
     const showTeamCommunity = () => {
         navigate(`/${studyIdAsNumber}/teamblog/TeamCommunity`, {
             state: {
-                studyId: studyId,
+                studyIdAsNumber: studyIdAsNumber,
                 progressStatus:progressStatus,
             }
         })
@@ -79,7 +80,7 @@ const TeamBlog = () => {
     const showTeamMember = () => {
         navigate(`/${studyIdAsNumber}/teamblog/TeamMember`, {
             state: {
-                studyId: studyId,
+                studyIdAsNumber: studyIdAsNumber,
                 Member: Member,
             }
         })
@@ -201,18 +202,7 @@ const TeamBlog = () => {
                             <h3 className="study_duration">{studyItem.activityStart} ~ {studyItem.activityDeadline}</h3>
                         </div>
                     </div>
-                    <div className="gnb_bg">
-                        <ul className="gnb">
-
-                            <li>팀블로그 홈</li>
-
-
-                            <li onClick={ShowAllToDo}>TODO</li>
-                            <li onClick={ShowAllSchedule}>일정</li>
-                            <li onClick={showTeamCommunity}>팀 커뮤니티</li>
-                            <li onClick={showTeamMember}>스터디원</li>
-                        </ul>
-                    </div>
+                    <TeamBlogGnb  studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={studyItem} progressStatus={progressStatus}/>
                     <div className="content">
                         <div className={"content-left"}>
                             <div className={"todoAndSchedule"}>
