@@ -44,6 +44,7 @@ const TeamToDoList = () => {
 
     const onChangeSelectedTodo = (todo) => {
         setSelectedTodo(todo);
+        console.log(selectedTodo);
     };
 
     const [todoswithAssignee, setTodoswithAssignee] = useState({});
@@ -172,9 +173,9 @@ const TeamToDoList = () => {
         const assigneeStr = assigneeIds.toString();
 
         const updateToDo = {
-            task: UpdatedToDo.toDo.task, dueDate: UpdatedToDo.toDo.dueDate,
+            task: UpdatedToDo.task, dueDate: UpdatedToDo.dueDate,
         };
-        const toDoId = UpdatedToDo.toDo.id;
+        const toDoId = UpdatedToDo.id;
 
         const postDataResponse = await axios.put(`/api/todo/${toDoId}`, updateToDo, {
             params: {
@@ -192,10 +193,10 @@ const TeamToDoList = () => {
             const updatedTodos = {
                 ...prevTodos,
                 [dateKey]: prevTodos[dateKey].map((todo) => {
-                    if (todo.id === UpdatedToDo.toDo.id) {
+                    if (todo.id === UpdatedToDo.id) {
                         return {
                             ...todo,
-                            task: UpdatedToDo.toDo.task,
+                            task: UpdatedToDo.task,
                             assignees: postDataResponse.data.assignees,
                         };
                     } else {
