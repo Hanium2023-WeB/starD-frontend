@@ -3,7 +3,7 @@
 }
 
 .chat_wrap {
-    height: 687.5px;
+    height: 648.5px;
     border: 1px solid black;
     border-radius: 5px;
 }
@@ -11,14 +11,13 @@
 .chattingbox {
     height: 565px;
     overflow-y: auto;
-    padding: 10px;
+    padding: 0 10px;
     overflow-x: hidden;
 }
 
 .chatting {
     height: fit-content;
-    /*margin: 0 auto;*/
-
+    margin-top: 10px;
 }
 
 .studyTitle {
@@ -39,7 +38,7 @@
 }
 #message-thead{
     position: relative;
-    left: 45px;
+    left: 53px;
 }
 #message {
     font-size: 15px;
@@ -53,7 +52,7 @@
 }
 #greet{
     position: relative;
-    left: 40px;
+    left: 55px;
 }
 #my-chats{
     background-color: #F0EBC8;
@@ -61,7 +60,7 @@
     height: fit-content;
     border-radius: 10px;
     position: relative;
-    left: 70px;
+    left: 110px;
 }
 #other-chats{
     background-color: #CCE4C3;
@@ -75,10 +74,10 @@
 }
 #my-chats  #entry-time{
    position: relative;
-    left: 80px;
+    left: 72px;
 }
 .input_chat{
-    margin-top: 5px;
+    margin-top: -5px;
 }
 label{
     margin-left: 10px;
@@ -100,6 +99,7 @@ label{
     color: #F2F2F2;
     border-style: none;
     border-radius: 5px;
+    cursor: pointer;
 }
 .my-chats{
 

@@ -97,6 +97,7 @@ const Chat = (props) => {
                 });
 
                 setGreetings(response.data);
+                console.log(response.data);
 
                 if (stompClient.current.connected) {
                     sendEnterMessage();
@@ -239,7 +240,7 @@ const Chat = (props) => {
                                     <span>{greeting.message}</span>
                                 </td>
                             ) : (
-                                greeting.member.nickname === LogNicname ? (
+                                greeting.member.id === LogNicname ? (
                                     <td className={"message-detail"} id={"my-chats"}>
                                                 <span>
                                              {greeting.member ? greeting.member.nickname : 'Unknown'}: {greeting.message}

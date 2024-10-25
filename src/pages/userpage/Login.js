@@ -60,7 +60,7 @@ const Login = () => {
             })
             .then((res) => {
                 const accessToken = res.data.accessToken;
-
+                console.log(state);
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('isLoggedInUserId', state.ID);
 
