@@ -123,7 +123,7 @@ em {
     margin: 20px 0;
     position: absolute;
     left:50%;
-    bottom: -55px;
+    bottom: 105px;
     transform: translateX(-50%);
 }
 .check_term_of_service > span{

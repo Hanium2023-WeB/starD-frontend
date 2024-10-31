@@ -52,7 +52,7 @@ const Login = () => {
         }
 
         axios
-            .post("/api/user/auth/sign-in", {
+            .post("/api/members/auth/sign-in", {
                 memberId: state.ID,
                 password: state.PW
             }, {
