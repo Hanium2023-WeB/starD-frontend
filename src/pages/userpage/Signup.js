@@ -249,10 +249,10 @@ const Signup = () => {
         if (IDRef.current) {
             IDRef.current.remove();
         }
-
+        console.log(id);
         axios
-            .get("/api/members/check-email", {
-                params: { email: id },
+            .post("/api/members/auth/check-email", {
+                email: id,
             })
             .then((response) => {
                 const isDuplicate = response.data;
@@ -260,14 +260,13 @@ const Signup = () => {
                 setIsIdDuplicate(isDuplicate);
 
                 console.log(isDuplicate);
-                const message = document.createElement("p");
-                message.textContent = !isDuplicate ? "이미 존재하는 이메일입니다." : "사용 가능한 아이디입니다.";
-                message.style.display = "block";
-                message.style.color = !isDuplicate ? "red" : "blue";
+                const message = document.querySelector(".is_valid_email");
 
-                inputID.current.parentNode.parentNode.appendChild(message);
-
-                IDRef.current = message;
+                if (message) {
+                    message.textContent = !isDuplicate ? "이미 존재하는 이메일입니다." : "사용 가능한 이메일입니다.";
+                    message.style.display = "block";
+                    message.style.color = !isDuplicate ? "red" : "blue";
+                }
             })
             .catch((error) => {
                 console.error("Error:", error.response?.data || error);
@@ -293,27 +292,28 @@ const Signup = () => {
             nicknameRef.current.remove();
         }
 
-        try {
-            console.log(nickname);
-            const response = await axios.get("/api/members/check-nickname", {
-                params: {nickname: nickname},
+        axios
+            .post("/api/members/auth/check-nickname", {
+                nickname: nickname,
+            })
+            .then((response) => {
+                const isDuplicate = response.data;
+
+                setIsNicknameDuplicate(isDuplicate);
+
+                console.log(isDuplicate);
+                const message = document.createElement("p");
+                message.textContent = !isDuplicate ? "이미 존재하는 닉네임입니다." : "사용 가능한 닉네임입니다.";
+                message.style.display = "block";
+                message.style.color = !isDuplicate ? "red" : "blue";
+
+                inputNicname.current.parentNode.parentNode.appendChild(message);
+
+                nicknameRef.current = message;
+            })
+            .catch((error) => {
+                console.error("Error:", error.response?.data || error);
             });
-
-            const isDuplicate = response.data;
-
-            setIsNicknameDuplicate(isDuplicate);
-
-            const message = document.createElement("p");
-            message.textContent = !isDuplicate ? "이미 존재하는 닉네임입니다." : "사용 가능한 닉네임입니다.";
-            message.style.display = "block";
-            message.style.color = !isDuplicate ? "red" : "blue";
-
-            inputNicname.current.parentNode.parentNode.appendChild(message);
-
-            nicknameRef.current = message;
-        } catch (error) {
-            console.error("Error:", error);
-        }
     };
 
     return (
@@ -353,9 +353,9 @@ const Signup = () => {
                                     </div>
                                     {state.memberId !== "" ? (
                                         state.isValidEmail ? (
-                                            <p style={{color: "blue"}}>사용 가능한 email입니다.</p>
+                                            <p className="is_valid_email" style={{color: "blue"}}>유효한 email입니다.</p>
                                         ) : (
-                                            <p style={{color: "red"}}>유효하지 않은 email입니다.</p>
+                                            <p className="is_valid_email" style={{color: "red"}}>유효하지 않은 email입니다.</p>
                                         )
                                     ) : null}
                                 </div>
@@ -388,11 +388,13 @@ const Signup = () => {
                                         onChange={handleConfirmPasswordChange}
                                         placeholder="비밀번호 확인"
                                     />
-                                    {confirmPassword && !isPasswordMatch ? (
-                                        <p style={{color: "red"}}>비밀번호가 일치하지 않습니다.</p>
-                                    ) : (
-                                        <p style={{color: "blue"}}>비밀번호가 일치합니다.</p>
-                                    )}
+                                    {confirmPassword && state.password ? (
+                                        isPasswordMatch ? (
+                                            <p style={{color: "blue"}}>비밀번호가 일치합니다.</p>
+                                        ) : (
+                                            <p style={{color: "red"}}>비밀번호가 일치하지 않습니다.</p>
+                                        )
+                                    ) : null}
                                 </div>
 
                                 <div className="subinfo">닉네임<span className="require_info">*</span></div>
