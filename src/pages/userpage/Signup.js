@@ -27,23 +27,23 @@ const Signup = () => {
 
     ///변수명 변경
     const [state, setState] = useState({
-        memberId: "",
+        email: "",
         password: "",
         name: "",
         nickname: "",
         phone: "",
-        email: "",
+        authCode:"",
         isValidEmail: false,
         isValidPassword: false,
         isValidPhone: false,
         city: locations.city,
         district: locations.district,
         tags: locations.tags,
-
     });
 
     const [isIdDuplicate, setIsIdDuplicate] = useState(null); // id 중복 여부 상태 변수
     const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(true); // nickname 중복 여부 상태 변수
+    const [isCheckAuthCode, setIsCheckAuthCode] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
     const [termToggle, setTermToggle] = useState(false);
@@ -81,8 +81,6 @@ const Signup = () => {
             ...state,
             [e.target.name]: e.target.value,
         });
-        // console.log(e.target.name);
-        // console.log(e.target.value);
     };
 
     // 이메일 핸들러
@@ -91,7 +89,7 @@ const Signup = () => {
 
         setState((prevState) => ({
             ...prevState,
-            memberId: email,
+            email: email,
             isValidEmail: isEmail(email),
         }));
     };
@@ -147,7 +145,7 @@ const Signup = () => {
         e.preventDefault();
 
         if (
-            state.memberId.length < 1 &&
+            state.email.length < 1 &&
             state.password.length < 1 &&
             state.name.length < 1 &&
             state.nickname.length < 1 &&
@@ -159,7 +157,7 @@ const Signup = () => {
             return;
         }
 
-        if (state.memberId.length < 3) {
+        if (state.email.length < 3) {
             inputID.current.focus();
             alert("아이디는 3자 이상이어야 합니다.");
             return;
@@ -188,7 +186,7 @@ const Signup = () => {
             return;
         }
 
-        if (!isEmail(state.memberId)) {
+        if (!isEmail(state.email)) {
             inputID.current.focus();
             alert("유효한 이메일 주소를 입력해 주세요.");
             return;
@@ -212,12 +210,11 @@ const Signup = () => {
 
         try {
             const response = await axios.post("/api/signup", {
-                memberId: state.memberId,
+                email: state.email,
                 password: state.password,
                 name: state.name,
                 nickname: state.nickname,
                 phone: state.phone,
-                email: state.email,
                 city: locations.city,
                 district: locations.district,
                 tags: locations.tags,
@@ -225,11 +222,11 @@ const Signup = () => {
 
             if (response.status === 200) {
                 const newMember = response.data;
-                const memberId = newMember.id;
-                localStorage.setItem("memberId", memberId);
+                const email = newMember.email;
+                localStorage.setItem("email", email);
 
 
-                window.location.href = "/subinfo?memberId=${memberId}";
+                // window.location.href = "/subinfo?memberId=${memberId}";
             } else {
                 alert("회원가입에 실패하였습니다.");
             }
@@ -240,8 +237,8 @@ const Signup = () => {
 
 
     const handleCheckDuplicateID = () => {
-        const id = state.memberId;
-        if (!id) {
+        const email = state.email;
+        if (!email) {
             alert("이메일을 입력해 주세요.");
             return;
         }
@@ -249,10 +246,10 @@ const Signup = () => {
         if (IDRef.current) {
             IDRef.current.remove();
         }
-        console.log(id);
+        console.log(email);
         axios
             .post("/api/members/auth/check-email", {
-                email: id,
+                email: email,
             })
             .then((response) => {
                 const isDuplicate = response.data;
@@ -267,11 +264,41 @@ const Signup = () => {
                     message.style.display = "block";
                     message.style.color = !isDuplicate ? "red" : "blue";
                 }
+
+                // 이메일 중복 확인 통과 시 confirm 창을 띄워 인증번호 전송 여부 확인
+                if (isDuplicate) {
+                    const confirmSendCode = window.confirm("이 메일로 인증번호를 전송하시겠습니까?");
+                    if (confirmSendCode) {
+                        axios
+                            .post("/api/members/auth/auth-codes", { email: email })
+                            .then(() => {
+                                alert("인증번호가 전송되었습니다.");
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error.response?.data || error);
+                            });
+                    }
+                }
             })
             .catch((error) => {
                 console.error("Error:", error.response?.data || error);
             });
     };
+
+    const handleCheckAuthCode = () => {
+        const email = state.email;
+        const authCode = state.authCode;
+        axios
+            .post("api/members/auth/auth-codes/verify", {
+                email:email, authCode:authCode
+            })
+            .then((response) => {
+                setIsCheckAuthCode(response.data);
+            })
+            .catch((error) => {
+                console.error("Error:", error.response?.data || error);
+            });
+    }
 
 
     const handleCheckDuplicateNickname = async () => {
@@ -341,8 +368,8 @@ const Signup = () => {
                                     <div style={{display: "flex", alignItems: "center"}}>
                                         <input
                                             ref={inputID}
-                                            name={"memberId"}
-                                            value={state.memberId}
+                                            name={"email"}
+                                            value={state.email}
                                             onChange={handleEditemailChange}
                                             placeholder="이메일을 입력해주세요."
                                             style={{marginBottom: "0"}}
@@ -351,13 +378,28 @@ const Signup = () => {
                                             중복 확인
                                         </button>
                                     </div>
-                                    {state.memberId !== "" ? (
+                                    {state.email !== "" ? (
                                         state.isValidEmail ? (
                                             <p className="is_valid_email" style={{color: "blue"}}>유효한 email입니다.</p>
                                         ) : (
                                             <p className="is_valid_email" style={{color: "red"}}>유효하지 않은 email입니다.</p>
                                         )
                                     ) : null}
+                                </div>
+                                <div className="signup_id input_bottom">
+                                    <div style={{display: "flex", alignItems: "center"}}>
+                                        <input
+                                            ref={inputID}
+                                            name={"authCode"}
+                                            value={state.authCode}
+                                            onChange={onChange}
+                                            placeholder="메일로 받으신 인증번호를 입력해주세요."
+                                            style={{marginBottom: "0"}}
+                                        />
+                                        <button id="signup_nicname_btn" type="button" onClick={handleCheckAuthCode}>
+                                            인증 확인
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="subinfo">비밀번호<span className="require_info">*</span></div>
