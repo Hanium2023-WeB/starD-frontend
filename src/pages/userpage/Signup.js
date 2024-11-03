@@ -43,6 +43,7 @@ const Signup = () => {
 
     const [isIdDuplicate, setIsIdDuplicate] = useState(null); // id 중복 여부 상태 변수
     const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(true); // nickname 중복 여부 상태 변수
+    const [showVerificationInput, setShowVerificationInput] = useState(false);
     const [isCheckAuthCode, setIsCheckAuthCode] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isPasswordMatch, setIsPasswordMatch] = useState(true);
@@ -273,6 +274,7 @@ const Signup = () => {
                             .post("/api/members/auth/auth-codes", { email: email })
                             .then(() => {
                                 alert("인증번호가 전송되었습니다.");
+                                setShowVerificationInput(true);
                             })
                             .catch((error) => {
                                 console.error("Error:", error.response?.data || error);
@@ -288,15 +290,25 @@ const Signup = () => {
     const handleCheckAuthCode = () => {
         const email = state.email;
         const authCode = state.authCode;
+        console.log(email);
+        console.log(authCode);
         axios
-            .post("api/members/auth/auth-codes/verify", {
+            .post("/api/members/auth/auth-codes/verify", {
                 email:email, authCode:authCode
             })
             .then((response) => {
                 setIsCheckAuthCode(response.data);
+                alert("인증이 성공적으로 완료되었습니다.");
             })
             .catch((error) => {
-                console.error("Error:", error.response?.data || error);
+                const status = error.response?.status;
+                if (status === 400) {
+                    alert("인증번호가 틀렸습니다.");
+                } else if (status === 404) {
+                    alert("유효시간이 지났습니다.");
+                } else {
+                    console.error("Error:", error.response?.data || error);
+                }
             });
     }
 
@@ -386,22 +398,22 @@ const Signup = () => {
                                         )
                                     ) : null}
                                 </div>
-                                <div className="signup_id input_bottom">
-                                    <div style={{display: "flex", alignItems: "center"}}>
-                                        <input
-                                            ref={inputID}
-                                            name={"authCode"}
-                                            value={state.authCode}
-                                            onChange={onChange}
-                                            placeholder="메일로 받으신 인증번호를 입력해주세요."
-                                            style={{marginBottom: "0"}}
-                                        />
-                                        <button id="signup_nicname_btn" type="button" onClick={handleCheckAuthCode}>
-                                            인증 확인
-                                        </button>
+                                {showVerificationInput && (
+                                    <div className="signup_id input_bottom">
+                                        <div style={{display: "flex", alignItems: "center"}}>
+                                            <input
+                                                name={"authCode"}
+                                                value={state.authCode}
+                                                onChange={onChange}
+                                                placeholder="메일로 받으신 인증번호를 입력해주세요."
+                                                style={{marginBottom: "0"}}
+                                            />
+                                            <button id="signup_nicname_btn" type="button" onClick={handleCheckAuthCode}>
+                                                인증 확인
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-
+                                )}
                                 <div className="subinfo">비밀번호<span className="require_info">*</span></div>
                                 <div className="inputpw input_bottom">
                                     <input
