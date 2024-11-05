@@ -209,22 +209,29 @@ const Signup = () => {
         if (imgfile) {
             formData.append("file", imgfile);
         }
+
+        formData.append("requestDto", JSON.stringify({
+            password: state.password,
+            nickname: state.nickname,
+            email: state.email,
+        }));
+
         console.log(formData);
         setState(prevState => ({
             ...prevState,
             file:formData
         }))
 
-        axios.post("/api/members/auth/join", {email:state.email, password:state.password, nickname:state.nickname, file:state.file}, {
+        axios.post("/api/members/auth/join", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data', // Ensure the content type is set correctly
             }
         })
             .then((response) => {
                 if (response.status === 200) {
-                    const newMember = response.data;
-                    const email = newMember.email;
-                    localStorage.setItem("email", email);
+                    const newMemberId = response.data.id;
+                    localStorage.setItem("newMemberId", newMemberId);
+                    alert("가입되었습니다.");
 
                     // Redirect or perform another action after successful signup
                 } else {
