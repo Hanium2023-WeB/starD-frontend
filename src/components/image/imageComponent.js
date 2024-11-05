@@ -1,40 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import default_profile_img from "../../images/default_profile_img.png";
-const ImageComponent = (getImgName, imgsrc) => {
 
-    let accessToken = localStorage.getItem('accessToken');
+// ImageComponent: 특정 이미지 파일명을 받아와 프로필 사진을 렌더링하는 재사용 가능한 컴포넌트
+const ImageComponent = ({ imgName }) => {
     const [imageSrc, setImageSrc] = useState(null);
-    const imgName = getImgName;
+    const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        const imageUrl = imageSrc || `/api/user/mypage/profile/image/${imgName.getImgName}`;
-        axios
-            .get(imageUrl, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                },
-                responseType: 'arraybuffer',    // 매우 중요! 바이너리 데이터를 안전하게 처리
-            })
-            .then(response => {
-                // 이미지 -> Blob 변환
+        if (!imgName) return; // imgName이 없으면 기본 이미지 사용
+
+        const fetchImage = async () => {
+            try {
+                const response = await axios.get(`/api/user/mypage/profile/image/${imgName}`, {
+                    withCredentials: true,
+                    headers: { 'Authorization': `Bearer ${accessToken}` },
+                    responseType: 'arraybuffer',
+                });
                 const blob = new Blob([response.data], { type: response.headers['content-type'] });
-                const objectURL = URL.createObjectURL(blob);
-                setImageSrc(objectURL);
-            })
-            .catch(error => {
+                setImageSrc(URL.createObjectURL(blob));
+            } catch (error) {
                 console.error('이미지 불러오기 실패: ', error);
-            });
-    }, [imgName, imgsrc, accessToken]);
+            }
+        };
+
+        fetchImage();
+    }, [imgName, accessToken]);
 
     return (
-        <div className={"profile_content"}>
-            {imageSrc ? (
-                <img className="profile-img" src={imageSrc} alt="프로필 불러오기 실패"/>
-            ) : (
-                <img className="profile-img" src={default_profile_img} alt="기본 프로필" />
-            )}
+        <div className="profile_content">
+            <img
+                className="profile-img"
+                src={imageSrc || default_profile_img}
+                alt="프로필 이미지"
+            />
         </div>
     );
 };

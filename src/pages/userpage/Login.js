@@ -52,7 +52,7 @@ const Login = () => {
         }
 
         axios
-            .post("/api/user/auth/sign-in", {
+            .post("/api/members/auth/sign-in", {
                 memberId: state.ID,
                 password: state.PW
             }, {
@@ -60,7 +60,7 @@ const Login = () => {
             })
             .then((res) => {
                 const accessToken = res.data.accessToken;
-
+                console.log(state);
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('isLoggedInUserId', state.ID);
 

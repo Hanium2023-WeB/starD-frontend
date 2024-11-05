@@ -55,7 +55,7 @@
     flex-direction: row;
 }
 
-#add, #cancel, #del {
+#add, #cancel, #del, #edit {
     background-color: #395b64;
     color: white;
     border-radius: 5px;
@@ -176,6 +176,6 @@
     box-shadow: none;
 }
 
-.todoedit_insert button {
+.todoedit_insert > button {
     height: 22px;
 }

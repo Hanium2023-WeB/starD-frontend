@@ -12,11 +12,21 @@ const Chat = (props) => {
     const [message, setMessage] = useState('');
     const [greetings, setGreetings] = useState([]);
     const [studyId, setStudyId] = useState(props.studyId);
+    console.log(props);
+    console.log(studyId);
     const [studyTitle, setStudyTitle] = useState(props.studyTitle);
+    console.log(studyTitle);
     const progressStatus= useState(props.progressStatus);
-    const [pendingEnter, setPendingEnter] = useState(false); //
+    const [pendingEnter, setPendingEnter] = useState(false);
     const LogNicname = localStorage.getItem("isLoggedInUserId");
-    
+
+    useEffect(() => {
+        // props.studyId가 업데이트될 때마다 studyId를 설정
+        setStudyId(props.studyId);
+        // props.studyTitle이 업데이트될 때마다 studyTitle을 설정
+        setStudyTitle(props.studyTitle);
+    }, [props.studyId, props.studyTitle]); // props가 변경될 때 실행
+
     const stompClient = useRef(
         new Client({
             brokerURL: 'ws://localhost:8080/gs-guide-websocket',
@@ -87,6 +97,7 @@ const Chat = (props) => {
                 });
 
                 setGreetings(response.data);
+                console.log(response.data);
 
                 if (stompClient.current.connected) {
                     sendEnterMessage();
@@ -229,7 +240,7 @@ const Chat = (props) => {
                                     <span>{greeting.message}</span>
                                 </td>
                             ) : (
-                                greeting.member.nickname === LogNicname ? (
+                                greeting.member.id === LogNicname ? (
                                     <td className={"message-detail"} id={"my-chats"}>
                                                 <span>
                                              {greeting.member ? greeting.member.nickname : 'Unknown'}: {greeting.message}

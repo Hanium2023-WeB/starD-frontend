@@ -74,9 +74,8 @@ const TeamCommunity = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="container">
-                <Category/>
+                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member}/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
-                    <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member}/>
                     <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 스터디원</p>
                     <Backarrow subname={"TEAM MEMBER LIST"}/>
 

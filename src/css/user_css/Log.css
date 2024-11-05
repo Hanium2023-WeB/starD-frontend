@@ -75,7 +75,7 @@
 	color:#E64C3C;
 	margin-left: 5px;
 }
-.input_info .signup_id,
+.input_info .signup_email,
 .input_info .signup_nicname{
 	display: flex;
 	flex-direction: column;
@@ -133,7 +133,7 @@
 	font-size: 13px;
 	font-family: 'Pretendard-Regular';
 }
-.signup_nicname, .signup_id{
+.signup_nicname, .signup_email{
 	display: flex;
 	flex-direction: row;
 	/*width: 148%;*/

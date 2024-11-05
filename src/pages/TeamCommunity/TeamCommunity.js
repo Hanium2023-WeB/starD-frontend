@@ -50,9 +50,8 @@ const TeamCommunity = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="container">
-                <Category/>
+                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} progressStatus={progressStatus}/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
-                    <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} progressStatus={progressStatus}/>
                     <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 커뮤니티</p>
                     <Backarrow subname={"TEAM COMMUNITY LIST"}/>
                     {showPostInsert && (
