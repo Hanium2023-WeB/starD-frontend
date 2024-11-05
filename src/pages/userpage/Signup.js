@@ -41,11 +41,7 @@ const Signup = () => {
     });
 
     const [isIdDuplicate, setIsIdDuplicate] = useState(null); // id 중복 여부 상태 변수
-<<<<<<< HEAD
     const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false); // nickname 중복 여부 상태 변수
-=======
-    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(true); // nickname 중복 여부 상태 변수
->>>>>>> origin/#feture/signup
     const [showVerificationInput, setShowVerificationInput] = useState(false);
     const [isCheckAuthCode, setIsCheckAuthCode] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
