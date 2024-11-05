@@ -29,9 +29,7 @@ const Signup = () => {
     const [state, setState] = useState({
         email: "",
         password: "",
-        name: "",
         nickname: "",
-        phone: "",
         authCode:"",
         isValidEmail: false,
         isValidPassword: false,
@@ -39,10 +37,11 @@ const Signup = () => {
         city: locations.city,
         district: locations.district,
         tags: locations.tags,
+        file:""
     });
 
     const [isIdDuplicate, setIsIdDuplicate] = useState(null); // id 중복 여부 상태 변수
-    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(true); // nickname 중복 여부 상태 변수
+    const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false); // nickname 중복 여부 상태 변수
     const [showVerificationInput, setShowVerificationInput] = useState(false);
     const [isCheckAuthCode, setIsCheckAuthCode] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -148,19 +147,9 @@ const Signup = () => {
         if (
             state.email.length < 1 &&
             state.password.length < 1 &&
-            state.name.length < 1 &&
-            state.nickname.length < 1 &&
-            state.phone.length < 1 &&
-            state.email.length < 1
+            state.nickname.length < 1
         ) {
-
             alert("회원 정보를 입력해 주세요.");
-            return;
-        }
-
-        if (state.email.length < 3) {
-            inputID.current.focus();
-            alert("아이디는 3자 이상이어야 합니다.");
             return;
         }
 
@@ -198,7 +187,7 @@ const Signup = () => {
             return;
         }
 
-        if (isNicknameDuplicate) {
+        if (!isNicknameDuplicate) {
             alert("닉네임 중복 확인을 해주세요.");
             return;
         }
@@ -208,33 +197,46 @@ const Signup = () => {
             return;
         }
 
+        if (!isCheckAuthCode) {
+            alert("인증 번호 확인이 되지 않았습니다.");
+            return;
+        }
 
-        try {
-            const response = await axios.post("/api/signup", {
-                email: state.email,
-                password: state.password,
-                name: state.name,
-                nickname: state.nickname,
-                phone: state.phone,
-                city: locations.city,
-                district: locations.district,
-                tags: locations.tags,
+        // Create a FormData object to send the file and other data
+        const formData = new FormData();
+
+        // Append the image file if it exists
+        if (imgfile) {
+            formData.append("file", imgfile);
+        }
+        console.log(formData);
+        setState(prevState => ({
+            ...prevState,
+            file:formData
+        }))
+
+        axios.post("/api/members/auth/join", {email:state.email, password:state.password, nickname:state.nickname, file:state.file}, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Ensure the content type is set correctly
+            }
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    const newMember = response.data;
+                    const email = newMember.email;
+                    localStorage.setItem("email", email);
+
+                    // Redirect or perform another action after successful signup
+                } else {
+                    alert("회원가입에 실패하였습니다.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error.response?.data || error);
             });
 
-            if (response.status === 200) {
-                const newMember = response.data;
-                const email = newMember.email;
-                localStorage.setItem("email", email);
-
-
-                // window.location.href = "/subinfo?memberId=${memberId}";
-            } else {
-                alert("회원가입에 실패하였습니다.");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
     };
+
 
 
     const handleCheckDuplicateID = () => {
@@ -364,15 +366,15 @@ const Signup = () => {
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div style={{display:"flex"}}>
-                        {/*<div className={"profile_wrapper"}>*/}
-                        {/*    <h2>프로필 사진</h2>*/}
-                        {/*    <div className={"profile_content"}>*/}
-                        {/*        <ImageComponent getImgName = {uploadImgUrl} imgsrc={imageSrc} />*/}
-                        {/*        <input className="image-upload" type="file" accept="image/*"*/}
-                        {/*               onChange={onchangeImageUpload}/>*/}
-                        {/*        <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+                        <div className={"profile_wrapper"}>
+                            <h2>프로필 사진</h2>
+                            <div className={"profile_content"}>
+                                <ImageComponent getImgName = {uploadImgUrl}/>
+                                <input className="image-upload" type="file" accept="image/*"
+                                       onChange={onchangeImageUpload}/>
+                                <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>
+                            </div>
+                        </div>
                         <div style={{position:"relative"}}>
                             <div className="input_info" style={{left: "31px"}}>
                                 <div className="subinfo">이메일<span className="require_info">*</span></div>
