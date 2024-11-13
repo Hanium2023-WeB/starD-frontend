@@ -111,30 +111,18 @@ const Signup = () => {
 
     //프로필 사진 업로드
     const onchangeImageUpload = (e) => {
-        setUploadImgUrl("");
-        setImgFile(null);
-        console.log("사진", e.target.files);
         const file = e.target.files[0];
         if (file) {
             setImgFile(file);
-            console.log("File details:", file);
             const imageUrl = URL.createObjectURL(file);
             setUploadImgUrl(imageUrl);
-            setImageSrc(uploadImgUrl);
-            const reader = new FileReader();
-            reader.onload = () => {
-                if(reader.readyState === 2){
-                    setUploadImgUrl(reader.result)
-                }
-            }
-            reader.readAsDataURL(e.target.files[0])
-
+            setImageSrc(imageUrl);
+            console.log(uploadImgUrl);
+            console.log(imageSrc);
         } else {
-            console.error("No file selected");
-            alert("이미지를 선택해주세요");
-            return;
+            alert("이미지를 선택해주세요.");
         }
-    }
+    };
     //프로필 사진 삭제
     const onchangeImageDelete = (e) => {
         setUploadImgUrl("");
@@ -376,7 +364,7 @@ const Signup = () => {
                         <div className={"profile_wrapper"}>
                             <h2>프로필 사진</h2>
                             <div className={"profile_content"}>
-                                <ImageComponent getImgName = {uploadImgUrl}/>
+                                <ImageComponent getImgName = {uploadImgUrl} imageUrl={imageSrc}/>
                                 <input className="image-upload" type="file" accept="image/*"
                                        onChange={onchangeImageUpload}/>
                                 <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>

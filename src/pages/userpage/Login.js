@@ -12,8 +12,8 @@ const Login = () => {
     const inputPW = useRef();
 
     const [state, setState] = useState({
-        ID: "",
-        PW: "",
+        email: "",
+        password: "",
     });
     const onChange = useCallback((e) => {
         setState({
@@ -42,19 +42,19 @@ const Login = () => {
 
     const handleSubmit = () => {
 
-        if (state.ID.length < 3) {
+        if (state.email.length < 3) {
             inputID.current.focus();
             return;
         }
-        if (state.PW.length < 5) {
+        if (state.password.length < 5) {
             inputPW.current.focus();
             return;
         }
 
         axios
             .post("/api/members/auth/sign-in", {
-                memberId: state.ID,
-                password: state.PW
+                email: state.email,
+                password: state.password
             }, {
                 withCredentials: true
             })
@@ -62,10 +62,10 @@ const Login = () => {
                 const accessToken = res.data.accessToken;
                 console.log(state);
                 localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('isLoggedInUserId', state.ID);
+                localStorage.setItem('isLoggedInUserId', state.email);
 
                 // // SSE를 구독하기 위해 SSEComponent 호출
-                login();
+                // login();
                 navigate('/'); // useNavigate를 사용하여 페이지를 이동
 
             })
@@ -75,7 +75,7 @@ const Login = () => {
                     alert("입력 값을 확인해주세요.");
 
                 if (error.response.status === 404)
-                    alert("가입되지 않는 회원입니다.");
+                    alert("가입되지 않은 회원입니다.");
             });
     };
 
@@ -93,9 +93,9 @@ const Login = () => {
                     <div className="input_bottom">
                         <input
                             ref={inputID}
-                            name={"ID"}
+                            name={"email"}
                             placeholder="아이디를 입력해주세요"
-                            value={state.ID}
+                            value={state.email}
                             onChange={onChange}
                             // onKeyDown={handleKeyDown}
                         />
@@ -107,9 +107,9 @@ const Login = () => {
                             style={{marginLeft: "0"}}
                             ref={inputPW}
                             placeholder="비밀번호를 입력해주세요"
-                            name={"PW"}
+                            name={"password"}
                             type={"password"}
-                            value={state.PW}
+                            value={state.password}
                             onChange={onChange}
                             onKeyDown={handleKeyDown}
                         />
