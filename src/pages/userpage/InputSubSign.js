@@ -8,32 +8,23 @@ import axios from "axios";
 
 const InputSubSign = () => {
 
-    const memberId = localStorage.getItem("memberId");
+    const memberId = localStorage.getItem("newMemberId");
     console.log("넘어온 회원 아이디: ", memberId);
 
     const navigate = useNavigate();
-
-    const [mem, setMem] = useState(
-        {city: "", district: "", interests: []});
-
-    useEffect(() => {
-        console.log("member상태", mem);
-    }, []);
 
     const onClickSkipBtn = () => {
         navigate("/");
     }
 
     const onClickSaveBtn = () => {
-        axios.post("/api/signup/option-data", {
-            id: memberId,
-            city: mem.city,
-            district: mem.district,
-            interestList: tags.join(","),
+        axios.post("/api/members/auth/join/additional-info", {
+            memberId: memberId,
+            interests: tags,
         })
             .then(response => {
                 console.log(response.data);
-                alert("회원가입이 완료되었습니다.");
+                alert("관심분야가 저장되었습니다.");
                 navigate("/");
             })
             .catch(error => {
@@ -42,27 +33,13 @@ const InputSubSign = () => {
     };
 
     const tagoptions = [
-        {value: "취업", name: "취업"},
-        {value: "자소서", name: "자소서"},
-        {value: "면접", name: "면접"},
+        {value: "개발/IT", name: "개발/IT"},
+        {value: "취업/자격증", name: "취업/자격증"},
+        {value: "디자인", name: "디자인"},
+        {value: "언어", name: "언어"},
+        {value: "자기계발", name: "자기계발"},
         {value: "취미", name: "취미"},
-        {value: "영어 공부", name: "영어 공부"},
-        {value: "프로그래밍", name: "프로그래밍"},
-        {value: "음악", name: "음악"},
-        {value: "미술", name: "미술"},
-        {value: "스포츠", name: "스포츠"},
-        {value: "요리", name: "요리"},
-        {value: "건강", name: "건강"},
-        {value: "여행", name: "여행"},
-        {value: "독서", name: "독서"},
-        {value: "투자", name: "투자"},
-        {value: "사회봉사", name: "사회봉사"},
-        {value: "뉴스", name: "뉴스"},
-        {value: "기술 동향", name: "기술 동향"},
-        {value: "건축", name: "건축"},
-        {value: "환경", name: "환경"},
-        {value: "블로그 운영", name: "블로그 운영"},
-        // Add more categories as needed
+        {value: "기타", name: "기타"},
     ];
 
     const [tags, setTags] = useState(() => {
@@ -77,7 +54,6 @@ const InputSubSign = () => {
             } else {
                 if (tags.length < 3) { //최대 3개까지만 선택 가능하게
                     setTags([...tags, value]);
-
                 } else {
                     alert("관심분야는 최대 3개까지 입니다.");
                 }
@@ -96,9 +72,9 @@ const InputSubSign = () => {
                         value={editoption.value}
                         style={{
                             backgroundColor: tags.includes(editoption.value)
-                                ? "lightpink"
+                                ? "#fff89c"
                                 : tags.length === 3
-                                    ? "#dbdbdb"
+                                    ? "#efefef"
                                     : "white",
                         }}
                         value={editoption.value}
@@ -115,16 +91,8 @@ const InputSubSign = () => {
             <Header showSideCenter={false}/>
             <div className="wrap">
                 <div className="content">
-                    <div className="login_info">
-                        <p>회원가입 <span style={{color: "red"}}>(STEP 2)</span></p>
-                    </div>
                     <div className="subcontent">
-                        <div className="change_estates" id="estates">
-                            <div id="title">거주지</div>
-                            <div id="checkestate">
-                                <RealEstate mem={mem}/>
-                            </div>
-                        </div>
+                        <h2>관심분야 <span style={{color:"red"}}>(선택)</span></h2>
                         <div id="checkestates">
                             <div>
                                 <div id="title">

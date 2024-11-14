@@ -69,8 +69,8 @@ input{
 .tags{
     width: 90%;
     height: fit-content;
-    margin-left: 100px;
-    margin-bottom: 20px;
+    margin:0 auto 20px;
+    text-align: center;
 }
 #tag{
     width: 18%;
