@@ -3,7 +3,7 @@ import React, {useState, useRef, useEffect, useCallback} from "react";
 import {isEmail, isPassword, isPhone} from "../../util/check.js";
 import "../../css/user_css/Log.css";
 import Header from "../../components/repeat_etc/Header";
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import axios from "axios";
 import checkbox from "../../images/check.png";
 import uncheckbox from "../../images/unchecked.png";
@@ -24,6 +24,7 @@ const Signup = () => {
     const inputNicname = useRef();
     const IDRef = useRef();
     const nicknameRef = useRef();
+    const navigate = useNavigate();
 
     ///변수명 변경
     const [state, setState] = useState({
@@ -217,13 +218,13 @@ const Signup = () => {
         })
             .then((response) => {
                 if (response.status === 200) {
-                    const newMemberId = response.data.id;
+                    console.log(response.data);
+                    const newMemberId = response.data.memberId;
                     localStorage.setItem("newMemberId", newMemberId);
                     alert("가입되었습니다.");
-
-                    // Redirect or perform another action after successful signup
+                    navigate(`/subinfo`);
                 } else {
-                    alert("회원가입에 실패하였습니다.");
+                    alert("회원가입에 실패했습니다.");
                 }
             })
             .catch((error) => {
