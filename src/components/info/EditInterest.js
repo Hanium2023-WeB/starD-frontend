@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import edit from "../../css/mypage_css/edit.css";
 import axios from "axios";
-const EditInterest=({mem})=>{
+const EditInterest=()=>{
     const tagoptions = [
         { value: "웹 개발", name: "웹 개발" },
         { value: "앱 개발", name: "앱 개발" },
@@ -126,14 +126,14 @@ const handleSaveTag = async () => {
 
 
 return(
-  <div>
+  <>
       <div id="title">
         관심분야<span id="sub_title">(최대 3개까지 선택 가능)</span>
       </div>
       <Tagoption editoptions={tagoptions} value="" />
 
       <button id="save" onClick={handleSaveTag}>저장하기</button>
-  </div>
+  </>
 );
 
 }

@@ -20,13 +20,17 @@ svg{
     font-family: inter;
 
 }
-.change_nicname,.change_estate, .change_email,
-.change_interest, .change_pw , .change_phone , .signout{
+.change_nicname,
+.change_interest, .change_pw , .signout{
     width: 100%;
     height: fit-content;
     border-radius: 10px;
     border: lightgray solid 1px;
-
+}
+.change_pw, .change_nicname, .change_interest{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #c_email{
@@ -55,7 +59,6 @@ svg{
     width: 80%;
     height: 35px;
     background-color: #F2F2F2;
-    margin-left: 10%;
     margin-bottom: 23px;
     border-radius: 10px;
     text-align:center;
@@ -85,15 +88,13 @@ input{
     font-family: 'Pretendard-Regular';
 }
 #save{
-    width: 20%;
-    height: 30px;
-    font-size: 1.3em;
+    padding: 10px 30px;
     color: white;
     background-color: #99A98F;
     border-style: none;
     border-radius: 10px;
     margin-bottom: 20px;
-    margin-left: 40%;
+    font-family: Pretendard-Regular;
     cursor: pointer;
 }
 .change_email > #save{
@@ -169,6 +170,8 @@ select{
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -177,13 +180,14 @@ select{
 }
 #check_double_nicname{
     width: 10%;
-    height: 30px;
+    height: 35px;
     background-color: #99A98F;
     color:white;
     margin-left: 20px;
-    margin-top: -5px;
-    border-radius: 5px;
+    margin-bottom: 23px;
+    border-radius: 10px;
     border-style: none;
+    font-family: Pretendard-Regular;
     cursor: pointer;
 }
 /* 거주지 */
