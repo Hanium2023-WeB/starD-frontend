@@ -230,7 +230,7 @@ const Editinfo = ({sideheader}) => {
                     </div>
                     <div className="sub_container" id="interested">
                         <div className="change_interest">
-                            <EditInterest/>
+                            <EditInterest interests={state.interests}/>
                         </div>
                     </div>
                     <Signout/>

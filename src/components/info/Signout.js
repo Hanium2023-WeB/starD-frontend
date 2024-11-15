@@ -83,7 +83,9 @@ const Signout = () => {
               </ul>
               <div id="checkpw">
                 <input type="password" id="signout_pw" placeholder="현재 비밀번호를 입력해주세요"
-                    value={password} onChange={(e) => setPassword(e.target.value)}/>
+                       value={password} onChange={(e) => setPassword(e.target.value)}
+                       style={{paddingLeft:"10px"}}
+                />
                 <button id ="signout_btn" onClick={handleSignOutClick}>탈퇴하기</button>
               </div>
              
