@@ -60,32 +60,6 @@ const EditInterest=({interests})=>{
         );
       };
 
-    // useEffect(() => {
-    //     const accessToken = localStorage.getItem('accessToken');
-    //
-    //     axios.get("/api/members/edit/interests", {
-    //         withCredentials: true,
-    //         headers: {
-    //             'Authorization': `Bearer ${accessToken}`
-    //         }
-    //     })
-    //         .then(response => {
-    //             const serverInterests = response.data;
-    //             if (serverInterests) {
-    //                 console.log("관심분야 : " + serverInterests.map(interest => interest.field));
-    //                 const fieldValues = serverInterests.map(interest => interest.field);
-    //                 setTags(fieldValues);
-    //             }
-    //         })
-    //         .catch(error => {
-    //             if (axios.isAxiosError(error)) {
-    //                 console.error("AxiosError:", error.message);
-    //             } else {
-    //                 console.error("데이터 가져오기 중 오류 발생:", error);
-    //             }
-    //         })
-    // }, []);
-
 const handleSaveTag = async () => {
     const accessToken = localStorage.getItem('accessToken');
     const memberId = localStorage.getItem('newMemberId');

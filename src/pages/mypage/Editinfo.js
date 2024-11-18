@@ -50,8 +50,6 @@ const Editinfo = ({sideheader}) => {
             ...state,
             [e.target.name]: e.target.value,
         });
-        console.log(e.target.name);
-        console.log(e.target.value);
     };
     const handleCheckDuplicateNickname = async () => {
 
@@ -129,24 +127,26 @@ const Editinfo = ({sideheader}) => {
     };
 
     const handleSavePassword = async () => {
-        const password = state.password;
-        const newPassword = state.newPassword;
+        const originPassword = state.password;
+        const password = state.newPassword;
         const checkNewPw = state.checkNewPw;
 
-        if (!password || !newPassword) {
+        if (!originPassword || !password) {
             alert("비밀번호를 입력해 주세요.");
             return;
         }
 
-        if (newPassword !== checkNewPw) {
+        if (password !== checkNewPw) {
             alert("비밀번호가 일치하지 않습니다.");
             return;
         }
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("/api/user/mypage/update/password", null, {
-            params: {password: password, newPassword: newPassword},
+        axios.post("/api/members/edit/password", {
+            originPassword: originPassword,
+            password: password
+        }, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
