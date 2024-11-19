@@ -11,42 +11,17 @@ import Header from "../../components/repeat_etc/Header";
 const Editinfo = ({sideheader}) => {
     const [state, setState] = useState({
         nickname: "",
-        email: "",
         password: "",
         newPassword: "",
         checkNewPw: "",
-        phone: "",
-        isValidEmail: false,
+        interests:[],
     });
-
-    const [mem, setMem] = useState({city:"", district:""});
     const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(true); // nickname 중복 여부 상태 변수
-
-    useEffect(()=>{
-        const city = localStorage.getItem("selectedSido");
-        const district = localStorage.getItem("selectedGugun");
-        const estate = {city:city, district:district};
-        setMem(estate);
-    },[]);
-
-    const checkValidEmail = () => {
-        let timer;
-        if (timer) {
-            clearTimeout(timer);
-        }
-        timer = setTimeout(() => {
-            if (!isEmail(state.email)) {
-                setState({isValidEmail: false});
-            } else {
-                setState({isValidEmail: true});
-            }
-        }, 300);
-    };
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.get("/api/user/mypage/update", {
+        axios.get("/api/members/edit", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -55,12 +30,10 @@ const Editinfo = ({sideheader}) => {
             .then(response => {
                 const member = response.data;
                 console.log(member);
-                setMem(member);
                 setState({
                     ...state,
                     nickname: member.nickname,
-                    email: member.email,
-                    phone: member.phone
+                    interests: member.interests
                 });
             })
             .catch(error => {
@@ -72,25 +45,12 @@ const Editinfo = ({sideheader}) => {
             });
     }, []);
 
-
     const handleEditChange = (e) => {
         setState({
             ...state,
             [e.target.name]: e.target.value,
         });
-        console.log(e.target.name);
-        console.log(e.target.value);
     };
-    const handleEditemailChange = (e) => { //이메일 정규식 핸들러
-        setState({
-            ...state,
-            [e.target.name]: e.target.value,
-        });
-        checkValidEmail();
-        console.log(e.target.name);
-        console.log(e.target.value);
-    };
-
     const handleCheckDuplicateNickname = async () => {
 
         const nickname = state.nickname;
@@ -102,8 +62,7 @@ const Editinfo = ({sideheader}) => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("/api/user/mypage/check/nickname", null, {
-            params: {nickname: nickname},
+        axios.post("/api/members/auth/check-nickname", {nickname: nickname}, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -111,10 +70,10 @@ const Editinfo = ({sideheader}) => {
         })
             .then(response => {
                 const isDuplicate = response.data;
-
+                console.log(isDuplicate);
                 setIsNicknameDuplicate(isDuplicate);
 
-                if (isDuplicate) {
+                if (!isDuplicate) {
                     alert("이미 존재하는 닉네임입니다.");
                 } else {
                     alert("사용 가능한 닉네임입니다.");
@@ -138,15 +97,14 @@ const Editinfo = ({sideheader}) => {
             return;
         }
 
-        if (isNicknameDuplicate) {
+        if (!isNicknameDuplicate) {
             alert("닉네임 중복 확인을 해주세요.");
             return;
         }
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("/api/user/mypage/update/nickname", null, {
-            params: {nickname: nickname},
+        axios.post("/api/members/edit/nickname", {nickname: nickname}, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -168,58 +126,27 @@ const Editinfo = ({sideheader}) => {
             });
     };
 
-    const handleSaveEmail = async () => {
-
-        const email = state.email;
-
-        if (!email) {
-            alert("이메일을 입력해 주세요.");
-            return;
-        }
-
-        const accessToken = localStorage.getItem('accessToken');
-
-        axios.post("/api/user/mypage/update/email", null, {
-            params: {email: email},
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    console.log("이메일 변경 성공");
-                    alert("이메일이 변경되었습니다.");
-                } else {
-                    console.error("이메일 변경 실패");
-                    alert("이메일 변경에 실패하였습니다.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("이메일 변경에 실패하였습니다.");
-            });
-    };
-
     const handleSavePassword = async () => {
-        const password = state.password;
-        const newPassword = state.newPassword;
+        const originPassword = state.password;
+        const password = state.newPassword;
         const checkNewPw = state.checkNewPw;
 
-        if (!password || !newPassword) {
+        if (!originPassword || !password) {
             alert("비밀번호를 입력해 주세요.");
             return;
         }
 
-        if (newPassword !== checkNewPw) {
+        if (password !== checkNewPw) {
             alert("비밀번호가 일치하지 않습니다.");
             return;
         }
 
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.post("/api/user/mypage/update/password", null, {
-            params: {password: password, newPassword: newPassword},
+        axios.post("/api/members/edit/password", {
+            originPassword: originPassword,
+            password: password
+        }, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -242,71 +169,6 @@ const Editinfo = ({sideheader}) => {
                     console.error("Error:", error);
                     alert("비밀번호 변경에 실패하였습니다.");
                 }
-            });
-    };
-
-    const handleSavePhone = async () => {
-        const phone = state.phone;
-        if (!phone) {
-            alert("전화번호를 입력해 주세요.");
-            return;
-        }
-
-        const accessToken = localStorage.getItem('accessToken');
-
-        axios.post("/api/user/mypage/update/phone", null, {
-            params: {phone: phone},
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    console.log("전화번호 변경 성공");
-                    alert("전화번호가 변경되었습니다.");
-                } else {
-                    console.error("전화번호 변경 실패");
-                    alert("전화번호 변경에 실패하였습니다.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("전화번호 변경에 실패하였습니다.");
-            });
-    };
-
-    const handleSaveAddress = async () => {
-        const city = document.getElementById("sido1").value;
-        const district = document.getElementById("gugun1").value;
-        console.log("city : " + city + ", district : " + district);
-
-        if (city === "시/도 선택" || district === "구/군 선택" || !city || !district) {
-            alert("거주지를 선택해주세요.");
-            return;
-        }
-
-        const accessToken = localStorage.getItem('accessToken');
-
-        axios.post("/api/user/mypage/update/address", null, {
-            params: {city: city, district: district},
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    console.log("거주지 변경 성공");
-                    alert("거주지가 변경되었습니다.");
-                } else {
-                    console.error("거주지 변경 실패");
-                    alert("거주지 변경에 실패하였습니다.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("거주지 변경에 실패하였습니다.");
             });
     };
 
@@ -363,63 +225,12 @@ const Editinfo = ({sideheader}) => {
                                 />
                                 <button id="check_double_nicname" onClick={handleCheckDuplicateNickname}>중복확인</button>
                             </div>
-
                             <button id="save" onClick={handleSaveNickname}>저장하기</button>
-                        </div>
-                    </div>
-                    <div className="sub_container" id="phone_number">
-                        <div className="change_phone">
-                            <div id="title">
-                                전화번호
-                                <span id="sub_title">(-없이 전화번호만 입력)</span>
-                            </div>
-
-                            <input
-                                id="content"
-                                name={"phone"}
-                                value={state.phone}
-                                onChange={handleEditChange}
-                                placeholder={"전화번호를 입력해주세요."}
-                            ></input>
-
-                            <button id="save" onClick={handleSavePhone}>저장하기</button>
-                        </div>
-                    </div>
-                    <div className="sub_container" id="c_email">
-                        <div className="change_email">
-                            <div id="title">
-                                이메일<span id="sub_title">(이메일 변경 후 재인증 필요)</span>
-                            </div>
-                            <input
-                                id="content"
-                                name={"email"}
-                                value={state.email}
-                                onChange={handleEditemailChange}
-                                placeholder="이메일을 입력하세요."
-                            />
-                            {state.email != "" ? (
-                                state.isValidEmail ? (
-                                    <p style={{color: "blue"}}>사용가능한 email입니다.</p>
-                                ) : (
-                                    <p style={{color: "red"}}>유효하지 않은 email입니다.</p>
-                                )
-                            ) : null}
-                            <button id="save" onClick={handleSaveEmail}>저장하기</button>
-                        </div>
-                    </div>
-                    <div className="sub_container">
-                        <div className="change_estate">
-                            <div id="title" style={{padding:"0"}}>거주지</div>
-                            <div id="checkestate">
-                                {mem && <RealEstate mem={mem}/>}
-                            </div>
-
-                            <button id="save" onClick={handleSaveAddress}>저장하기</button>
                         </div>
                     </div>
                     <div className="sub_container" id="interested">
                         <div className="change_interest">
-                            <EditInterest mem = {mem}/>
+                            <EditInterest interests={state.interests}/>
                         </div>
                     </div>
                     <Signout/>
