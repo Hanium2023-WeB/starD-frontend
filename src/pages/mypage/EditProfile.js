@@ -20,7 +20,7 @@ const EditProfile = () => {
     //프로필 조회하기
     useEffect(() => {
         axios
-            .get("/api/user/mypage/profile", {
+            .get("/api/members/profile/image", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -28,15 +28,7 @@ const EditProfile = () => {
             })
             .then((res) => {
                 console.log("프로필 가져오기 성공:", res.data);
-                setProfile(res.data);
-                console.log("이미지:",res.data.imgUrl );
-                var str = res.data.imgUrl.substr(14);
-                var str_result = str.substr(1);
-                const fullImageUrl = `D:\\stard\\${str_result}`;
-                console.log("fullImageUrl:", fullImageUrl);
-
-                // TODO 2023-11-28 uploadImgUrl을 서버에 저장된 이미지 파일명으로 설정
-                setUploadImgUrl(res.data.imgUrl);
+                setUploadImgUrl(res.data.imageUrl);
             })
             .catch((error) => {
                 console.error("프로필 가져오기 실패:", error);
@@ -45,24 +37,14 @@ const EditProfile = () => {
 
     //프로필 사진 업로드
     const onchangeImageUpload = (e) => {
-        setUploadImgUrl("");
-        setImgFile(null);
-        console.log("사진", e.target.files);
         const file = e.target.files[0];
         if (file) {
             setImgFile(file);
-            console.log("File details:", file);
-             const imageUrl = URL.createObjectURL(file);
+            const imageUrl = URL.createObjectURL(file);
             setUploadImgUrl(imageUrl);
-            setImageSrc(uploadImgUrl);
-            const reader = new FileReader();
-            reader.onload = () => {
-                if(reader.readyState === 2){
-                    setUploadImgUrl(reader.result)
-                }
-            }
-            reader.readAsDataURL(e.target.files[0])
-
+            setImageSrc(imageUrl);
+            console.log(uploadImgUrl);
+            console.log(imageSrc);
         } else {
             console.error("No file selected");
             alert("이미지를 선택해주세요");
@@ -70,25 +52,35 @@ const EditProfile = () => {
         }
     }
 
-
-
     //프로필 사진 삭제
     const onchangeImageDelete = (e) => {
-        setUploadImgUrl("");
-        return;
+        axios
+            .delete("/api/members/profile/image", {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            })
+            .then((res) => {
+                console.log("프로필 이미지 삭제 성공:", res.data);
+                alert("프로필 이미지 삭제 완료");
+                setUploadImgUrl("");
+            })
+            .catch((error) => {
+                console.error("프로필 이미지 삭제 실패:", error);
+            });
     }
     const onchangeselfintro=(e)=>{
         setSelfIntro(e.target.value);
     }
 
     //프로필 수정
-    const saveProfile=(e)=>{
+    const saveProfileImage=(e)=>{
         const formData = new FormData();
-        formData.append("introduce", selfintro);
-        formData.append("imgFile", imgfile);
+        formData.append("file", imgfile);
 
         axios
-            .put("/api/user/mypage/profile", formData, {
+            .put("/api/members/profile/image", formData, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
@@ -99,12 +91,11 @@ const EditProfile = () => {
                 console.log("프로필 수정 성공:", res.data);
                 setProfile(res.data);
                 alert("프로필 수정 완료");
-                navigate("/mypage/profile");
+                // navigate("/mypage/profile");
             })
             .catch((error) => {
                 console.error("프로필 수정 실패:", error);
             });
-
     }
 
     return (
@@ -117,7 +108,7 @@ const EditProfile = () => {
                     <Backarrow subname={"프로필 수정"}/>
                     <div className="sub_container">
                         <div className={"profile_content"}>
-                            <ImageComponent getImgName = {uploadImgUrl} imgsrc={imageSrc} />
+                            <ImageComponent getImgName = {uploadImgUrl} imageUrl={uploadImgUrl} />
                             <input className="image-upload" type="file" accept="image/*"
                                    onChange={onchangeImageUpload}/>
                             <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>
@@ -128,7 +119,8 @@ const EditProfile = () => {
                         </div>
                     </div>
                     <div className={"save_profile_content"}>
-                        <button className={"save-profile"} onClick={saveProfile}>저장하기</button>
+                        <button className={"save-profile"} onClick={saveProfileImage}>사진 저장</button>
+                        <button className={"save-profile"}>소개 저장</button>
                     </div>
                 </div>
             </div>

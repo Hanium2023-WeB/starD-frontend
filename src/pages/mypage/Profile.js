@@ -19,7 +19,7 @@ const Profile = () => {
     //프로필 조회하기
     useEffect(() => {
         axios
-            .get("/api/user/mypage/profile", {
+            .get("/api/members/profile/image", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -27,25 +27,12 @@ const Profile = () => {
             })
             .then((res) => {
                 console.error("프로필 가져오기 성공:", res.data);
-                setProfile(res.data);
-                console.log("이미지:",res.data.imgUrl );
-                var str = res.data.imgUrl.substr(14);
-                var str_result = str.substr(1);
-                const fullImageUrl = `D:\\stard\\${str_result}`;
-                console.log("fullImageUrl:", fullImageUrl);
-                // TODO 2023-11-28 uploadImgUrl을 서버에 저장된 이미지 파일명으로 설정
-                setUploadImgUrl(res.data.imgUrl);
+                setUploadImgUrl(res.data.imageUrl);
             })
             .catch((error) => {
                 console.error("프로필 가져오기 실패:", error);
             });
     }, []);
-
-    //프로필 사진 삭제
-    const onchangeImageDelete = (e) => {
-        setUploadImgUrl(null);
-        return;
-    }
 
     return (
         <div>
@@ -56,7 +43,7 @@ const Profile = () => {
                     <p id={"entry-path"}> 홈 > 마이페이지 > 프로필 </p>
                     <Backarrow subname={"프로필"}/>
                     <div className="sub_container">
-                        <ImageComponent getImgName = {uploadImgUrl} imageSrc={""} />
+                        <ImageComponent getImgName = {uploadImgUrl} imageUrl={uploadImgUrl} />
                         <div className={"One-line-self-introduction"}>
                             <p id={"self-intro-p"}>한줄 자기소개</p>
                             <div>
