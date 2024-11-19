@@ -45,32 +45,20 @@ const EditProfile = () => {
 
     //프로필 사진 업로드
     const onchangeImageUpload = (e) => {
-        setUploadImgUrl("");
-        setImgFile(null);
-        console.log("사진", e.target.files);
         const file = e.target.files[0];
         if (file) {
             setImgFile(file);
-            console.log("File details:", file);
-             const imageUrl = URL.createObjectURL(file);
+            const imageUrl = URL.createObjectURL(file);
             setUploadImgUrl(imageUrl);
-            setImageSrc(uploadImgUrl);
-            const reader = new FileReader();
-            reader.onload = () => {
-                if(reader.readyState === 2){
-                    setUploadImgUrl(reader.result)
-                }
-            }
-            reader.readAsDataURL(e.target.files[0])
-
+            setImageSrc(imageUrl);
+            console.log(uploadImgUrl);
+            console.log(imageSrc);
         } else {
             console.error("No file selected");
             alert("이미지를 선택해주세요");
             return;
         }
     }
-
-
 
     //프로필 사진 삭제
     const onchangeImageDelete = (e) => {
@@ -82,13 +70,12 @@ const EditProfile = () => {
     }
 
     //프로필 수정
-    const saveProfile=(e)=>{
+    const saveProfileImage=(e)=>{
         const formData = new FormData();
-        formData.append("introduce", selfintro);
-        formData.append("imgFile", imgfile);
+        formData.append("file", imgfile);
 
         axios
-            .put("/api/user/mypage/profile", formData, {
+            .put("/api/members/profile/image", formData, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
@@ -99,7 +86,7 @@ const EditProfile = () => {
                 console.log("프로필 수정 성공:", res.data);
                 setProfile(res.data);
                 alert("프로필 수정 완료");
-                navigate("/mypage/profile");
+                // navigate("/mypage/profile");
             })
             .catch((error) => {
                 console.error("프로필 수정 실패:", error);
@@ -128,7 +115,8 @@ const EditProfile = () => {
                         </div>
                     </div>
                     <div className={"save_profile_content"}>
-                        <button className={"save-profile"} onClick={saveProfile}>저장하기</button>
+                        <button className={"save-profile"} onClick={saveProfileImage}>사진 저장</button>
+                        <button className={"save-profile"}>소개 저장</button>
                     </div>
                 </div>
             </div>

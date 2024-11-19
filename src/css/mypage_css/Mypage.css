@@ -261,6 +261,9 @@ li {
 	display: flex;
 	justify-content: center;
 }
+.save_profile_content .save-profile:nth-of-type(1){
+	margin-right: 10px;
+}
 .self-intro-input{
 	margin-left: 0px;
 	padding:0 10px;
