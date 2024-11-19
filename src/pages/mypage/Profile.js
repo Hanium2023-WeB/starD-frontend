@@ -34,12 +34,6 @@ const Profile = () => {
             });
     }, []);
 
-    //프로필 사진 삭제
-    const onchangeImageDelete = (e) => {
-        setUploadImgUrl(null);
-        return;
-    }
-
     return (
         <div>
             <Header showSideCenter={true}/>

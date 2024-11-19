@@ -54,8 +54,21 @@ const EditProfile = () => {
 
     //프로필 사진 삭제
     const onchangeImageDelete = (e) => {
-        setUploadImgUrl("");
-        return;
+        axios
+            .delete("/api/members/profile/image", {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            })
+            .then((res) => {
+                console.log("프로필 이미지 삭제 성공:", res.data);
+                alert("프로필 이미지 삭제 완료");
+                setUploadImgUrl("");
+            })
+            .catch((error) => {
+                console.error("프로필 이미지 삭제 실패:", error);
+            });
     }
     const onchangeselfintro=(e)=>{
         setSelfIntro(e.target.value);
@@ -83,7 +96,6 @@ const EditProfile = () => {
             .catch((error) => {
                 console.error("프로필 수정 실패:", error);
             });
-
     }
 
     return (
