@@ -20,7 +20,7 @@ const EditProfile = () => {
     //프로필 조회하기
     useEffect(() => {
         axios
-            .get("/api/user/mypage/profile", {
+            .get("/api/members/profile/image", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -28,15 +28,7 @@ const EditProfile = () => {
             })
             .then((res) => {
                 console.log("프로필 가져오기 성공:", res.data);
-                setProfile(res.data);
-                console.log("이미지:",res.data.imgUrl );
-                var str = res.data.imgUrl.substr(14);
-                var str_result = str.substr(1);
-                const fullImageUrl = `D:\\stard\\${str_result}`;
-                console.log("fullImageUrl:", fullImageUrl);
-
-                // TODO 2023-11-28 uploadImgUrl을 서버에 저장된 이미지 파일명으로 설정
-                setUploadImgUrl(res.data.imgUrl);
+                setUploadImgUrl(res.data.imageUrl);
             })
             .catch((error) => {
                 console.error("프로필 가져오기 실패:", error);
@@ -104,7 +96,7 @@ const EditProfile = () => {
                     <Backarrow subname={"프로필 수정"}/>
                     <div className="sub_container">
                         <div className={"profile_content"}>
-                            <ImageComponent getImgName = {uploadImgUrl} imgsrc={imageSrc} />
+                            <ImageComponent getImgName = {uploadImgUrl} imageUrl={uploadImgUrl} />
                             <input className="image-upload" type="file" accept="image/*"
                                    onChange={onchangeImageUpload}/>
                             <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>
