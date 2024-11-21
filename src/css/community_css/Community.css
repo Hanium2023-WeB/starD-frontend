@@ -126,6 +126,9 @@ input{
     font-family: 'Pretendard-Regular';
     cursor: pointer;
 }
+.btn .register_btn:nth-of-type(1){
+    margin-right: 10px;
+}
 
 
 

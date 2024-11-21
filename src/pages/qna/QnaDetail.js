@@ -20,9 +20,6 @@ const QnaDetail = () => {
 
     const [postItem, setPostItem] = useState(null);
 
-    const [likeStates, setLikeStates] = useState(false);
-    const [initiallyLikeStates, setInitiallyLikeStates] = useState(false);
-
     const [posts, setPosts] = useState([]);
     const [editing, setEditing] = useState(false);
     const [postDetail, setPostDetail] = useState([]);
@@ -104,41 +101,43 @@ const QnaDetail = () => {
     }
 
     const handlePostUpdate = (updatedPost) => {
-        console.log("수정 예정 : " + updatedPost.postId + ", " + updatedPost.title + ", " + updatedPost.content
-            + ", " + updatedPost.postType);
+        console.log("수정 예정:", updatedPost.postId, updatedPost.title, updatedPost.content, updatedPost.postType);
 
+        // Authorization 헤더 구성
         const config = {
             headers: {}
         };
-
         if (accessToken && isLoggedInUserId) {
             config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
-        axios.post(url, {
-            title: updatedPost.title,
-            content: updatedPost.content,
-        }, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
+        // 수정 요청 보내기
+        axios
+            .put(
+                url, // API URL
+                { // 전달할 데이터
+                    title: updatedPost.title,
+                    content: updatedPost.content,
+                },
+                config // 헤더 설정
+            )
             .then(response => {
-                console.log("qna 수정 성공");
-                const confirmEdit = window.alert("게시글이 수정되었습니다.");
-
-                if (confirmEdit) {
-                    setEditing(false);
-                }
+                console.log("qna 수정 성공:", response.data);
+                alert("게시글이 수정되었습니다.");
+                setEditing(false); // 수정 모드 비활성화
+                navigate(`/qnadetail/${updatedPost.postId}`); // 수정된 게시글로 이동
             })
             .catch(error => {
-                console.error("Error:", error);
-                console.log("qna 수정 실패");
+                console.error("qna 수정 실패:", error.response || error.message);
                 alert("수정에 실패했습니다.");
             });
+    };
 
-    }
+
+    useEffect(() => {
+        console.log("Current URL:", window.location.href);
+    }, [window.location.href]);
+
 
     const handlePostDelete = () => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
@@ -200,12 +199,12 @@ const QnaDetail = () => {
                                     <div className="post_title">
                                         {postItem.title}
                                     </div>
-                                    {(isWriter || (isWriter && isAdmin)) && (
+                                    {/*{(isWriter || (isWriter && isAdmin)) && (*/}
                                         <div className="button">
                                             <button style={{marginRight:"5px"}} onClick={handleEditClick}>수정</button>
                                             <button onClick={handlePostDelete}>삭제</button>
                                         </div>
-                                    )}
+                                    {/*)}*/}
                                     {(isAdmin && !isWriter) && (
                                         <div className="button">
                                             <button onClick={handlePostDelete}>삭제</button>
