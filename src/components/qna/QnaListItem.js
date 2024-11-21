@@ -18,20 +18,28 @@ const QnaListItem = ({posts, setPosts}) => {
         <tr className={`post_list ${posts.postType === "FAQ" ? "faq_row" : ""}`}>
             <td className="community_category">{posts.postType}</td>
             {posts.postType === "FAQ" ? (
-                <Link to={`/faqdetail/${posts.id}`}
-                      style={{
-                          textDecoration: "none",
-                          color: "inherit",
-                      }}>
+                <Link
+                    to={`/faqdetail/${posts.postId}`}
+                    state={{ postType: posts.postType }} // state 전달
+                    style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                    }}
+                >
                     <td className="community_title">{posts.title}</td>
-                </Link>) : (
-                <Link to={`/qnadetail/${posts.id}`}
-                      style={{
-                          textDecoration: "none",
-                          color: "inherit",
-                      }}>
+                </Link>
+            ) : (
+                <Link
+                    to={`/qnadetail/${posts.postId}`}
+                    state={{ postType: posts.postType }} // state 전달
+                    style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                    }}
+                >
                     <td className="community_title">{posts.title}</td>
-                </Link>)}
+                </Link>
+            )}
             {posts.postType === "FAQ" ? (
                 <td className="community_nickname">관리자</td>
             ) : (
