@@ -15,9 +15,9 @@ const QnaListItem = ({posts, setPosts}) => {
     };
 
     return (
-        <tr className={`post_list ${posts.type === "FAQ" ? "faq_row" : ""}`}>
-            <td className="community_category">{posts.type}</td>
-            {posts.type === "FAQ" ? (
+        <tr className={`post_list ${posts.postType === "FAQ" ? "faq_row" : ""}`}>
+            <td className="community_category">{posts.postType}</td>
+            {posts.postType === "FAQ" ? (
                 <Link to={`/faqdetail/${posts.id}`}
                       style={{
                           textDecoration: "none",
@@ -32,13 +32,13 @@ const QnaListItem = ({posts, setPosts}) => {
                       }}>
                     <td className="community_title">{posts.title}</td>
                 </Link>)}
-            {posts.type === "FAQ" ? (
+            {posts.postType === "FAQ" ? (
                 <td className="community_nickname">관리자</td>
             ) : (
-                <td className="community_nickname">{posts.member.nickname}</td>
+                <td className="community_nickname">{posts.writer}</td>
             )}
-            <td className="community_datetime">{formatDatetime(posts.createdAt)}</td>
-            <td>{posts.viewCount}</td>
+            <td className="community_datetime">{formatDatetime(posts.updatedAt)}</td>
+            <td>{posts.hit}</td>
             <td>{posts.starCount}</td>
         </tr>
     )

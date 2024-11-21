@@ -76,15 +76,15 @@ const Qna = () => {
     }, [accessToken]);
 
     const fetchQnaAndFaq = (pageNumber) => {
-        axios.get("/api/qna/all", {
+        axios.get("/api/faqs-and-qnas", {
             params: {
                 page: pageNumber,
             },
         })
             .then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                setPosts(res.data.posts);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.totalPages);
             }).catch((error) => {
             console.error("데이터 가져오기 실패:", error);
         });
@@ -95,14 +95,15 @@ const Qna = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("/api/qna/all", {
+        axios.get("/api/faqs-and-qnas", {
             params: {
                 page: 1,
             }
         }).then((res) => {
-            setPosts(res.data.content);
-            setItemsPerPage(res.data.pageable.pageSize);
-            setCount(res.data.totalElements);
+            console.log(res.data);
+            setPosts(res.data.posts);
+            setItemsPerPage(res.data.currentPage);
+            setCount(res.data.totalPages);
         })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);

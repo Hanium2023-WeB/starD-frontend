@@ -36,15 +36,19 @@ const QnaDetail = () => {
     useEffect(() => {
         // 타입 조회
         axios.get(`/api/notice/find-type/${id}`, {
-            params: { id: id }
+            params: { id: id },
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         })
             .then((res) => {
-                setType(res.data.type);
+                setType(res.data.postType);
 
-                if (res.data.type === "FAQ") {
+                if (res.data.postType === "FAQ") {
                     setUrl(`/api/faq/${id}`);
                 }
-                else if (res.data.type === "QNA") {
+                else if (res.data.postType === "QNA") {
                     setUrl(`/api/qna/${id}`);
                 }
 
