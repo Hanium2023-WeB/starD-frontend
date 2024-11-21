@@ -170,6 +170,18 @@ input{
     font-weight: bold;
     margin-right: 30px;
 }
+.community_detail .post_header .post_info .left .community_nickname{
+    display: flex;
+    align-items: center;
+    margin-bottom:10px;
+}
+.community_detail .post_header .post_info .left .community_nickname .profile_image{
+    width: 15px;
+    height:15px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 5px;
+}
 .community_detail .post_header .post_info .right{
     display: flex;
     align-items: center;

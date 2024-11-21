@@ -25,7 +25,7 @@ const QnaEdit = ({post, onUpdatePost, onCancel}) => {
                 <span>카테고리</span>
                 <span className="field_wrapper">
                     <select name="category" onChange={handleInputChange} disabled>
-                        {post.type === 'FAQ' ? (
+                        {post.postType === 'FAQ' ? (
                             <option value="qna">FAQ</option>
                         ) : <option value="faq">QNA</option>
                         }

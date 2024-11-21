@@ -163,7 +163,6 @@ const Qna = () => {
                                     <th>닉네임</th>
                                     <th>날짜</th>
                                     <th>조회수</th>
-                                    <th>공감수</th>
                                     {posts.map((d, index) => (
                                         <QnaListItem setPosts={setPosts} posts={d} d={d}
                                                      index={index} key={d.id}/>

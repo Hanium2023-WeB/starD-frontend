@@ -47,7 +47,6 @@ const QnaListItem = ({posts, setPosts}) => {
             )}
             <td className="community_datetime">{formatDatetime(posts.updatedAt)}</td>
             <td>{posts.hit}</td>
-            <td>{posts.starCount}</td>
         </tr>
     )
 }
