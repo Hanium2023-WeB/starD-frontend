@@ -29,9 +29,9 @@ function checkRecruitStatus(recruitStatus, proressStatus) {
 
 const StudyListItem = ({studies, toggleLike, toggleScrap, d, index}) => {
     console.log(studies);
-    const imgUrl = studies.recruiter.profile.imgUrl;
+    const imgUrl = studies.imgUrl ? studies.imgUrl : default_profile_img;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
-    const recruitStatus = checkRecruitStatus(studies.recruitStatus, studies.progressStatus);
+    const recruitStatus = checkRecruitStatus(studies.recruitmentType, studies.progressStatus);
     const navigate = useNavigate();
 
 
@@ -64,17 +64,17 @@ const StudyListItem = ({studies, toggleLike, toggleScrap, d, index}) => {
             </div>
             <div className="list_founder">
                 <ImageComponent getImgName = {imgUrl} imageSrc={""} />
-                <span>{studies.recruiter?.nickname}</span>
+                <span>{studies.nickname}</span>
             </div>
             <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>
             <div className="list_tag_wrapper" onClick={GoNextDetailPage}>
-                {studies.tags.split(',').map((tag, idx) => (
+                {studies.tagText.split(',').map((tag, idx) => (
                     <div key={idx} className="list_tag">
                       {tag.trim()}
                     </div>
                 ))}
             </div>
-            <div className="list_onoff" onClick={GoNextDetailPage}>{studies.onOff}</div>
+            <div className="list_onoff" onClick={GoNextDetailPage}>{studies.activityType}</div>
             <div className="stroke"></div>
             <div className="list_deadline">
                 마감일 | {studies.recruitmentDeadline}

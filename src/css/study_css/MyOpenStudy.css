@@ -102,6 +102,7 @@ html {
 .study_list {
 	display: flex;
 	flex-wrap: wrap;
+	width:100%;
 }
 .study_list .list {
 	width: 25%;

@@ -12,7 +12,7 @@ const StudyInfo = ({study, isRecruiter}) => {
     const [reportStudyId, setReportStudyId] = useState(null);
     const [editing, setEditing] = useState(false);
     const accessToken = localStorage.getItem('accessToken');
-    const imgUrl = study.recruiter.profile.imgUrl;
+    // const imgUrl = study.recruiter.profile.imgUrl;
     const handleOpenReportModal = (studyId) => {
         setReportStudyId(studyId);
         setShowReportModal(true);
@@ -99,7 +99,7 @@ const StudyInfo = ({study, isRecruiter}) => {
                 <div>
                     <div className="study_author_info">
                         <span>
-                            <ImageComponent getImgName = {imgUrl} imageSrc={""} />
+                            {/*<ImageComponent getImgName = {imgUrl} imageSrc={""} />*/}
                             <p className="study_author">
                                 <Link
                                     to={`/${study.recruiter.id}/userprofile`}

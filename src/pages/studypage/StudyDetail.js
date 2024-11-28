@@ -35,13 +35,14 @@ const StudyDetail = ({sideheader}) => {
             studyId = id;
         }
 
-        axios.get(`/api/api/v2/studies/${studyId}`, {
+        axios.get(`/api/studies/${studyId}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         }).then((res) => {
             setStudyItem(res.data);
+            console.log(res.data);
             if (res.data.recruiter.id === isLoggedInUserId) {
                 console.log("자기 자신의 글", res.data);
                 setIsRecruiter(true);

@@ -28,7 +28,7 @@ const Study = () => {
     const [page, setPage] = useState(pageparams);
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     // const updateStudies = (updatedStudies) => {
     //     setStudies(updatedStudies);
@@ -148,51 +148,57 @@ const Study = () => {
     };
 
     const fetchLikeScrap = (pageNumber) => {
-        if (accessToken && isLoggedInUserId) {
-            const res_like = axios.get("/api/study/stars", {
-                params: {
-                    page: pageNumber,
-                },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            }).then((response) => {
-                setLikeStates(response.data);
-                setIsLikeStates(true);
-            }).catch((error) => {
-                console.error("공감 가져오기 실패:", error);
-            });
-
-            const res_scrap = axios.get("/api/study/scraps", {
-                params: {
-                    page: pageNumber,
-                },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            }).then((response) => {
-                setScrapStates(response.data);
-                setIsScrapStates(true);
-                console.log("스크랩 가져오기 성공");
-            }).catch((error) => {
-                console.error("스크랩 가져오기 실패:", error);
-            });
-        }
+        // if (accessToken && isLoggedInUserId) {
+        //     const res_like = axios.get("/api/study/stars", {
+        //         params: {
+        //             page: pageNumber,
+        //         },
+        //         withCredentials: true,
+        //         headers: {
+        //             'Authorization': `Bearer ${accessToken}`
+        //         }
+        //     }).then((response) => {
+        //         setLikeStates(response.data);
+        //         setIsLikeStates(true);
+        //     }).catch((error) => {
+        //         console.error("공감 가져오기 실패:", error);
+        //     });
+        //
+        //     const res_scrap = axios.get("/api/study/scraps", {
+        //         params: {
+        //             page: pageNumber,
+        //         },
+        //         withCredentials: true,
+        //         headers: {
+        //             'Authorization': `Bearer ${accessToken}`
+        //         }
+        //     }).then((response) => {
+        //         setScrapStates(response.data);
+        //         setIsScrapStates(true);
+        //         console.log("스크랩 가져오기 성공");
+        //     }).catch((error) => {
+        //         console.error("스크랩 가져오기 실패:", error);
+        //     });
+        // }
     };
 
     const fetchStudies = (pageNumber) => {
-        setLoading(true);
-        axios.get("/api/api/v2/studies/all", {
-            params: {
+        // setLoading(true);
+        axios.post("/api/studies/search", {
                 page: pageNumber,
+                size: 9
             },
+            {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
         })
             .then((response) => {
-                setStudies(response.data.content);
-                setItemsPerPage(response.data.pageable.pageSize);
-                setCount(response.data.totalElements);
+                console.log(response.data);
+                setStudies(response.data.studyInfos);
+                setItemsPerPage(response.data.currentPage);
+                setCount(response.data.totalPages);
                 if (response.data.content != null) {
                     setStudiesInitialized(true);
                 }
@@ -211,14 +217,20 @@ const Study = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("/api/api/v2/studies/all", {
-            params: {
+        axios.post("/api/studies/search", {
                 page: 1,
+                size: 9
             },
+            {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
         }).then((response) => {
-            setStudies(response.data.content);
-            setItemsPerPage(response.data.pageable.pageSize);
-            setCount(response.data.totalElements);
+            console.log(response.data);
+            setStudies(response.data.studyInfos);
+            setItemsPerPage(response.data.currentPage);
+            setCount(response.data.totalPages);
             if (response.data.content != null) {
                 setStudiesInitialized(true);
             }
