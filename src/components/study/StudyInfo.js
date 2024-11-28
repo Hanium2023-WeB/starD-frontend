@@ -32,7 +32,7 @@ const StudyInfo = ({study, isRecruiter}) => {
     console.log("자신의 글인가요? ", isRecruiter);
 
     const showregion = () => {
-        if (study.onOff === "offline" || study.onOff === "both") {
+        if (study.activityType === "OFFLINE" || study.activityType === "ONLINE_OFFLINE") {
             return (
                 <li>
                     <span>지역</span>
