@@ -42,7 +42,6 @@ import NoticeSearchResult from "./pages/notice/NoticeSearchResult";
 import MemberEvaluate from "./pages/mypage/MemberEvaluate";
 import Qna from "./pages/qna/Qna";
 import QnaDetail from "./pages/qna/QnaDetail";
-import QnaSearchResult from "./pages/qna/QnaSearchResult";
 import Admin from "./pages/admin/Admin";
 import MyScore from "./pages/mypage/MyScore";
 import Profile from "./pages/mypage/Profile";
@@ -290,7 +289,7 @@ function App() {
                     <Route
                         path="/qna/search"
                         element={
-                            <QnaSearchResult/>
+                            <Qna/>
                         }
                     />
                     <Route path="/comm/search" component={CommSearchResult} />

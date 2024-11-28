@@ -13,61 +13,37 @@ import Paging from "../../components/repeat_etc/Paging";
 
 const Qna = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // 상태 관리
     const [posts, setPosts] = useState([]);
     const [showQnaInsert, setShowQnaInsert] = useState(false);
     const [showFaqInsert, setShowFaqInsert] = useState(false);
-    let accessToken = localStorage.getItem('accessToken');
-    let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
     const [userIsAdmin, setUserIsAdmin] = useState(false);
-    const [postType, setPostType] = useState(null);
 
-    const location = useLocation();
-    const pageparams = location.state ? location.state.page : 1;
-    const [page, setPage] = useState(pageparams);
+    const [page, setPage] = useState(location.state?.page || 1);
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const insertPage = location.state && location.state.page;
 
-    const handleMoveToStudyInsert = (e, type) => {
-        if (accessToken && isLoggedInUserId) {
-            e.preventDefault();
-            <Link to={`/insert-QnaAndFaq`}
-                  style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                  }}>
-            </Link>
-            // if (userIsAdmin) {
-            //     setPostType(type);
-            //     setShowFaqInsert(!showFaqInsert);
-            // } else {
-            //     setPostType(type);
-            //     setShowQnaInsert(!showQnaInsert);
-            // }
-        } else {
-            alert("로그인 해주세요");
-            navigate("/login");
-        }
-    };
+    const searchQuery = new URLSearchParams(location.search).get("q");
+    const categoryOption = new URLSearchParams(location.search).get("category");
 
-    // TODO 권한 조회
+    const accessToken = localStorage.getItem("accessToken");
+    const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
+
+    // 초기 렌더링 또는 검색 상태 확인
+    const [isSearchMode, setIsSearchMode] = useState(!!searchQuery || !!categoryOption);
+
+    // 권한 조회
     useEffect(() => {
         axios
             .get("/api/member/auth", {
                 withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+                headers: { Authorization: `Bearer ${accessToken}` },
             })
             .then((res) => {
                 const auth = res.data[0].authority;
-                console.log("auth :", auth);
-
-                if (auth === "ROLE_USER") {
-                    setUserIsAdmin(false);
-                } else if (auth === "ROLE_ADMIN") {
-                    setUserIsAdmin(true);
-                }
+                setUserIsAdmin(auth === "ROLE_ADMIN");
             })
             .catch((error) => {
                 console.error("권한 조회 실패:", error);
@@ -75,110 +51,135 @@ const Qna = () => {
             });
     }, [accessToken]);
 
+    // 데이터 가져오기 함수
     const fetchQnaAndFaq = (pageNumber) => {
-        axios.get("/api/qna/all", {
-            params: {
+        console.log("fetchQnaAndFaq 호출됨", { pageNumber, isSearchMode, categoryOption, searchQuery });
+        let base_url;
+
+        if (isSearchMode) {
+            if (categoryOption === "전체") {
+                base_url = "/api/faqs-and-qnas/search";
+            } else if (categoryOption === "FAQ") {
+                base_url = "/api/faqs/search";
+            } else if (categoryOption === "QNA") {
+                base_url = "/api/qnas/search";
+            }
+        } else {
+            base_url = "/api/faqs-and-qnas";
+        }
+
+        let params = isSearchMode
+            ? {
+                category: categoryOption,
+                keyword: searchQuery,
                 page: pageNumber,
-            },
-        })
+            }
+            : { page: pageNumber };
+
+        axios
+            .get(base_url, { params })
             .then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
-            }).catch((error) => {
-            console.error("데이터 가져오기 실패:", error);
-        });
+                console.log(res.data);
+                const data = res.data;
+                setPosts(data.posts);
+                setItemsPerPage(data.currentPage);
+                setCount(data.totalPages);
+            })
+            .catch((error) => console.error("데이터 가져오기 실패:", error));
     };
 
-    useEffect(() => {
-        fetchQnaAndFaq(page);
-    }, [page]);
-
-    useEffect(() => {
-        axios.get("/api/qna/all", {
-            params: {
-                page: 1,
-            }
-        }).then((res) => {
-            setPosts(res.data.content);
-            setItemsPerPage(res.data.pageable.pageSize);
-            setCount(res.data.totalElements);
-        })
-            .catch((error) => {
-                console.error("데이터 가져오기 실패:", error);
-            });
-    }, [insertPage]);
-
+    // 페이지 번호 변경 시 호출
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
-        navigate(`/qna/page=${selectedPage}`);
+        fetchQnaAndFaq(selectedPage);
+    };
+
+    // 렌더링 시 또는 검색 조건 변경 시 데이터 불러오기
+    useEffect(() => {
+        fetchQnaAndFaq(page);
+    }, [page, location.search]);
+
+    useEffect(() => {
+        setIsSearchMode(!!searchQuery || !!categoryOption);
+    }, [searchQuery, categoryOption]); // location.search 대신 직접 사용
+
+    // QnA 작성 버튼 핸들러
+    const handleMoveToStudyInsert = (e, type) => {
+        if (accessToken && isLoggedInUserId) {
+            e.preventDefault();
+            setShowQnaInsert(type === "QNA");
+            setShowFaqInsert(type === "FAQ");
+        } else {
+            alert("로그인 해주세요");
+            navigate("/login");
+        }
     };
 
     return (
-        <div className={"main_wrap"} id={"community"}>
-            <Header showSideCenter={true}/>
+        <div className="main_wrap" id="community">
+            <Header showSideCenter={true} />
             <div className="community_container">
-                <p id={"entry-path"}> 홈 > QNA </p>
-                <Backarrow subname={"QNA LIST"}/>
-                {showFaqInsert && (
-                    <QnaInsert postType={postType}/>
-                )}
-                {showQnaInsert && (
-                    <QnaInsert postType={postType}/>
-                )}
-                {(!showFaqInsert && !showQnaInsert) && (
+                <p id="entry-path">홈 > QNA</p>
+                <Backarrow subname="QNA LIST" />
+
+                {showFaqInsert && <QnaInsert postType="FAQ" />}
+                {showQnaInsert && <QnaInsert postType="QNA" />}
+                {!showFaqInsert && !showQnaInsert && (
                     <div>
                         <div className="community_header">
-                            <SearchBar/>
-
+                            <SearchBar setIsSearchMode={setIsSearchMode}/>
                             {userIsAdmin ? (
-                                <>
-                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                    <Link to={`/admin/insert-Faq`}
-                                          style={{
-                                              textDecoration: "none",
-                                              color: "inherit",
-                                          }}>
-                                        <button className="new_post_btn">
-                                            FAQ 작성
-                                        </button>
-                                    </Link>
-                                </>
-                            ) : <Link to={`/insert-Qna`}
-                                      style={{
-                                          textDecoration: "none",
-                                          color: "inherit",
-                                      }}>
-                                <button className="new_post_btn">
+                                <button
+                                    onClick={(e) => handleMoveToStudyInsert(e, "FAQ")}
+                                    className="new_post_btn"
+                                >
+                                    FAQ 작성
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={(e) => handleMoveToStudyInsert(e, "QNA")}
+                                    className="new_post_btn"
+                                >
                                     QNA 작성
                                 </button>
-                            </Link>}
+                            )}
                         </div>
                         <div className="community">
-                            <div>
-                                <table className="post_table" key={posts.id}>
+                            <table className="post_table">
+                                <thead>
+                                <tr>
                                     <th>카테고리</th>
                                     <th>제목</th>
                                     <th>닉네임</th>
                                     <th>날짜</th>
                                     <th>조회수</th>
-                                    <th>공감수</th>
-                                    {posts.map((d, index) => (
-                                        <QnaListItem setPosts={setPosts} posts={d} d={d}
-                                                     index={index} key={d.id}/>
-                                    ))}
-                                </table>
-                            </div>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {posts && posts.length === 0 && (
+                                    <tr>
+                                        <td colSpan="5">검색 결과가 없습니다.</td>
+                                    </tr>
+                                )}
+                                {posts && posts.map((d, index) => (
+                                    <QnaListItem setPosts={setPosts} posts={d} d={d}
+                                                 index={index} key={d.id}/>
+                                ))}
+                                </tbody>
+                            </table>
                         </div>
-                        <div className={"paging"}>
-                            <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                                    handlePageChange={handlePageChange}/>
+                        <div className="paging">
+                            <Paging
+                                page={page}
+                                totalItemCount={count}
+                                itemsPerPage={itemsPerPage}
+                                handlePageChange={handlePageChange}
+                            />
                         </div>
                     </div>
                 )}
             </div>
-
         </div>
     );
-}
+};
 export default Qna;

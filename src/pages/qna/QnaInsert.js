@@ -73,7 +73,7 @@ const QnaInsert = () => {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("/api/qna",
+        const response = axios.post("/api/qnas",
             {
                 title: formData.title,
                 content: formData.content,
@@ -86,7 +86,7 @@ const QnaInsert = () => {
             })
             .then((res) => {
                 console.log(res.data);
-                const id = res.data.id;
+                const id = res.data.postId;
                 alert("게시글이 등록되었습니다.");
                 window.location.href = `/qnadetail/${id}`;
             }).catch((error) => {
@@ -103,11 +103,11 @@ const QnaInsert = () => {
                     <p id={"entry-path"}> 홈 > QNA </p>
                     <Backarrow subname={"QNA LIST"}/>
                     <form className="new_post_form" onSubmit={handleSubmit}>
-                        <div style={{display: "flex"}}>
-                            <span style={{paddingLeft: "10px", marginTop: "25px"}}>제목</span>
+                        <div style={{display: "flex", alignItems:"center"}}>
+                            <span>제목</span>
                             <input type="text" name="title" value={formData.title} onChange={handleInputChange}/>
                         </div>
-                        <div>
+                        <div style={{marginLeft:"-10px"}}>
                             <span>카테고리</span>
                             <span className="field_wrapper">
                     <select name="category" onChange={handleInputChange} disabled>
@@ -119,7 +119,7 @@ const QnaInsert = () => {
                 </span>
                         </div>
                         <div style={{display: "flex"}}>
-                            <span style={{paddingLeft: "10px", marginTop: "5px"}}>상세 내용</span>
+                            <span>상세 내용</span>
                             <textarea name="content" value={formData.content} onChange={handleInputChange}/>
                         </div>
                         <div className="btn">

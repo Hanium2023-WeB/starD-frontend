@@ -4,13 +4,11 @@ import searchicon from "../../images/search.png";
 import axios from "axios";
 
 
-const QnaSearchBar = () => {
+const QnaSearchBar = ({setIsSearchMode}) => {
 
 	const [search, setSearch] = useState("");
-	const [selectOption, setSelectOption] = useState("제목");
 	const [categoryOption, setCategoryOption] = useState("전체");
 	const navigate = useNavigate();
-
 
 	const tagoptions = [
 		{ value: "전체", name: "전체" },
@@ -33,15 +31,11 @@ const QnaSearchBar = () => {
 		setSearch(e.target.value)
 	}
 
-	const onHandleselect = (e)=>{
-		setSelectOption(e.target.value);
-		console.log(`value = ${e.target.value}`)
-	}
-
 	const searchItem = (item)=>{
 		setSearch(item);
-		const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}&select=${encodeURIComponent(selectOption)}`;
-		navigate(`/qna/search${queryParams}`);
+		setIsSearchMode(true); // 강제 설정
+		const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}`;
+		navigate(`/qna/search${queryParams}`, { replace: true }); // replace를 추가해 페이지 히스토리 문제 방지
 	}
 
 	return (
@@ -52,11 +46,6 @@ const QnaSearchBar = () => {
                         <option value={category.value}>{category.name}</option>
                     )}
 			    </select>
-				<select id="sub" value={selectOption} onChange={onHandleselect}>
-					<option value="제목">제목</option>
-					<option value="내용">내용</option>
-					<option value="작성자">작성자</option>
-				</select>
 			</div>
 
 			<div className="searchbar">
