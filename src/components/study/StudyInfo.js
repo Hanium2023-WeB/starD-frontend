@@ -4,6 +4,7 @@ import Report from "../report/Report";
 import CommentForm from "../comment/CommentForm";
 import axios from "axios";
 import ImageComponent from "../image/imageComponent";
+import default_profile_img from "../../images/default_profile_img.png";
 
 const StudyInfo = ({study, isRecruiter}) => {
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
@@ -12,7 +13,7 @@ const StudyInfo = ({study, isRecruiter}) => {
     const [reportStudyId, setReportStudyId] = useState(null);
     const [editing, setEditing] = useState(false);
     const accessToken = localStorage.getItem('accessToken');
-    // const imgUrl = study.recruiter.profile.imgUrl;
+    const imgUrl = study.imgUrl ? study.imgUrl : default_profile_img;
     const handleOpenReportModal = (studyId) => {
         setReportStudyId(studyId);
         setShowReportModal(true);
@@ -99,20 +100,20 @@ const StudyInfo = ({study, isRecruiter}) => {
                 <div>
                     <div className="study_author_info">
                         <span>
-                            {/*<ImageComponent getImgName = {imgUrl} imageSrc={""} />*/}
+                            <ImageComponent getImgName = {imgUrl} imageSrc={""} />
                             <p className="study_author">
-                                <Link
-                                    to={`/${study.recruiter.id}/userprofile`}
-                                    style={{
-                                        textDecoration: "none",
-                                        color: "inherit",
-                                    }}
-                                >
-                                    {study.recruiter.nickname}
-                                </Link>
+                                {/*<Link*/}
+                                {/*    to={`/${study.recruiter.id}/userprofile`}*/}
+                                {/*    style={{*/}
+                                {/*        textDecoration: "none",*/}
+                                {/*        color: "inherit",*/}
+                                {/*    }}*/}
+                                {/*>*/}
+                                    {study.nickname}
+                                {/*</Link>*/}
                             </p>
                         </span>
-                        <p className="study_created_date">{formatDatetime(study.recruitmentStart)}</p>
+                        <p className="study_created_date">{formatDatetime(study.createdAt)}</p>
                         {(study.recruitStatus !== 'RECRUITMENT_COMPLETE') | (study.recruiter !== isLoggedInUserId)  && (
                             <>
                                 <p>&nbsp;&nbsp; | &nbsp;&nbsp;</p>
@@ -127,7 +128,7 @@ const StudyInfo = ({study, isRecruiter}) => {
                         />
                         <>
                             <p>&nbsp;&nbsp; | &nbsp;&nbsp;</p>
-                            <p>조회수 : {study.viewCount}</p>
+                            <p>조회수 : {study.hit}</p>
                         </>
                     </div>
                     {isRecruiter && (
@@ -154,7 +155,7 @@ const StudyInfo = ({study, isRecruiter}) => {
                     </li>
                     <li>
                         <span>진행 방식</span>
-                        <span>{study.onOff}</span>
+                        <span>{study.activityType}</span>
                     </li>
                     {showregion()}
                     <li>

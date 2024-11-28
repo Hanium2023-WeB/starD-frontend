@@ -183,7 +183,7 @@ const Study = () => {
     };
 
     const fetchStudies = (pageNumber) => {
-        // setLoading(true);
+        setLoading(true);
         axios.post("/api/studies/search", {
                 page: pageNumber,
                 size: 9
@@ -198,7 +198,7 @@ const Study = () => {
                 console.log(response.data);
                 setStudies(response.data.studyInfos);
                 setItemsPerPage(response.data.currentPage);
-                setCount(response.data.totalPages);
+                setCount(response.data.studyInfos.length);
                 if (response.data.content != null) {
                     setStudiesInitialized(true);
                 }
@@ -230,7 +230,7 @@ const Study = () => {
             console.log(response.data);
             setStudies(response.data.studyInfos);
             setItemsPerPage(response.data.currentPage);
-            setCount(response.data.totalPages);
+            setCount(response.data.studyInfos.length);
             if (response.data.content != null) {
                 setStudiesInitialized(true);
             }

@@ -35,7 +35,7 @@ const StudyDetail = ({sideheader}) => {
             studyId = id;
         }
 
-        axios.get(`/api/studies/${studyId}`, {
+        axios.get(`/api/studies/${id}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -43,14 +43,13 @@ const StudyDetail = ({sideheader}) => {
         }).then((res) => {
             setStudyItem(res.data);
             console.log(res.data);
-            if (res.data.recruiter.id === isLoggedInUserId) {
-                console.log("자기 자신의 글", res.data);
+            if (res.data.isAuthor) {
                 setIsRecruiter(true);
             }
         })
             .catch((error) => {
                 alert("로그인 해 주세요.");
-                navigate('/login');
+                // navigate('/login');
                 console.error("스터디 세부 데이터 가져오기 실패:", error);
             });
 
