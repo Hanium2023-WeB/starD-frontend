@@ -12,6 +12,7 @@ const StudyEdit = () => {
     const navigate = useNavigate();
     const study = location.state && location.state.study;
     const [updatedStudy, setUpdatedStudy] = useState(study);
+    console.log(updatedStudy);
     const [showSelect, setShowSelect] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [tags, setTags] = useState(study ? study.tags : "");
@@ -95,7 +96,8 @@ const StudyEdit = () => {
         }
     }, [updatedStudy]);
 
-    const handleStudyUpdate = useCallback(async () => {
+    const handleStudyUpdate = useCallback(async (e) => {
+        e.preventDefault();
         console.log("수정될 데이터?:", updatedStudy);
         const accessToken = localStorage.getItem('accessToken');
 
@@ -127,7 +129,7 @@ const StudyEdit = () => {
             console.log(error);
         })
         navigate(`/studydetail/${study.studyId}`);
-    },[updatedStudy,study, navigate]);
+    },[updatedStudy]);
     const studyeditform = () => {
         return (
             <form className="study_open_form study_edit_form">
@@ -170,11 +172,11 @@ const StudyEdit = () => {
                         <div style={{marginRight: "21px"}}>
                             <span className="onoff_title">진행 방식</span>
                             <div className="onoff">
-                                <input type="radio" value="online" name="activityType" onChange={handleRadioChange}
+                                <input type="radio" value="ONLINE" name="activityType" onChange={handleRadioChange}
                                        checked={updatedStudy.activityType === "ONLINE" || selectedOnOff === "ONLINE"}/>온라인
-                                <input type="radio" value="offline" name="activityType" onChange={handleRadioChange}
+                                <input type="radio" value="OFFLINE" name="activityType" onChange={handleRadioChange}
                                        checked={updatedStudy.activityType === "OFFLINE" || selectedOnOff === "OFFLINE"}/>오프라인
-                                <input type="radio" value="both" name="activityType" onChange={handleRadioChange}
+                                <input type="radio" value="ONLINE_OFFLINE" name="activityType" onChange={handleRadioChange}
                                        checked={updatedStudy.activityType === "ONLINE_OFFLINE" || selectedOnOff === "ONLINE_OFFLINE"}/>무관
                                 {showSelect && (
                                     <StudyRegion formData={updatedStudy} city={updatedStudy?.city}

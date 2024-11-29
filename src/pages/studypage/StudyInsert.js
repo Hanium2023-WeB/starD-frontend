@@ -8,6 +8,7 @@ import Tag from "../../components/study/Tag";
 import axios from "axios";
 import Header from "../../components/repeat_etc/Header";
 import Backarrow from "../../components/repeat_etc/Backarrow";
+import study from "./Study";
 
 const StudyInsert = () => {
     const location = useLocation();
@@ -41,7 +42,6 @@ const StudyInsert = () => {
         activityDeadline:"",
         author: "",
         recruitmentDeadline: "",
-        endDate: "",
         created_date: new Date(),
         current: current,
         scrap: false,
@@ -157,7 +157,6 @@ const StudyInsert = () => {
         const updatedStudies = [...studies, newData];
         localStorage.setItem("studies", JSON.stringify(updatedStudies));
 
-        console.log("update임 : " + JSON.stringify(updatedStudies));
         updateStudies(updatedStudies);
 
         setDataId((prevDataId) => prevDataId + 1);
@@ -270,9 +269,13 @@ const StudyInsert = () => {
         };
         localStorage.setItem("studyWithTags", JSON.stringify(studyWithTags));
         setFormData(onInsertStudy(studyWithTags));
-        console.log(`formData: ${JSON.stringify(formData)}`)
         const accessToken = localStorage.getItem('accessToken');
         console.log(studyWithTags);
+        console.log(formData);
+        console.log(formData.city);
+        console.log(formData.district);
+        console.log(studyWithTags.city);
+        console.log(studyWithTags.district);
 
         const response = axios.post("/api/studies",
             {
@@ -307,7 +310,7 @@ const StudyInsert = () => {
 
         console.log("response : ", response);
         e.preventDefault();
-    }, [formData, navigate, tags, onInsertStudy]);
+    }, [formData, tags, onInsertStudy]);
 
     const studyinsertform = () => {
         return (
@@ -355,7 +358,7 @@ const StudyInsert = () => {
                                 <input type="radio" value="OFFLINE" name="activityType" onChange={handleRadioChange}/>오프라인
                                 <input type="radio" value="ONLINE_OFFLINE" name="activityType" onChange={handleRadioChange}/>무관
                                 {showSelect && (
-                                    <StudyRegion formData={formData} city={formData?.city} district={formData?.district}
+                                    <StudyRegion formData={formData} city={city} district={district}
                                                  handleRegionCityChange={handleRegionCityChange}
                                                  handleRegionDistrictChange={handleRegionDistrictChange}/>
                                 )}
