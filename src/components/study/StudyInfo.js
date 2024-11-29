@@ -6,7 +6,7 @@ import axios from "axios";
 import ImageComponent from "../image/imageComponent";
 import default_profile_img from "../../images/default_profile_img.png";
 
-const StudyInfo = ({study, isRecruiter}) => {
+const StudyInfo = ({study, isRecruiter, setStudies}) => {
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
     const navigate = useNavigate();
     const [showReportModal, setShowReportModal] = useState(false);
@@ -65,7 +65,7 @@ const StudyInfo = ({study, isRecruiter}) => {
         const confirmDelete = window.confirm("정말로 스터디를 삭제하시겠습니까?");
         if (confirmDelete) {
             axios
-                .delete(`/api/api/v2/studies/${study.id}`, {
+                .delete(`/api/studies/${study.studyId}`, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -74,6 +74,8 @@ const StudyInfo = ({study, isRecruiter}) => {
                 .then((res) => {
                     console.log("API Response:", res.data);
                     console.log("삭제성공");
+                    alert("스터디 모집글이 삭제되었습니다.");
+                    setStudies((prevStudies) => prevStudies.filter(item => item.id !== study.id)); // 삭제 후 상태 갱신
                 })
                 .catch((error) => {
                     console.log("Deletion error:", error);

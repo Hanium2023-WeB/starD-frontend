@@ -89,21 +89,22 @@ const StudyDetail = ({sideheader}) => {
     const handleStudyDelete = useCallback(() => {
         const confirmDelete = window.confirm("정말로 스터디를 삭제하시겠습니까?");
         if (confirmDelete) {
-            axios.delete(`/api/api/v2/studies/${studyId}`,
+            axios.delete(`/api/studies/${id}`,
                 {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     },
-                }).then((res) => {
-                console.log("API Response:", res.data);
-                console.log("삭제성공");
-                setStudies(res.data);
-            }).catch((error) => {
-                console.log(error);
-            })
-            window.location.href = "/myopenstudy";
-        }
+                })
+                .then((res) => {
+                    console.log("API Response:", res.data);
+                    console.log("삭제성공");
+                    setStudies(res.data);
+                    alert("스터디 모집글이 삭제되었습니다.");
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
     }, [id]);
 
     return (
@@ -119,8 +120,8 @@ const StudyDetail = ({sideheader}) => {
                         <div key={studyItem.id}>
                             <StudyInfo
                                 study={studyItem}
-                                handleStudyDelete={handleStudyDelete}
                                 isRecruiter={isRecruiter}
+                                setStudies={setStudies}
                             />
                             <div className="study_intro">
                                 <div style={{fontWeight: "bold"}}>스터디 소개</div>
