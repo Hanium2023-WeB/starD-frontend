@@ -19,20 +19,27 @@ const Tag = React.memo(({ onTagChange, tags }) => {
 
     const onKeyUp = useCallback(
         (e) => {
-            const $HashWrapOuter = document.querySelector('.tag_wrapper');
-
             if (e.keyCode === 188 && e.target.value.trim() !== '') {
                 const newHashTag = e.target.value.replace(/,/g, '').trim();
-                setTagString((prevTagString) =>
-                    prevTagString.length > 0
-                        ? `${prevTagString}, ${newHashTag}`
-                        : newHashTag
-                );
+                const currentTags = tagString.length > 0
+                    ? tagString.split(',').map((tag) => tag.trim())
+                    : [];
+
+                // 중복 방지와 최대 5개 제한 로직 추가
+                if (currentTags.includes(newHashTag)) {
+                    alert('이미 추가된 태그입니다.');
+                } else if (currentTags.length >= 5) {
+                    alert('태그는 최대 5개까지 추가할 수 있습니다.');
+                } else {
+                    const updatedTags = [...currentTags, newHashTag].join(',');
+                    setTagString(updatedTags);
+                }
+
                 setHashtag('');
                 e.target.value = '';
             }
         },
-        []
+        [tagString]
     );
 
 

@@ -16,7 +16,7 @@ const Header = ({showSideCenter}) => {
         useEffect(() => {
 
             const logout = (member) => {
-                axios.post("/api/user/auth/sign-out", {}, {
+                axios.post("/api/members/auth/sign-out", {}, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`

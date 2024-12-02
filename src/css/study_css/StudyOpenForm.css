@@ -77,8 +77,8 @@ html {
     /*right: 7px;*/
 }
 
-.study_open_form .right input[name="onoff"],
-.study_open_form .right input[name="onOff"]{
+.study_open_form .right input[name="activityType"],
+.study_open_form .right input[name="activityType"]{
     width:auto;
     height:auto;
     background: none;

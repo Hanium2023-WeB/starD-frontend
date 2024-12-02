@@ -12,35 +12,23 @@ const StudyEdit = () => {
     const navigate = useNavigate();
     const study = location.state && location.state.study;
     const [updatedStudy, setUpdatedStudy] = useState(study);
+    console.log(updatedStudy);
     const [showSelect, setShowSelect] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [tags, setTags] = useState(study ? study.tags : "");
-    const [selectedOnOff, setSelectedOnOff] = useState(study ? study.onOff : "");
+    const [selectedOnOff, setSelectedOnOff] = useState(study ? study.activityType : "");
     const [selectedField, setSelectedField] = useState(study ? study.field : "");
     const [city, setCity] = useState("");
     const [district, setDistrict] = useState("");
 
     const tagoptions = [
-        {value: "취업", name: "취업"},
-        {value: "자소서", name: "자소서"},
-        {value: "면접", name: "면접"},
+        {value: "개발/IT", name: "개발/IT"},
+        {value: "취업/자격증", name: "취업/자격증"},
+        {value: "디자인", name: "디자인"},
+        {value: "언어", name: "언어"},
+        {value: "자기계발", name: "자기계발"},
         {value: "취미", name: "취미"},
-        {value: "영어 공부", name: "영어 공부"},
-        {value: "프로그래밍", name: "프로그래밍"},
-        {value: "음악", name: "음악"},
-        {value: "미술", name: "미술"},
-        {value: "스포츠", name: "스포츠"},
-        {value: "요리", name: "요리"},
-        {value: "건강", name: "건강"},
-        {value: "여행", name: "여행"},
-        {value: "독서", name: "독서"},
-        {value: "투자", name: "투자"},
-        {value: "사회봉사", name: "사회봉사"},
-        {value: "뉴스", name: "뉴스"},
-        {value: "기술 동향", name: "기술 동향"},
-        {value: "건축", name: "건축"},
-        {value: "환경", name: "환경"},
-        {value: "블로그 운영", name: "블로그 운영"},
+        {value: "기타", name: "기타"},
     ];
 
     const handleGoBack = () => {
@@ -51,10 +39,10 @@ const StudyEdit = () => {
         setSelectedOnOff(selectedValue);
         setUpdatedStudy((prevStudy) => ({
             ...prevStudy,
-            onOff: selectedValue,
+            activityType: selectedValue,
         }));
         console.log(selectedOption)
-        setShowSelect(selectedValue === "offline" || selectedValue === "both");
+        setShowSelect(selectedValue === "OFFLINE" || selectedValue === "ONLINE_OFFLINE");
     }, []);
 
     const handleRadioFieldChange = useCallback((e) => {
@@ -101,30 +89,31 @@ const StudyEdit = () => {
     }, []);
 
     useEffect(() => {
-        if (updatedStudy && (updatedStudy.onOff === "offline" || updatedStudy.onOff === "both")) {
+        if (updatedStudy && (updatedStudy.activityType === "OFFLINE" || updatedStudy.activityType === "ONLINE_OFFLINE")) {
             setShowSelect(true);
-        } else if (updatedStudy && updatedStudy.onOff === "online") {
+        } else if (updatedStudy && updatedStudy.activityType === "ONLINE") {
             setShowSelect(false);
         }
     }, [updatedStudy]);
 
-    const handleStudyUpdate = useCallback(async () => {
+    const handleStudyUpdate = useCallback(async (e) => {
+        e.preventDefault();
         console.log("수정될 데이터?:", updatedStudy);
         const accessToken = localStorage.getItem('accessToken');
 
-        axios.put(`/api/api/v2/studies/${study.id}`,
+        axios.put(`/api/studies/${study.studyId}`,
             {
                 title: updatedStudy.title,
-                field: updatedStudy.field,
+                content: updatedStudy.content,
                 capacity: updatedStudy.capacity,
-                onOff: updatedStudy.onOff,
+                activityType: updatedStudy.activityType,
                 city: updatedStudy.city,
                 district: updatedStudy.district,
-                recruitmentDeadline: updatedStudy.recruitmentDeadline,
+                field: updatedStudy.field,
+                tags: updatedStudy.tags,
                 activityStart: updatedStudy.activityStart,
                 activityDeadline: updatedStudy.activityDeadline,
-                content: updatedStudy.content,
-                tags: updatedStudy.tags,
+                recruitmentDeadline: updatedStudy.recruitmentDeadline,
             },
             {
                 withCredentials: true,
@@ -133,13 +122,14 @@ const StudyEdit = () => {
                 }
             })
             .then((res) => {
+                alert("스터디가 수정되었습니다.");
                 console.log("API Response:", res.data);
                 console.log("수정성공");
             }).catch((error) => {
             console.log(error);
         })
-        navigate(`/studydetail/${study.id}`);
-    },[updatedStudy,study, navigate]);
+        navigate(`/studydetail/${study.studyId}`);
+    },[updatedStudy]);
     const studyeditform = () => {
         return (
             <form className="study_open_form study_edit_form">
@@ -182,12 +172,12 @@ const StudyEdit = () => {
                         <div style={{marginRight: "21px"}}>
                             <span className="onoff_title">진행 방식</span>
                             <div className="onoff">
-                                <input type="radio" value="online" name="onOff" onChange={handleRadioChange}
-                                       checked={updatedStudy.onOff === "online" || selectedOnOff === "online"}/>온라인
-                                <input type="radio" value="offline" name="onOff" onChange={handleRadioChange}
-                                       checked={updatedStudy.onOff === "offline" || selectedOnOff === "offline"}/>오프라인
-                                <input type="radio" value="both" name="onOff" onChange={handleRadioChange}
-                                       checked={updatedStudy.onOff === "both" || selectedOnOff === "both"}/>무관
+                                <input type="radio" value="ONLINE" name="activityType" onChange={handleRadioChange}
+                                       checked={updatedStudy.activityType === "ONLINE" || selectedOnOff === "ONLINE"}/>온라인
+                                <input type="radio" value="OFFLINE" name="activityType" onChange={handleRadioChange}
+                                       checked={updatedStudy.activityType === "OFFLINE" || selectedOnOff === "OFFLINE"}/>오프라인
+                                <input type="radio" value="ONLINE_OFFLINE" name="activityType" onChange={handleRadioChange}
+                                       checked={updatedStudy.activityType === "ONLINE_OFFLINE" || selectedOnOff === "ONLINE_OFFLINE"}/>무관
                                 {showSelect && (
                                     <StudyRegion formData={updatedStudy} city={updatedStudy?.city}
                                                  district={updatedStudy?.district}

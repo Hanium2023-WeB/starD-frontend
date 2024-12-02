@@ -86,7 +86,7 @@ export function RegionSelectBOX({formData, city , district, handleRegionCityChan
         city = selectedSido;
         handleRegionCityChange(city);
     }
-    function  saveSelectedGugunVal(selectedGugun){
+    function saveSelectedGugunVal(selectedGugun){
         localStorage.setItem("selectedRegionGugun", selectedGugun);
         district = selectedGugun;
         handleRegionDistrictChange(district);

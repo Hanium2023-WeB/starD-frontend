@@ -4,15 +4,16 @@ import Report from "../report/Report";
 import CommentForm from "../comment/CommentForm";
 import axios from "axios";
 import ImageComponent from "../image/imageComponent";
+import default_profile_img from "../../images/default_profile_img.png";
 
-const StudyInfo = ({study, isRecruiter}) => {
+const StudyInfo = ({study, isRecruiter, setStudies}) => {
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
     const navigate = useNavigate();
     const [showReportModal, setShowReportModal] = useState(false);
     const [reportStudyId, setReportStudyId] = useState(null);
     const [editing, setEditing] = useState(false);
     const accessToken = localStorage.getItem('accessToken');
-    const imgUrl = study.recruiter.profile.imgUrl;
+    const imgUrl = study.imgUrl ? study.imgUrl : default_profile_img;
     const handleOpenReportModal = (studyId) => {
         setReportStudyId(studyId);
         setShowReportModal(true);
@@ -31,7 +32,7 @@ const StudyInfo = ({study, isRecruiter}) => {
     console.log("자신의 글인가요? ", isRecruiter);
 
     const showregion = () => {
-        if (study.onOff === "offline" || study.onOff === "both") {
+        if (study.activityType === "OFFLINE" || study.activityType === "ONLINE_OFFLINE") {
             return (
                 <li>
                     <span>지역</span>
@@ -64,7 +65,7 @@ const StudyInfo = ({study, isRecruiter}) => {
         const confirmDelete = window.confirm("정말로 스터디를 삭제하시겠습니까?");
         if (confirmDelete) {
             axios
-                .delete(`/api/api/v2/studies/${study.id}`, {
+                .delete(`/api/studies/${study.studyId}`, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -73,6 +74,8 @@ const StudyInfo = ({study, isRecruiter}) => {
                 .then((res) => {
                     console.log("API Response:", res.data);
                     console.log("삭제성공");
+                    alert("스터디 모집글이 삭제되었습니다.");
+                    setStudies((prevStudies) => prevStudies.filter(item => item.id !== study.id)); // 삭제 후 상태 갱신
                 })
                 .catch((error) => {
                     console.log("Deletion error:", error);
@@ -101,18 +104,18 @@ const StudyInfo = ({study, isRecruiter}) => {
                         <span>
                             <ImageComponent getImgName = {imgUrl} imageSrc={""} />
                             <p className="study_author">
-                                <Link
-                                    to={`/${study.recruiter.id}/userprofile`}
-                                    style={{
-                                        textDecoration: "none",
-                                        color: "inherit",
-                                    }}
-                                >
-                                    {study.recruiter.nickname}
-                                </Link>
+                                {/*<Link*/}
+                                {/*    to={`/${study.recruiter.id}/userprofile`}*/}
+                                {/*    style={{*/}
+                                {/*        textDecoration: "none",*/}
+                                {/*        color: "inherit",*/}
+                                {/*    }}*/}
+                                {/*>*/}
+                                    {study.nickname}
+                                {/*</Link>*/}
                             </p>
                         </span>
-                        <p className="study_created_date">{formatDatetime(study.recruitmentStart)}</p>
+                        <p className="study_created_date">{formatDatetime(study.createdAt)}</p>
                         {(study.recruitStatus !== 'RECRUITMENT_COMPLETE') | (study.recruiter !== isLoggedInUserId)  && (
                             <>
                                 <p>&nbsp;&nbsp; | &nbsp;&nbsp;</p>
@@ -127,7 +130,7 @@ const StudyInfo = ({study, isRecruiter}) => {
                         />
                         <>
                             <p>&nbsp;&nbsp; | &nbsp;&nbsp;</p>
-                            <p>조회수 : {study.viewCount}</p>
+                            <p>조회수 : {study.hit}</p>
                         </>
                     </div>
                     {isRecruiter && (
@@ -154,7 +157,7 @@ const StudyInfo = ({study, isRecruiter}) => {
                     </li>
                     <li>
                         <span>진행 방식</span>
-                        <span>{study.onOff}</span>
+                        <span>{study.activityType}</span>
                     </li>
                     {showregion()}
                     <li>

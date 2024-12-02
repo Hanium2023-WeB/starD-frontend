@@ -8,6 +8,7 @@ import Tag from "../../components/study/Tag";
 import axios from "axios";
 import Header from "../../components/repeat_etc/Header";
 import Backarrow from "../../components/repeat_etc/Backarrow";
+import study from "./Study";
 
 const StudyInsert = () => {
     const location = useLocation();
@@ -30,17 +31,17 @@ const StudyInsert = () => {
     const [current, setCurrent] = useState("Recruiting");
     const [formData, setFormData] = useState({
         title: "",
+        content: value,
+        capacity:"",
+        activityType:"",
+        city:"",
+        district:"",
         field: "취업",
+        tags:"",
+        activityStart:"",
+        activityDeadline:"",
         author: "",
-        number: "",
-        onoff: "",
-        sido: "",
-        gugun: "",
-        deadline: "",
-        startDate: "",
-        endDate: "",
-        description: value,
-        tag: "",
+        recruitmentDeadline: "",
         created_date: new Date(),
         current: current,
         scrap: false,
@@ -50,28 +51,21 @@ const StudyInsert = () => {
         setStudies(updatedStudies);
     };
     const tagoptions = [
-        {value: "취업", name: "취업"},
-        {value: "자소서", name: "자소서"},
-        {value: "면접", name: "면접"},
+        {value: "개발/IT", name: "개발/IT"},
+        {value: "취업/자격증", name: "취업/자격증"},
+        {value: "디자인", name: "디자인"},
+        {value: "언어", name: "언어"},
+        {value: "자기계발", name: "자기계발"},
         {value: "취미", name: "취미"},
-        {value: "영어 공부", name: "영어 공부"},
-        {value: "프로그래밍", name: "프로그래밍"},
-        {value: "음악", name: "음악"},
-        {value: "미술", name: "미술"},
-        {value: "스포츠", name: "스포츠"},
-        {value: "요리", name: "요리"},
-        {value: "건강", name: "건강"},
-        {value: "여행", name: "여행"},
-        {value: "독서", name: "독서"},
-        {value: "투자", name: "투자"},
-        {value: "사회봉사", name: "사회봉사"},
-        {value: "뉴스", name: "뉴스"},
-        {value: "기술 동향", name: "기술 동향"},
-        {value: "건축", name: "건축"},
-        {value: "환경", name: "환경"},
-        {value: "블로그 운영", name: "블로그 운영"},
+        {value: "기타", name: "기타"},
     ];
 
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
     const handleInputChange = useCallback((e) => {
         const {name, value} = e.target;
@@ -85,7 +79,7 @@ const StudyInsert = () => {
         setCity(newCity);
         setFormData({
             ...formData,
-            sido: newCity,
+            city: newCity,
         })
     };
 
@@ -93,7 +87,7 @@ const StudyInsert = () => {
         setDistrict(newDistrict);
         setFormData({
             ...formData,
-            gugun: newDistrict,
+            district: newDistrict,
         })
     };
 
@@ -103,25 +97,25 @@ const StudyInsert = () => {
         setSelectedOption(selectedValue);
         setFormData({
             ...formData,
-            onoff: e.target.value,
+            activityType: e.target.value,
         })
-        setShowSelect(selectedValue === "offline" || selectedValue === "both");
+        setShowSelect(selectedValue === "OFFLINE" || selectedValue === "ONLINE_OFFLINE");
     }
 
     const onInsertStudy = useCallback((study) => {
         const {
             title,
+            content,
+            capacity,
+            activityType,
+            city,
+            district,
             field,
+            tags,
+            activityStart,
+            activityDeadline,
             author,
-            number,
-            onoff,
-            sido,
-            gugun,
-            deadline,
-            startDate,
-            endDate,
-            description,
-            tag,
+            recruitmentDeadline,
             created_date,
             current
         } = study;
@@ -134,19 +128,22 @@ const StudyInsert = () => {
             const selectedGugun = document.querySelector('select[name="gugun1"]').value;
         }
 
+        const updatedCity = activityType === "ONLINE" ? "" : selectedSido;
+        const updatedDistrict = activityType === "ONLINE" ? "" : selectedGugun;
+
         const newData = {
             title,
+            content,
+            capacity,
+            activityType,
+            city: updatedCity,
+            district: updatedDistrict,
             field: selectedField,
+            tags,
+            activityStart,
+            activityDeadline,
             author,
-            number,
-            onoff,
-            sido: selectedSido,
-            gugun: selectedGugun,
-            deadline,
-            startDate,
-            endDate,
-            description,
-            tag,
+            recruitmentDeadline,
             created_date,
             current: current,
             id: dataId,
@@ -155,12 +152,11 @@ const StudyInsert = () => {
         };
 
         console.log("id : " + newData.id);
-        console.log("tag : " + newData.tag);
+        console.log("tags : " + newData.tags);
         setStudies((prevStudies) => [...prevStudies, newData]);
         const updatedStudies = [...studies, newData];
         localStorage.setItem("studies", JSON.stringify(updatedStudies));
 
-        console.log("update임 : " + JSON.stringify(updatedStudies));
         updateStudies(updatedStudies);
 
         setDataId((prevDataId) => prevDataId + 1);
@@ -184,14 +180,22 @@ const StudyInsert = () => {
     const handleSubmit = useCallback(e => {
         e.preventDefault(); // 기본 이벤트 방지
 
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+
+        // 입력된 날짜들 가져오기
+        const recruitmentDeadline = new Date(formData.recruitmentDeadline);
+        const activityStart = new Date(formData.activityStart);
+        const activityDeadline = new Date(formData.activityDeadline);
+
         if (
             formData.title.trim() === '' &&
-            formData.number.trim() === '' &&
-            formData.deadline.trim() === '' &&
-            formData.startDate.trim() === '' &&
-            formData.endDate.trim() === '' &&
-            formData.description.trim() === '' &&
-            !formData.onoff
+            formData.content.trim() === '' &&
+            formData.capacity.trim() === '' &&
+            formData.activityStart.trim() === '' &&
+            formData.activityDeadline.trim() === '' &&
+            formData.recruitmentDeadline.trim() === '' &&
+            !formData.activityType
         ) {
             alert('스터디 정보를 입력해주세요.');
             return;
@@ -200,27 +204,38 @@ const StudyInsert = () => {
             alert("제목을 입력해주세요.");
             return;
         }
-        if (formData.number.trim() === '') {
+        if (formData.title.trim().length > 200) {
+            alert("제목은 최대 200자까지 입력 가능합니다.");
+            return;
+        }
+        if (formData.capacity.trim() === '') {
             alert("모집 인원을 입력해주세요.");
             return;
         }
-        if (formData.deadline.trim() === '') {
-            alert("모집 마감일을 입력해주세요.");
+        // 모집 마감일 유효성 검사
+        if (!formData.recruitmentDeadline.trim() || recruitmentDeadline < today.setHours(0, 0, 0, 0)) {
+            alert("모집 마감일은 오늘 이후의 날짜만 선택 가능합니다.");
             return;
         }
-        if (formData.startDate.trim() === '') {
-            alert("스터디 시작일을 입력해주세요.");
+        // 스터디 시작일 유효성 검사
+        if (!formData.activityStart.trim() || activityStart < today) {
+            alert("스터디 시작일은 오늘 이후의 날짜만 선택 가능합니다.");
             return;
         }
-        if (formData.endDate.trim() === '') {
-            alert("스터디 종료일을 입력해주세요.");
+        // 스터디 종료일 유효성 검사
+        if (!formData.activityDeadline.trim() || activityDeadline < activityStart) {
+            alert("스터디 종료일은 시작일과 같거나 그 이후의 날짜만 선택 가능합니다.");
             return;
         }
-        if (formData.description.trim() === '') {
+        if (formData.content.trim() === '') {
             alert("상세 내용을 입력해주세요.");
             return;
         }
-        if (!formData.onoff) {
+        if (formData.content.trim().length > 1000) {
+            alert("상세 내용은 최대 1000자까지 입력 가능합니다.");
+            return;
+        }
+        if (!formData.activityType) {
             alert("온라인, 오프라인 여부를 선택해주세요.");
             return;
         }
@@ -235,28 +250,46 @@ const StudyInsert = () => {
             return; // 창이 넘어가지 않도록 중단
         }
 
+        // `capacity` 숫자 변환
+        const numericCapacity = Number(formData.capacity);
+        if (isNaN(numericCapacity) || numericCapacity < 3) {
+            alert("모집 인원은 3 이상의 숫자여야 합니다.");
+            return;
+        }
+
         const studyWithTags = {
             ...formData,
-            tag: tags
+            capacity: numericCapacity,
+            tags: tags,
+            city: formData.activityType === "ONLINE" ? "" : city,
+            district: formData.activityType === "ONLINE" ? "" : district,
+            activityStart: formatDate(new Date(formData.activityStart)),
+            activityDeadline: formatDate(new Date(formData.activityDeadline)),
+            recruitmentDeadline: formatDate(new Date(formData.recruitmentDeadline)),
         };
         localStorage.setItem("studyWithTags", JSON.stringify(studyWithTags));
         setFormData(onInsertStudy(studyWithTags));
-        console.log(`formData: ${JSON.stringify(formData)}`)
         const accessToken = localStorage.getItem('accessToken');
+        console.log(studyWithTags);
+        console.log(formData);
+        console.log(formData.city);
+        console.log(formData.district);
+        console.log(studyWithTags.city);
+        console.log(studyWithTags.district);
 
-        const response = axios.post("/api/api/v2/studies",
+        const response = axios.post("/api/studies",
             {
                 title: studyWithTags.title,
+                content: studyWithTags.content,
+                capacity: studyWithTags.capacity,
+                activityType: studyWithTags.activityType,
+                city: studyWithTags.city,
+                district: studyWithTags.district,
                 field: studyWithTags.field,
-                capacity: studyWithTags.number,
-                onOff: studyWithTags.onoff,
-                city: studyWithTags.sido,
-                district: studyWithTags.gugun,
-                recruitmentDeadline: studyWithTags.deadline,
-                activityStart: studyWithTags.startDate,
-                activityDeadline: studyWithTags.endDate,
-                content: studyWithTags.description,
-                tags: studyWithTags.tag,
+                tags: studyWithTags.tags,
+                activityStart: studyWithTags.activityStart,
+                activityDeadline: studyWithTags.activityDeadline,
+                recruitmentDeadline: studyWithTags.recruitmentDeadline,
             },
             {
                 withCredentials: true,
@@ -272,12 +305,12 @@ const StudyInsert = () => {
                 const id = res.data.id;
                 navigate(`/studydetail/${id}`);
             }).catch((error) => {
-                console.log('전송 실패', error);
+                console.log('전송 실패', error.response.data || error);
             })
 
         console.log("response : ", response);
         e.preventDefault();
-    }, [formData, navigate, tags, onInsertStudy]);
+    }, [formData, tags, onInsertStudy]);
 
     const studyinsertform = () => {
         return (
@@ -291,18 +324,18 @@ const StudyInsert = () => {
                         </div>
                         <div>
                             <span>모집 인원</span>
-                            <input type="number" name="number" value={formData.number} onChange={handleInputChange}
+                            <input type="number" name="capacity" value={formData.capacity} onChange={handleInputChange}
                                    className="inputbox" placeholder="모집 인원을 입력해주세요"/>
                         </div>
                         <div>
                             <span>스터디 시작일</span>
-                            <input type="date" name="startDate" value={formData.startDate}
+                            <input type="date" name="activityStart" value={formData.activityStart}
                                    onChange={handleInputChange}
                                    min={formattedCurrentDate} className="inputbox" placeholder="스터디 시작일을 선택해주세요"/>
                         </div>
                         <div>
                             <span>모집 마감일</span>
-                            <input type="date" name="deadline" value={formData.deadline}
+                            <input type="date" name="recruitmentDeadline" value={formData.recruitmentDeadline}
                                    onChange={handleInputChange}
                                    min={formattedCurrentDate} className="inputbox" placeholder="스터디 모집 마감일을 선택해주세요"/>
                         </div>
@@ -321,11 +354,11 @@ const StudyInsert = () => {
                         <div className={"onoffline"} style={{marginRight: "21px"}}>
                             <span className="onoff_title">진행 방식</span>
                             <div className="onoff">
-                                <input type="radio" value="online" name="onoff" onChange={handleRadioChange}/>온라인
-                                <input type="radio" value="offline" name="onoff" onChange={handleRadioChange}/>오프라인
-                                <input type="radio" value="both" name="onoff" onChange={handleRadioChange}/>무관
+                                <input type="radio" value="ONLINE" name="activityType" onChange={handleRadioChange}/>온라인
+                                <input type="radio" value="OFFLINE" name="activityType" onChange={handleRadioChange}/>오프라인
+                                <input type="radio" value="ONLINE_OFFLINE" name="activityType" onChange={handleRadioChange}/>무관
                                 {showSelect && (
-                                    <StudyRegion formData={formData} city={formData?.sido} district={formData?.gugun}
+                                    <StudyRegion formData={formData} city={city} district={district}
                                                  handleRegionCityChange={handleRegionCityChange}
                                                  handleRegionDistrictChange={handleRegionDistrictChange}/>
                                 )}
@@ -333,15 +366,15 @@ const StudyInsert = () => {
                         </div>
                         <div className={"deadline"}>
                             <span>스터디 종료일</span>
-                            <input type="date" name="endDate" value={formData.endDate} onChange={handleInputChange}
-                                   min={formattedCurrentDate} className="inputbox" placeholder="스터디 종료일을 선택해주세요"/>
+                            <input type="date" name="activityDeadline" value={formData.activityDeadline} onChange={handleInputChange}
+                                   min={formData.activityStart || new Date().toISOString().split('T')[0]} className="inputbox" placeholder="스터디 종료일을 선택해주세요"/>
                         </div>
 
                     </div>
                 </div>
                 <div className="study_open_detail">
                     <span>상세 내용</span>
-                    <textarea value={formData.description} name="description" onChange={handleInputChange}
+                    <textarea value={formData.content} name="content" onChange={handleInputChange}
                               placeholder={value}/>
                 </div>
                 <div className="study_tag">
