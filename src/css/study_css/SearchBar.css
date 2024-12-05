@@ -1,0 +1,36 @@
+/* 검색바 */
+.Home_wrap{
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+    margin:0 0 50px 0;
+}
+
+.study_search{
+    justify-content: space-between;
+}
+.searchbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.searchselect{
+    display: flex;
+}
+.searchselect select{
+    width:inherit;
+    height:47px;
+    margin-right:10px;
+}
+.searchselect .onlyrecruting{
+    border: 1px solid #dbdbdb;
+    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    height:47px;
+    padding:0 10px;
+    cursor: pointer;
+}

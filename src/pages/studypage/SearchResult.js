@@ -285,7 +285,7 @@ const SearchResult = () => {
                     )}
                     {!showStudyInsert && (
                         <div>
-                            <div><SearchBar/>
+                            <div><SearchBar isHome={false}/>
                             </div>
 
                             <div className="study_count">

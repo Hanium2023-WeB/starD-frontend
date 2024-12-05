@@ -229,7 +229,7 @@ const Home = () => {
                             STARD는 스터디 그룹 구성부터 일정 관리에 이르기까지, 필요한 모든 기능을 한 곳에서 제공합니다.
                         </span>
                         </div>
-                        <SearchBar/>
+                        <SearchBar isHome={true}/>
                     </CenteredDiv>
 
                     <div className={"welcome"}>

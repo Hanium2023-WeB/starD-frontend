@@ -1,14 +1,21 @@
 import {Link, Route, Router, useParams, useNavigate} from "react-router-dom";
 import React, {useEffect, useState,useCallback} from "react";
 import searchicon from "./images/search.png";
+import "./css/study_css/SearchBar.css";
 import axios from "axios";
 
 
-const SearchBar = () => {
+const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting}) => {
 
 	const [search, setSearch] = useState("");
 	const [selectOption, setSelectOption] = useState("제목");
 	const navigate = useNavigate();
+
+	const activityType = [
+		{value:"ONLINE", name: "온라인"},
+		{value:"OFFLINE", name: "오프라인"},
+		{value:"ONLINE_OFFLINE", name: "온/오프라인"},
+	]
 
 	const handleKeyDown = (e) => {
 		if (e.keyCode === 13) {
@@ -34,15 +41,22 @@ const SearchBar = () => {
 	}
 
 	return (
-		<div className="Home_wrap">
-			<div className="select_search">
-				<select id="sub" value={selectOption} onChange={onHandleselect}>
-					<option value="제목">제목</option>
-					<option value="내용">내용</option>
-					<option value="작성자">작성자</option>
+		<div className="Home_wrap study_search">
+			<div className="searchselect">
+				<select onChange={onHandleselect}>
+					{activityType.map((type, idx) =>
+						<option key={idx} value={type.value}>{type.name}</option>
+					)}
 				</select>
+				{isHome == false && (
+					<div className="onlyrecruting" onClick={handleClickRecrutingBtn}
+						 style={{
+							 backgroundColor: isOnlyRecruting ? "#BBDF9F" : "",
+						 }}>
+						모집중인 공고 보기
+					</div>
+				)}
 			</div>
-
 			<div className="searchbar">
 				<div className="searchinput">
 					<input className="input_padding"

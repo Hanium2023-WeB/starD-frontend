@@ -29,6 +29,7 @@ const Study = () => {
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
     const [loading, setLoading] = useState(false);
+    const [isOnlyRecruting, setIsOnlyRecruting] = useState(false);
 
     // const updateStudies = (updatedStudies) => {
     //     setStudies(updatedStudies);
@@ -49,6 +50,11 @@ const Study = () => {
     const handleStudyInsertClose = () => {
         setShowStudyInsert(false);
     };
+
+    const handleClickRecrutingBtn = () => {
+        setIsOnlyRecruting((prev) => !prev);
+
+    }
 
     const toggleScrap = useCallback((index) => {
         if (!(accessToken && isLoggedInUserId)) {
@@ -184,10 +190,17 @@ const Study = () => {
 
     const fetchStudies = (pageNumber) => {
         setLoading(true);
-        axios.post("/api/studies/search", {
-                page: pageNumber,
-                size: 9
-            },
+
+        const requestData = {
+            page: pageNumber,
+            size: 9,
+        };
+
+        if (isOnlyRecruting) {
+            requestData.recruitmentType = "RECRUITING";
+        }
+
+        axios.post("/api/studies/search", requestData,
             {
                 withCredentials: true,
                 headers: {
@@ -215,6 +228,10 @@ const Study = () => {
         fetchStudies(page);
         fetchLikeScrap(page);
     }, [page]);
+
+    useEffect(() => {
+        fetchStudies(page);
+    }, [isOnlyRecruting, page]);
 
     useEffect(() => {
         axios.post("/api/studies/search", {
@@ -274,7 +291,7 @@ const Study = () => {
                         navigate('/study/studyInsert')
                     )}
                     <div>
-                        <div><SearchBar/>
+                        <div><SearchBar isHome={false} handleClickRecrutingBtn={handleClickRecrutingBtn} isOnlyRecruting={isOnlyRecruting}/>
                         </div>
                         <div className="study_count">
                             총 {count} 건
@@ -297,7 +314,7 @@ const Study = () => {
             </div>
             <div className={"paging"}>
                 {!showStudyInsert && (
-                    <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+                    <Paging page={page} totalItemCount={itemsPerPage} itemsPerPage={itemsPerPage}
                             handlePageChange={handlePageChange}/>
                 )}
             </div>
