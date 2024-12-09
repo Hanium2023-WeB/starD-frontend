@@ -31,6 +31,11 @@ const Study = () => {
     const [loading, setLoading] = useState(false);
     const [isOnlyRecruting, setIsOnlyRecruting] = useState(false);
 
+    const query = new URLSearchParams(location.search).get("q") || "";
+    const option = new URLSearchParams(location.search).get("select") || "";
+    console.log(query);
+    console.log(option);
+
     // const updateStudies = (updatedStudies) => {
     //     setStudies(updatedStudies);
     // };
@@ -191,21 +196,27 @@ const Study = () => {
     const fetchStudies = (pageNumber) => {
         setLoading(true);
 
-        const requestData = {
+        const requestParams = {
             page: pageNumber,
             size: 9,
         };
 
         if (isOnlyRecruting) {
-            requestData.recruitmentType = "RECRUITING";
+            requestParams.recruitmentType = "RECRUITING";
         }
 
-        axios.post("/api/studies/search", requestData,
-            {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+        if (query && option) {
+            requestParams.keyword = query;
+            requestParams.activityType = option;
+        }
+        console.log(requestParams);
+
+        axios.get("/api/studies/search", {
+            params: requestParams, // 데이터를 params로 전달
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         })
             .then((response) => {
                 console.log(response.data);
@@ -231,19 +242,17 @@ const Study = () => {
 
     useEffect(() => {
         fetchStudies(page);
-    }, [isOnlyRecruting, page]);
+    }, [isOnlyRecruting, page, query, option]);
 
     useEffect(() => {
-        axios.post("/api/studies/search", {
-                page: 1,
-                size: 9
-            },
-            {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-        }).then((response) => {
+        axios.get("/api/studies/search", {
+            params: { page:1, size:9 }, // 데이터를 params로 전달
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then((response) => {
             console.log(response.data);
             setStudies(response.data.studyInfos);
             setItemsPerPage(response.data.currentPage);

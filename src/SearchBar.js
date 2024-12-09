@@ -8,14 +8,14 @@ import axios from "axios";
 const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting}) => {
 
 	const [search, setSearch] = useState("");
-	const [selectOption, setSelectOption] = useState("제목");
+	const [selectOption, setSelectOption] = useState("온라인");
 	const navigate = useNavigate();
 
 	const activityType = [
-		{value:"ONLINE", name: "온라인"},
-		{value:"OFFLINE", name: "오프라인"},
-		{value:"ONLINE_OFFLINE", name: "온/오프라인"},
-	]
+		{ name: "ONLINE", value: "온라인" },
+		{ name: "OFFLINE", value: "오프라인" },
+		{ name: "ONLINE_OFFLINE", value: "온/오프라인" },
+	];
 
 	const handleKeyDown = (e) => {
 		if (e.keyCode === 13) {
@@ -36,8 +36,12 @@ const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting}) => {
 	const searchItem = (item)=>{
 		console.log("타깃",item)
 		setSearch(item);
-		const queryParams = `?q=${encodeURIComponent(item)}&select=${encodeURIComponent(selectOption)}`;
-		navigate(`/search${queryParams}`);
+		const selectedType = activityType.find((type) => type.value === selectOption);
+		if (selectedType) {
+			const queryParams = `?q=${encodeURIComponent(item)}&select=${encodeURIComponent(selectedType.name)}`;
+			console.log(queryParams);
+			navigate(`/search${queryParams}`);
+		}
 	}
 
 	return (
@@ -53,7 +57,7 @@ const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting}) => {
 						 style={{
 							 backgroundColor: isOnlyRecruting ? "#BBDF9F" : "",
 						 }}>
-						모집중인 공고 보기
+						모집중인 스터디 보기
 					</div>
 				)}
 			</div>
