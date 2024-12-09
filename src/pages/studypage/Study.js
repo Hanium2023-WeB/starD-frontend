@@ -29,6 +29,12 @@ const Study = () => {
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
     const [loading, setLoading] = useState(false);
+    const [isOnlyRecruting, setIsOnlyRecruting] = useState(false);
+
+    const query = new URLSearchParams(location.search).get("q") || "";
+    const option = new URLSearchParams(location.search).get("select") || "";
+    console.log(query);
+    console.log(option);
 
     // const updateStudies = (updatedStudies) => {
     //     setStudies(updatedStudies);
@@ -49,6 +55,11 @@ const Study = () => {
     const handleStudyInsertClose = () => {
         setShowStudyInsert(false);
     };
+
+    const handleClickRecrutingBtn = () => {
+        setIsOnlyRecruting((prev) => !prev);
+
+    }
 
     const toggleScrap = useCallback((index) => {
         if (!(accessToken && isLoggedInUserId)) {
@@ -184,15 +195,28 @@ const Study = () => {
 
     const fetchStudies = (pageNumber) => {
         setLoading(true);
-        axios.post("/api/studies/search", {
-                page: pageNumber,
-                size: 9
-            },
-            {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+
+        const requestParams = {
+            page: pageNumber,
+            size: 9,
+        };
+
+        if (isOnlyRecruting) {
+            requestParams.recruitmentType = "RECRUITING";
+        }
+
+        if (query && option) {
+            requestParams.keyword = query;
+            requestParams.activityType = option;
+        }
+        console.log(requestParams);
+
+        axios.get("/api/studies/search", {
+            params: requestParams, // 데이터를 params로 전달
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         })
             .then((response) => {
                 console.log(response.data);
@@ -217,16 +241,18 @@ const Study = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.post("/api/studies/search", {
-                page: 1,
-                size: 9
-            },
-            {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-        }).then((response) => {
+        fetchStudies(page);
+    }, [isOnlyRecruting, page, query, option]);
+
+    useEffect(() => {
+        axios.get("/api/studies/search", {
+            params: { page:1, size:9 }, // 데이터를 params로 전달
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then((response) => {
             console.log(response.data);
             setStudies(response.data.studyInfos);
             setItemsPerPage(response.data.currentPage);
@@ -274,7 +300,7 @@ const Study = () => {
                         navigate('/study/studyInsert')
                     )}
                     <div>
-                        <div><SearchBar/>
+                        <div><SearchBar isHome={false} handleClickRecrutingBtn={handleClickRecrutingBtn} isOnlyRecruting={isOnlyRecruting}/>
                         </div>
                         <div className="study_count">
                             총 {count} 건
@@ -297,7 +323,7 @@ const Study = () => {
             </div>
             <div className={"paging"}>
                 {!showStudyInsert && (
-                    <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+                    <Paging page={page} totalItemCount={itemsPerPage} itemsPerPage={itemsPerPage}
                             handlePageChange={handlePageChange}/>
                 )}
             </div>

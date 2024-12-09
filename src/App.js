@@ -184,7 +184,7 @@ function App() {
                     <Route
                         path="/search"
                         element={
-                            <SearchResult/>
+                            <Study/>
                         }
                     />
                     <Route
