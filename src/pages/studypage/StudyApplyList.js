@@ -70,16 +70,16 @@ const StudyApplyList = () => {
         }
     };
 
-    const handleaccept = (memberId, index) => {
+    const handleaccept = (memberId, nickname, index) => {
         if (isCompleted === true) {
             alert('이미 모집 완료된 게시글입니다.');
         } else {
-            const result = window.confirm(memberId + "을(를) 수락하시겠습니까?");
+            const result = window.confirm(nickname + "님을(를) 수락하시겠습니까?");
             if (result) {
-                axios.put(`/api/api/v2/studies/${id}/select`, {}, {
+                axios.post(`/api/studies/${id}/applications/${memberId}/assignment`, {}, {
                     params: {
-                        applicantId: memberId,
-                        isSelect: true
+                        studyId: id,
+                        applicationId: memberId,
                     },
                     withCredentials: true,
                     headers: {
@@ -89,19 +89,15 @@ const StudyApplyList = () => {
                     .then((res) => {
                         console.log(res.data);
 
-                        if (res.data !== "SUCCESS") {
-                            window.alert(memberId + "을(를) 수락 실패했습니다.");
-                        } else {
-                            window.alert(memberId + "을(를) 수락했습니다.");
-                            setApplyList((prevApplyList) => {
-                                const updatedList = prevApplyList.map((item) => {
-                                    if (item.member.id === memberId) {
-                                        return {...item, participationState: true};
-                                    }
-                                    return item;
-                                });
-                                return updatedList;
-                            });
+                        window.alert(nickname + "님을(를) 수락했습니다.");
+                        setApplyList((prevApplyList) =>
+                            prevApplyList.map((item) => {
+                                if (item.applicantId === memberId) {
+                                    return { ...item, status: "ACCEPTED" }; // 상태 업데이트
+                                }
+                                return item;
+                            })
+                        );
 
                             setClickedApplyStates((prevStates) => {
                                 const updatedStates = [...prevStates];
@@ -116,7 +112,6 @@ const StudyApplyList = () => {
                             });
 
                             setAcceptedMembers([...acceptedMembers, memberId]);
-                        }
                     })
                     .catch((error) => {
                         console.error("수락 실패:", error);
@@ -252,42 +247,53 @@ const StudyApplyList = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {applyList.map((item, index) => (
-                            <tr key={index}>
-                                <td id={"apply_name"}>
-                                    <div>
-                                        <ImageComponent getImgName = {""} imageSrc={""} />
-                                        <Link
-                                            to={`/${item.applicantId}/userprofile`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {item.nickname}
-                                        </Link>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className={"look_motive"} onClick={() => toggleMotivation(index)}>보기
-                                    </button>
-                                    {openMotivationIndex === index && (
-                                        <Motive motive={item.introduce} onClose={() => setOpenMotivationIndex(-1)}/>
-                                    )}
-                                </td>
-                                <td>
-                                    <span><button
-                                        className={`acceptbtn ${item.participationState === true ? 'clicked' : ''}`}
-                                        onClick={() => handleaccept(item.applicantId, index)}>수락</button></span>
-                                    <span><button
-                                        className={`rejectbtn ${item.participationState === false ? 'clicked' : ''}`}
-                                        onClick={() => handlereturn(item.applicantId, index)}>거절</button></span>
-                                </td>
-                            </tr>
-                        ))}
-
-                        {/*))}*/}
+                        {/* PENDING 상태인 지원자들만 표시 */}
+                        {applyList
+                            .filter((item) => item.status === "PENDING")
+                            .map((item, index) => (
+                                <tr key={index}>
+                                    <td id={"apply_name"}>
+                                        <div>
+                                            <ImageComponent getImgName={""} imageSrc={""} />
+                                            <Link
+                                                to={`/${item.applicantId}/userprofile`}
+                                                style={{
+                                                    textDecoration: "none",
+                                                    color: "inherit",
+                                                }}
+                                            >
+                                                {item.nickname}
+                                            </Link>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button className={"look_motive"} onClick={() => toggleMotivation(index)}>보기</button>
+                                        {openMotivationIndex === index && (
+                                            <Motive motive={item.introduce} onClose={() => setOpenMotivationIndex(-1)} />
+                                        )}
+                                    </td>
+                                    <td>
+                    <span>
+                        <button
+                            className={`acceptbtn ${item.participationState === true ? 'clicked' : ''}`}
+                            onClick={() => handleaccept(item.applicantId, index)}
+                        >
+                            수락
+                        </button>
+                    </span>
+                                        <span>
+                        <button
+                            className={`rejectbtn ${item.participationState === false ? 'clicked' : ''}`}
+                            onClick={() => handlereturn(item.applicantId, index)}
+                        >
+                            거절
+                        </button>
+                    </span>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
+
                     </table>
                 </div>
                 <div className={"isMember_wrap"}>
@@ -302,18 +308,21 @@ const StudyApplyList = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {applyList.map((item, index) => (
-                                item.participationState && (
+                            {applyList
+                                .filter((item) => item.status === "ACCEPTED") // ACCEPTED 상태인 사람만 필터링
+                                .map((item, index) => (
                                     <tr key={index}>
                                         <td id={"apply_name"}>
+                                            <ImageComponent getImgName={""} imageSrc={""} />
                                             <Link
-                                                to={`/${item.member.id}/userprofile`}
+                                                to={`/${item.applicantId}/userprofile`}
                                                 style={{
                                                     textDecoration: "none",
                                                     color: "inherit",
+                                                    padding: "5px 0",
                                                 }}
                                             >
-                                                {item.member.nickname}
+                                                {item.nickname}
                                             </Link>
                                         </td>
                                         <td>
@@ -321,19 +330,20 @@ const StudyApplyList = () => {
                                                     onClick={() => toggleMotivation(index)}>보기
                                             </button>
                                             {openMotivationIndex === index && (
-                                                <Motive motive={item.applyReason}
-                                                        onClose={() => setOpenMotivationIndex(-1)}/>
+                                                <Motive motive={item.introduce}
+                                                        onClose={() => setOpenMotivationIndex(-1)} />
                                             )}
                                         </td>
                                         <td>
-                                            <span><button
+                                            <button
                                                 className={`rejectbtn ${clickedRejectStates[index] ? 'clicked' : ''}`}
-                                                onClick={() => handlereturn(item.member.id, index)}>수락 취소</button></span>
+                                                onClick={() => handlereturn(item.applicantId, index)}
+                                            >
+                                                수락 취소
+                                            </button>
                                         </td>
                                     </tr>
-                                )
-                            ))}
-
+                                ))}
                             </tbody>
                         </table>
                     </div>

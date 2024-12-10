@@ -12,7 +12,7 @@
     border-radius: 20px;
     overflow: hidden;
     width:60%;
-    margin:0 auto;
+    margin:20px auto 0;
 }
 .study_apply_list {
     border-collapse: collapse;
@@ -43,13 +43,14 @@
 #apply_name{
     font-size: 15px;
     cursor: pointer;
-
+    display: flex;
+    width: 100%;
+    justify-content: center;
 }
 #apply_name:hover{
     text-decoration: underline;
 }
 #apply_name > div{
-    width:100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -142,6 +143,7 @@
 }
 .background .show_motive p{
     font-size: 14px;
+    margin:0 0 20px 0;
 }
 .openStudy{
     display: flex;
