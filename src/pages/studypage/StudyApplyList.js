@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams, useNavigate, Link} from "react-router-dom";
+import {useParams, useNavigate, useLocation, Link} from "react-router-dom";
 
 import "../../css/study_css/ApplyList.css";
 import Header from "../../components/repeat_etc/Header";
@@ -9,35 +9,36 @@ import ImageComponent from "../../components/image/imageComponent";
 
 const StudyApplyList = () => {
     const [applyList, setApplyList] = useState([]);
+    const location = useLocation();
+    const { capacity } = location.state || {}; // 전달된 state에서 capacity 가져오기
+    console.log(capacity);
     const [MotiveToggle, setMotiveToggle] = useState(false);
     const [openMotivationIndex, setOpenMotivationIndex] = useState(-1);
     const accessToken = localStorage.getItem('accessToken');
     const [acceptedMembers, setAcceptedMembers] = useState([]);
 
     const [count, setCount] = useState(0);
-    const capacity = applyList.length > 0 ? applyList[0].study.capacity : 0;
     const [clickedApplyStates, setClickedApplyStates] = useState(Array(applyList.length).fill(false));
     const [clickedRejectStates, setClickedRejectStates] = useState(Array(applyList.length).fill(false));
-    console.log(capacity);
 
     let {id} = useParams();
     const navigate = useNavigate();
 
     const [isCompleted, setIsCompleted] = useState(false);
 
-
+    // 신청자 조회
     useEffect(() => {
-        axios.get(`/api/api/v2/studies/${id}/select`, {
+        axios.get(`/api/studies/${id}/applications`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         })
             .then((res) => {
-                console.log(res.data.data);
-                setApplyList(res.data.data);
-                setCount(res.data.data.length);
-
+                console.log(res.data.length);
+                console.log(res.data);
+                setCount(res.data.length);
+                setApplyList(res.data);
             })
             .catch((error) => {
                 console.error("신청자 데이터 가져오기 실패:", error);
@@ -257,13 +258,13 @@ const StudyApplyList = () => {
                                     <div>
                                         <ImageComponent getImgName = {""} imageSrc={""} />
                                         <Link
-                                            to={`/${item.member.id}/userprofile`}
+                                            to={`/${item.applicantId}/userprofile`}
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",
                                             }}
                                         >
-                                            {item.member.nickname}
+                                            {item.nickname}
                                         </Link>
                                     </div>
                                 </td>
@@ -271,16 +272,16 @@ const StudyApplyList = () => {
                                     <button className={"look_motive"} onClick={() => toggleMotivation(index)}>보기
                                     </button>
                                     {openMotivationIndex === index && (
-                                        <Motive motive={item.applyReason} onClose={() => setOpenMotivationIndex(-1)}/>
+                                        <Motive motive={item.introduce} onClose={() => setOpenMotivationIndex(-1)}/>
                                     )}
                                 </td>
                                 <td>
                                     <span><button
                                         className={`acceptbtn ${item.participationState === true ? 'clicked' : ''}`}
-                                        onClick={() => handleaccept(item.member.id, index)}>수락</button></span>
+                                        onClick={() => handleaccept(item.applicantId, index)}>수락</button></span>
                                     <span><button
                                         className={`rejectbtn ${item.participationState === false ? 'clicked' : ''}`}
-                                        onClick={() => handlereturn(item.member.id, index)}>거절</button></span>
+                                        onClick={() => handlereturn(item.applicantId, index)}>거절</button></span>
                                 </td>
                             </tr>
                         ))}

@@ -155,7 +155,8 @@ const StudyDetail = ({sideheader}) => {
                             {isApply === false && isRecruiter === true && (
                                 <div className="btn">
                                     <Link
-                                        to={`/StudyApplyList/${studyItem.id}`}
+                                        to={`/StudyApplyList/${studyItem.studyId}`}
+                                        state={{ capacity: studyItem.capacity }}
                                         style={{
                                             textDecoration: "none",
                                             color: "inherit",
