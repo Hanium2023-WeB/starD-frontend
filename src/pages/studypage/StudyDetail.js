@@ -142,7 +142,7 @@ const StudyDetail = ({sideheader}) => {
                             {isApply === false && isRecruiter === false && isCompleted === false && (
                                 <div className="btn">
                                     <Link
-                                        to={`/studyapplyform/${studyItem.id}`}
+                                        to={`/studyapplyform/${studyItem.studyId}`}
                                         style={{
                                             textDecoration: "none",
                                             color: "inherit",
