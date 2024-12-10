@@ -28,8 +28,7 @@
 .study_apply_list th,
 .study_apply_list tr,
 .study_apply_list td {
-    /*font-family: 'Pretendard-Regular';*/
-    border: 1px solid #ffffff;
+    /*border: 1px solid #ffffff;*/
     width: 33%;
 }
 .study_apply_list th{

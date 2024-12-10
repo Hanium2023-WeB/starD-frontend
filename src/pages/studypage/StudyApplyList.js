@@ -189,7 +189,7 @@ const StudyApplyList = () => {
                 alert("모집인원을 초과하였습니다.");
                 return;
             } else {
-                axios.post(`/api/api/v2/studies/${id}/open`, {}, {
+                axios.post(`/api/studies/${id}/open`, {}, {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -197,35 +197,42 @@ const StudyApplyList = () => {
                 })
                     .then((res) => {
                         console.log(res.data);
-
-                        const requestData = {
-                            studyId: id
-                        };
-                        axios.post('/api/chat/room', requestData, {
-                            withCredentials: true,
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`
+                        console.log("모집 완료");
+                        alert("모집 완료. 팀블로그로 이동합니다.");
+                        navigate(`/${id}/teamblog`, {
+                            state: {
+                                "studyId": id,
                             }
                         })
-                            .then((response) => {
-                                if (response.data === "SUCCESS") {
-                                    console.log(id, " 채팅방 생성 완료");
-                                }
-                            })
-                            .catch((error) => {
-                                console.error(error);
-                            });
 
-                        if (res.data !== "SUCCESS") {
-                            console.log("모집 완료 실패");
-                        } else {
-                            alert("모집 완료. 팀블로그로 이동합니다.");
-                            navigate(`/${id}/teamblog`, {
-                                state: {
-                                    "studyId": id,
-                                }
-                            })
-                        }
+                    //     const requestData = {
+                    //         studyId: id
+                    //     };
+                    //     axios.post('/api/chat/room', requestData, {
+                    //         withCredentials: true,
+                    //         headers: {
+                    //             'Authorization': `Bearer ${accessToken}`
+                    //         }
+                    //     })
+                    //         .then((response) => {
+                    //             if (response.data === "SUCCESS") {
+                    //                 console.log(id, " 채팅방 생성 완료");
+                    //             }
+                    //         })
+                    //         .catch((error) => {
+                    //             console.error(error);
+                    //         });
+                    //
+                    //     if (res.data !== "SUCCESS") {
+                    //         console.log("모집 완료 실패");
+                    //     } else {
+                    //         alert("모집 완료. 팀블로그로 이동합니다.");
+                    //         navigate(`/${id}/teamblog`, {
+                    //             state: {
+                    //                 "studyId": id,
+                    //             }
+                    //         })
+                    //     }
                     })
                     .catch((error) => {
                         console.error("참여완료 데이터 전송 실패:", error);
@@ -276,7 +283,7 @@ const StudyApplyList = () => {
                     <span>
                         <button
                             className={`acceptbtn ${item.participationState === true ? 'clicked' : ''}`}
-                            onClick={() => handleaccept(item.applicantId, index)}
+                            onClick={() => handleaccept(item.applicantId, item.nickname, index)}
                         >
                             수락
                         </button>
@@ -319,7 +326,7 @@ const StudyApplyList = () => {
                                                 style={{
                                                     textDecoration: "none",
                                                     color: "inherit",
-                                                    padding: "5px 0",
+                                                    padding: "6.5px 0",
                                                 }}
                                             >
                                                 {item.nickname}
