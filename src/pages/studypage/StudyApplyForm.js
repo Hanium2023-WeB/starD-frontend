@@ -11,7 +11,8 @@ import axios from "axios";
 
 const StudyApplyForm = ({sideheader}) => {
 
-    const {id} = useParams();
+    const { id } = useParams();
+    console.log(id);
     // const dataId = useRef(0);
     const contentRef = useRef();
     const [studies, setStudies] = useState([]);
@@ -49,9 +50,11 @@ const StudyApplyForm = ({sideheader}) => {
             return;
         }
 
-        axios.post(`/api/api/v2/studies/${id}/apply`, {}, {
+        axios.post(`/api/studies/${id}/applications`, {
+            introduce:content
+        }, {
             params: {
-                apply_reason: content
+                studyId: id
             },
             withCredentials: true,
             headers: {
@@ -59,8 +62,7 @@ const StudyApplyForm = ({sideheader}) => {
             }
         }).then((res) => {
             console.log(res.data);
-            setStudyDetail(res.data);
-            navigate("/myapplystudy/");
+            navigate("/myapplystudy");
         })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
