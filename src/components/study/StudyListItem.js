@@ -27,7 +27,7 @@ function checkRecruitStatus(recruitStatus, proressStatus) {
         return "모집 완료";
 }
 
-const StudyListItem = ({studies, toggleLike, toggleScrap, d, index}) => {
+const StudyListItem = ({studies, toggleScrap, d, index}) => {
     console.log(studies);
     const imgUrl = studies.imgUrl ? studies.imgUrl : default_profile_img;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
@@ -52,13 +52,9 @@ const StudyListItem = ({studies, toggleLike, toggleScrap, d, index}) => {
                     <div className="list_status">{recruitStatus}</div>
                 </div>
                 <div className="list_btn">
-                    <div className="list_like">
-                        <LikeButton like={studies.like}
-                                    onClick={() => toggleLike(index)}/>
-                    </div>
                     <div className="list_scrap">
                         {/* 스크랩 버튼을 클릭하면 해당 스터디 리스트 항목의 스크랩 상태를 토글 */}
-                        <ScrapButton scrap={studies.scrap}
+                        <ScrapButton scrap={studies.isScrapped}
                                      onClick={() => toggleScrap(index)}/>
                     </div>
                 </div>
