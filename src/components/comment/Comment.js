@@ -110,17 +110,7 @@ const Comment = ({ type }) => {
   };
 
   const addComment = (newComment) => {
-    let url;
-    if (type === "QNA" || type === 'COMM') {
-      url = "/api/replies/post";
-    } else if (type === "STUDY") {
-      url = "/api/replies/study";
-    } else if (type === "STUDYPOST") {
-        url = "/api/replies/studypost";
-    }
-
-    axios
-      .post(url, {
+    axios.post(`/replies/${targetId}`, {
         targetId: targetId,
         replyContent: newComment,
       }, {
