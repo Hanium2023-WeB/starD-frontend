@@ -10,6 +10,7 @@ const Comment = ({ type }) => {
   const [userNickname, setUserNickname] = useState("");
   const location = useLocation();
   let targetId = location.state;
+  console.log(targetId);
 
   const [comments, setComments] = useState([]);
   const [editingComment, setEditingComment] = useState(null);
@@ -110,10 +111,11 @@ const Comment = ({ type }) => {
   };
 
   const addComment = (newComment) => {
-    axios.post(`/replies/${targetId}`, {
-        targetId: targetId,
-        replyContent: newComment,
+    axios.post(`/api/replies/${targetId}`, {
+        type: type,
+        content: newComment,
       }, {
+        params: {targetId:targetId},
         withCredentials: true,
         headers: {
           'Authorization': `Bearer ${accessToken}`

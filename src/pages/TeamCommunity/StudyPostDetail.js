@@ -341,7 +341,7 @@ const StudyPostDetail = ( ) => {
 
                     {!editing && (
                         <div className="comment_container" style={{width:"90%"}}>
-                            <Comment type="STUDYPOST" />
+                            <Comment type="studypost" />
                         </div>
                     )}
                 </div>
