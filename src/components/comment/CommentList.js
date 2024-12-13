@@ -56,13 +56,13 @@ const CommentList = ({ comments, onEditClick, onRemoveClick, onReplySubmit, user
                 <div>
                   {comment.isAuthor && (
                       <>
-                    <span className="comment_edit_btn" onClick={() => onEditClick(comment.replyId)}>
-                      수정
-                    </span>
+                        <span className="comment_edit_btn" onClick={() => onEditClick(comment.replyId)}>
+                          수정
+                        </span>
                         <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
                         <span className="comment_remove_btn" onClick={() => onRemoveClick(comment.replyId)}>
-                      삭제
-                    </span>
+                          삭제
+                        </span>
                       </>
                   )}
                 </div>

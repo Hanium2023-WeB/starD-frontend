@@ -117,9 +117,10 @@ const Comment = ({ type }) => {
 
   const handleCommentSave = (commentId, updatedContent) => {
     axios
-      .post(`/api/replies/${commentId}`, {
-        replyContent: updatedContent,
+      .put(`/api/replies/${commentId}`, {
+        content: updatedContent,
       }, {
+        params:{replyId:commentId},
         withCredentials: true,
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -131,7 +132,7 @@ const Comment = ({ type }) => {
         const updatedCommentData = response.data;
 
         const updatedComments = comments.map((comment) =>
-          comment.id === commentId ? updatedCommentData : comment
+          comment.replyId === commentId ? updatedCommentData : comment
         );
         setEditingComment(null);
         setComments(updatedComments);
