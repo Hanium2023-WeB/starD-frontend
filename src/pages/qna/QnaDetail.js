@@ -252,7 +252,7 @@ const QnaDetail = () => {
             </div>
             {postItem && postItem.type === "QNA" && (
                 <div className="comment_container">
-                    <Comment type="QNA" />
+                    <Comment type="qna" />
                 </div>
             )}
         </div>

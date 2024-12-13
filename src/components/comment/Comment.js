@@ -10,6 +10,7 @@ const Comment = ({ type }) => {
   const [userNickname, setUserNickname] = useState("");
   const location = useLocation();
   let targetId = location.state;
+  console.log(targetId);
 
   const [comments, setComments] = useState([]);
   const [editingComment, setEditingComment] = useState(null);
@@ -43,14 +44,7 @@ const Comment = ({ type }) => {
   }, [targetId, accessToken]);
 
   useEffect(() => {
-    fetchComments()
-        .then(() => {
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("댓글 목록을 불러오는 중 에러 발생:", error);
-          setLoading(false); // 에러 발생 시에도 로딩 상태를 false로 설정합니다.
-        });
+    fetchComments();
     }, [id, accessToken]);
 
   useEffect(() => {
@@ -72,36 +66,21 @@ const Comment = ({ type }) => {
   }, [accessToken]);
 
   const fetchComments = () => {
-    // targetId가 없다면 댓글 목록을 가져올 수 없음
-    if (targetId === "") {
-      setLoading(false); // 로딩 상태 해제
-      return Promise.resolve(); // 빈 Promise를 반환
-    }
-
-    let url;
-    if (type === "QNA" || type === 'COMM' ) {
-      url = `/api/replies/post/${targetId}`;
-    } else if (type === "STUDY") {
-      url = `/api/replies/study/${targetId}`;
-    } else if (type === "STUDYPOST") {
-      url = `/api/replies/studypost/${targetId}`;
-    }
-
-    return axios
-      .get(url, {
+    axios
+      .get(`/api/replies/${targetId}`, {
+        params:{
+          targetId:targetId,
+          type:type
+        },
         withCredentials: true,
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }
       })
       .then((response) => {
-        const commentsWithIds = response.data.map((comment) => ({
-          ...comment,
-          id: comment.id,
-          author: comment.member.nickname,
-        }));
-        setComments(commentsWithIds);
-        console.log("댓글목록",commentsWithIds);
+        setLoading(false);
+        setComments(response.data.replies);
+        console.log(response.data.replies);
       })
       .catch((error) => {
         console.error("댓글 목록을 불러오는 중 에러 발생:", error);
@@ -110,10 +89,11 @@ const Comment = ({ type }) => {
   };
 
   const addComment = (newComment) => {
-    axios.post(`/replies/${targetId}`, {
-        targetId: targetId,
-        replyContent: newComment,
+    axios.post(`/api/replies/${targetId}`, {
+        type: type,
+        content: newComment,
       }, {
+        params: {targetId:targetId},
         withCredentials: true,
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -137,9 +117,10 @@ const Comment = ({ type }) => {
 
   const handleCommentSave = (commentId, updatedContent) => {
     axios
-      .post(`/api/replies/${commentId}`, {
-        replyContent: updatedContent,
+      .put(`/api/replies/${commentId}`, {
+        content: updatedContent,
       }, {
+        params:{replyId:commentId},
         withCredentials: true,
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -151,7 +132,7 @@ const Comment = ({ type }) => {
         const updatedCommentData = response.data;
 
         const updatedComments = comments.map((comment) =>
-          comment.id === commentId ? updatedCommentData : comment
+          comment.replyId === commentId ? updatedCommentData : comment
         );
         setEditingComment(null);
         setComments(updatedComments);
@@ -168,6 +149,7 @@ const Comment = ({ type }) => {
     if (confirmDelete) {
         axios
           .delete(`/api/replies/${commentId}`, {
+            params:{replyId:commentId},
             withCredentials: true,
             headers: {
               'Authorization': `Bearer ${accessToken}`
@@ -175,7 +157,7 @@ const Comment = ({ type }) => {
           })
           .then(() => {
             alert("댓글이 삭제되었습니다.");
-            const updatedComments = comments.filter((comment) => comment.id !== commentId);
+            const updatedComments = comments.filter((comment) => comment.replyId !== commentId);
             setComments(updatedComments);
           })
           .catch((error) => {

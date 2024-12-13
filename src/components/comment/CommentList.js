@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import Report from "../report/Report.js";
 import {Link, useNavigate} from "react-router-dom";
+import ImageComponent from "../image/imageComponent";
+import default_profile_img from "../../images/default_profile_img.png";
 
 const formatDatetime = (datetime) => {
   const date = new Date(datetime);
@@ -27,7 +29,6 @@ const CommentList = ({ comments, onEditClick, onRemoveClick, onReplySubmit, user
     setShowReportModal(false);
   };
 
-
   const handleReportSubmit = (reportReason) => {
     console.log("신고 사유:", reportReason);
   };
@@ -40,43 +41,48 @@ const CommentList = ({ comments, onEditClick, onRemoveClick, onReplySubmit, user
     <div className="comment_list">
       <ul>
         {comments.map((comment, index) => (
-          <li key={index} className="comment" >
-            <Link to={`/${comment.author}/profile`}
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                  }}>
-              <strong>{comment.author}</strong>
-            </Link>
-            <div style={{ float: "right" }}>
-              {comment.author === userNickname && (
-                <>
-                  <span className="comment_edit_btn" onClick={() => onEditClick(comment.id)}>
-                    수정
-                  </span>
-                  <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
-                  <span className="comment_remove_btn" onClick={() => onRemoveClick(comment.id)}>
-                    삭제
-                  </span>
-                </>
+            <li key={index} className="comment" >
+              <div style={{display:"flex", justifyContent:"space-between"}}>
+                <div className="comment_profile">
+                  <ImageComponent getImgName = {comment.profileImg} imageSrc={""} />
+                  <Link to={`/${comment.writer}/profile`}
+                        style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                        }}>
+                    <strong>{comment.writer}</strong>
+                  </Link>
+                </div>
+                <div>
+                  {comment.isAuthor && (
+                      <>
+                        <span className="comment_edit_btn" onClick={() => onEditClick(comment.replyId)}>
+                          수정
+                        </span>
+                        <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
+                        <span className="comment_remove_btn" onClick={() => onRemoveClick(comment.replyId)}>
+                          삭제
+                        </span>
+                      </>
+                  )}
+                </div>
+              </div>
+              <p>{comment.content}</p>
+              <span>{formatDatetime(comment.createdAt)}</span>
+              {comment.createdAt !== comment.updatedAt && (
+                  <>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>( 수정: {formatDatetime(comment.updatedAt)} )</span>
+                  </>
               )}
-            </div>
-            <p>{comment.content}</p>
-            <span>{formatDatetime(comment.createdAt)}</span>
-            {comment.createdAt !== comment.updatedAt && (
-              <>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <span>( 수정: {formatDatetime(comment.updatedAt)} )</span>
-              </>
-            )}
-            {comment.author !== userNickname && (
-              <>
-                <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
-                <span className="comment_report_btn"
-                      onClick={() => handleOpenReportModal(comment.id)}>신고</span>
-              </>
-            )}
-          </li>
+              {!comment.isAuthor && (
+                  <>
+                    <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
+                    <span className="comment_report_btn"
+                          onClick={() => handleOpenReportModal(comment.updatedAt)}>신고</span>
+                  </>
+              )}
+            </li>
         ))}
       </ul>
       <Report

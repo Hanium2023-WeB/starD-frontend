@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 const CommentEdit = ({ comment, commentId, onCancel, onSave }) => {
-  const [editedContent, setEditedContent] = useState(comment.find((c) => c.id === commentId)?.content || "");
+  const [editedContent, setEditedContent] = useState(comment.find((c) => c.replyId === commentId)?.content || "");
 
   const handleInputChange = useCallback((e) => {
     setEditedContent(e.target.value);

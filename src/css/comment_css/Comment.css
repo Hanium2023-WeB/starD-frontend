@@ -54,6 +54,15 @@
     border-radius: 10px;
     background:#fff;
 }
+.comment_list ul .comment .comment_profile{
+    display: flex;
+    align-items: center;
+}
+.comment_list ul .comment .comment_profile img{
+    width: 13px;
+    height: 13px;
+    margin-right: 5px;
+}
 .comment_list ul .comment strong{
     font-size: 13px;
 }

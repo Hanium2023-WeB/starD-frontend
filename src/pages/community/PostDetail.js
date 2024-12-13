@@ -374,7 +374,7 @@ const PostDetail = () => {
                 )}
             </div>
             <div className="comment_container">
-                <Comment type="COMM" />
+                <Comment type="comm" />
             </div>
         </div>
     )

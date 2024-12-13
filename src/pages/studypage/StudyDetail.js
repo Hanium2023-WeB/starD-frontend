@@ -171,7 +171,7 @@ const StudyDetail = ({sideheader}) => {
                 </div>
             </div>
             <div className="comment_container">
-                <Comment type="STUDY" />
+                <Comment type="study" />
             </div>
         </div>
     );
