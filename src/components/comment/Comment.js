@@ -149,6 +149,7 @@ const Comment = ({ type }) => {
     if (confirmDelete) {
         axios
           .delete(`/api/replies/${commentId}`, {
+            params:{replyId:commentId},
             withCredentials: true,
             headers: {
               'Authorization': `Bearer ${accessToken}`
@@ -156,7 +157,7 @@ const Comment = ({ type }) => {
           })
           .then(() => {
             alert("댓글이 삭제되었습니다.");
-            const updatedComments = comments.filter((comment) => comment.id !== commentId);
+            const updatedComments = comments.filter((comment) => comment.replyId !== commentId);
             setComments(updatedComments);
           })
           .catch((error) => {
