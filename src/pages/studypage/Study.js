@@ -14,15 +14,17 @@ import Loading from "../../components/repeat_etc/Loading";
 const Study = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [studies, setStudies] = useState([]);
-    const [isStudiesInitialized, setStudiesInitialized] = useState(false);
-    const [scrapStates, setScrapStates] = useState([]);
-    const [isScrapStates, setIsScrapStates] = useState(false);
     const pageparams = location.state ? location.state.page : 1;
-    const [showStudyInsert, setShowStudyInsert] = useState(false);
-    const [studiesChanged, setStudiesChanged] = useState(false);
     let accessToken = localStorage.getItem('accessToken');
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
+
+    const [studies, setStudies] = useState([]);
+    const [isStudiesInitialized, setStudiesInitialized] = useState(false);
+    const [isScrapStates, setIsScrapStates] = useState(false);
+
+    const [showStudyInsert, setShowStudyInsert] = useState(false);
+    const [studiesChanged, setStudiesChanged] = useState(false);
+
     const [page, setPage] = useState(pageparams);
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
@@ -32,33 +34,8 @@ const Study = () => {
 
     const query = new URLSearchParams(location.search).get("q") || "";
     const option = new URLSearchParams(location.search).get("select") || "";
-    console.log(query);
-    console.log(option);
 
-    // const updateStudies = (updatedStudies) => {
-    //     setStudies(updatedStudies);
-    // };
     const insertPage = location.state && location.state.page;
-
-    const handleMoveToStudyInsert = (e) => {
-        if (accessToken && isLoggedInUserId) {
-            e.preventDefault();
-            setShowStudyInsert(!showStudyInsert);
-        } else {
-            alert("로그인 해주세요");
-            navigate("/login");
-        }
-
-    };
-
-    const handleStudyInsertClose = () => {
-        setShowStudyInsert(false);
-    };
-
-    const handleClickRecrutingBtn = () => {
-        setIsOnlyRecruting((prev) => !prev);
-
-    }
 
     const toggleScrap = useCallback((index) => {
         if (!(accessToken && isLoggedInUserId)) {
@@ -125,184 +102,94 @@ const Study = () => {
         }
     }, [accessToken, isLoggedInUserId, studies, navigate]);
 
-    const toggleLike = useCallback((index) => {
-        if (!(accessToken && isLoggedInUserId)) {
-            alert("로그인 해주세요");
-            navigate("/login");
+    const fetchStudiesData = async (params) => {
+        try {
+            setLoading(true);
+            const response = await axios.get("/api/studies/search", {
+                params,
+                withCredentials: true,
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            });
+            setStudies(response.data.studyInfos);
+            setCount(response.data.studyInfos.length);
+            setLoading(false);
+        } catch (error) {
+            console.error("데이터 가져오기 실패:", error);
+            setLoading(false);
         }
+    }
 
-        setStudies((prevStudies) => {
-            const newStudies = [...prevStudies];
-            const studyId = newStudies[index].id;
-            if (newStudies[index].like) {
-                axios.delete(`/api/star/study/${studyId}`, {
-                    params: {id: studyId},
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then(response => {
-                        console.log("공감 취소 성공 " + response.data);
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        console.log("공감 취소 실패");
-                    });
-            } else {
-                axios.post(`/api/star/study/${studyId}`, null, {
-                    params: {id: studyId},
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then(response => {
-                        console.log("공감 성공");
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        console.log("공감 실패");
-                    });
-            }
-            newStudies[index] = {...newStudies[index], like: !newStudies[index].like};
-            setStudiesChanged(true);
-            return newStudies;
-        });
-    },[accessToken, isLoggedInUserId, studies]);
-
+    // 페이지 변경 시 호출되는 함수
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
         navigate(`/study/page=${selectedPage}`);
     };
 
-    const fetchStudies = (pageNumber) => {
-        setLoading(true);
-
-        const requestParams = {
-            page: pageNumber,
-            size: 9,
-        };
-
-        if (isOnlyRecruting) {
-            requestParams.recruitmentType = "RECRUITING";
-        }
-
-        if (filter) {
-            if (filter !== "ALL") {
-                requestParams.activityType = filter;
-            }
-        }
-
-        if (query) {
-            requestParams.keyword = query;
-        }
-        console.log(requestParams);
-
-        axios.get("/api/studies/search", {
-            params: requestParams, // 데이터를 params로 전달
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((response) => {
-                console.log(response.data);
-                setStudies(response.data.studyInfos);
-                setItemsPerPage(response.data.currentPage);
-                setCount(response.data.studyInfos.length);
-                if (response.data.content != null) {
-                    setStudiesInitialized(true);
-                }
-                setLoading(false);
-            }).catch((error) => {
-                console.error("데이터 가져오기 실패:", error);
-            });
-    };
-
-    useEffect(() => {
-        setStudiesInitialized(false);
-        setIsScrapStates(false);
-        fetchStudies(page);
-    }, [page]);
-
-    useEffect(() => {
-        fetchStudies(page);
-    }, [isOnlyRecruting, page, query, option, filter]);
-
+    // 필터 변경 처리
     const handleFilterChange = (newFilter) => {
         setFilter(newFilter);
     };
 
+    const loadStudies = useCallback(() => {
+        const requestParams = {
+            page,
+            size:9,
+            recruitmentType: isOnlyRecruting ? "RECRUITING" : undefined,
+            activityType: filter !== "ALL" ? filter : undefined,
+            keyword: new URLSearchParams(location.search).get("q") || "",
+        };
+        fetchStudiesData(requestParams);
+    }, [isOnlyRecruting, page, filter, location.search]);
+
     useEffect(() => {
-        axios.get("/api/studies/search", {
-            params: { page:1, size:9 }, // 데이터를 params로 전달
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((response) => {
-            console.log(response.data);
-            setStudies(response.data.studyInfos);
-            setItemsPerPage(response.data.currentPage);
-            setCount(response.data.studyInfos.length);
-            if (response.data.content != null) {
-                setStudiesInitialized(true);
-            }
-            setLoading(false);
-        })
-            .catch((error) => {
-                console.error("데이터 가져오기 실패:", error);
-            });
-    }, [insertPage])
+        loadStudies();
+    }, [loadStudies]);
+
+    const handleMoveToStudyInsert = (e) => {
+        if (accessToken && isLoggedInUserId) {
+            e.preventDefault();
+            navigate(`/study/studyInsert`);
+        } else {
+            alert("로그인 해주세요");
+            navigate("/login");
+        }
+    };
+
+    const handleClickRecrutingBtn = () => {
+        setIsOnlyRecruting((prev) => !prev);
+    }
 
     return (
-        <div className={"main_wrap"} id={"study"}>
-            <Header showSideCenter={true}/>
-            <div className="study_detail_container" style={{width: "70%"}}>
+        <div className="main_wrap" id="study">
+            <Header showSideCenter={true} />
+            <div className="study_detail_container" style={{ width: "70%" }}>
                 <h1>STAR TOUR STORY</h1>
                 <div className="arrow_left">
-                    <p id={"entry-path"}> 홈 > 스터디 리스트 </p>
-                    <Backarrow subname={"STAR TOUR STORY"}/>
-                    {!showStudyInsert && (
-                        <button onClick={handleMoveToStudyInsert} className="openStudy">
-                            스터디 개설
-                        </button>
-                    )}
+                    <p id="entry-path"> 홈 > 스터디 리스트 </p>
+                    <Backarrow subname="STAR TOUR STORY" />
+                    <button onClick={handleMoveToStudyInsert} className="openStudy">
+                        스터디 개설
+                    </button>
                 </div>
                 <div className="study">
-                    {showStudyInsert && (
-                        navigate('/study/studyInsert')
-                    )}
-                    <div>
-                        <div>
-                            <SearchBar isHome={false} handleClickRecrutingBtn={handleClickRecrutingBtn} isOnlyRecruting={isOnlyRecruting} onFilterChange={handleFilterChange}/>
-                        </div>
-                        <div className="study_count">
-                            총 {count} 건
-                        </div>
-                        {!showStudyInsert && loading ? (
-                            <Loading/>) : (
-                            <div className="content_container">
-                                <div className="study_list">
-                                    {studies.map((d, index) => (
-                                        <StudyListItem studies={d} toggleScrap={toggleScrap}
-                                                       d={d}
-                                                       index={index} key={d.id} studiesList={studies}/>
-                                    ))}
-                                </div>
+                    <SearchBar isHome={false} handleClickRecrutingBtn={handleClickRecrutingBtn} isOnlyRecruting={isOnlyRecruting} onFilterChange={handleFilterChange} />
+                    <div className="study_count">총 {count} 건</div>
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <div className="content_container">
+                            <div className="study_list">
+                                {studies.map((study, index) => (
+                                    <StudyListItem key={study.id} studies={study} index={index} />
+                                ))}
                             </div>
-                        )}
-                    </div>
-                    {!showStudyInsert && studies.length === 0 && !loading && <h3>스터디 리스트가 비었습니다.</h3>}
+                        </div>
+                    )}
+                    {studies.length === 0 && !loading && <h3>스터디 리스트가 비었습니다.</h3>}
                 </div>
             </div>
-            <div className={"paging"}>
-                {!showStudyInsert && (
-                    <Paging page={page} totalItemCount={itemsPerPage} itemsPerPage={itemsPerPage}
-                            handlePageChange={handlePageChange}/>
-                )}
+            <div className="paging">
+                <Paging page={page} totalItemCount={count} itemsPerPage={9} handlePageChange={handlePageChange} />
             </div>
         </div>
     );

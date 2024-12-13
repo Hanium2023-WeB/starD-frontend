@@ -1,10 +1,7 @@
-import LikeButton from "../repeat_etc/LikeButton";
 import ScrapButton from "../repeat_etc/ScrapButton";
 import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect} from "react";
 import default_profile_img from "../../images/default_profile_img.png";
-
-import axios from "axios";
 import ImageComponent from "../image/imageComponent";
 
 function calculateDateDifference(startDate, endDate) {
@@ -27,7 +24,7 @@ function checkRecruitStatus(recruitStatus, proressStatus) {
         return "모집 완료";
 }
 
-const StudyListItem = ({studies, toggleScrap, d, index}) => {
+const StudyListItem = ({studies, toggleScrap, index}) => {
     console.log(studies);
     const imgUrl = studies.imgUrl ? studies.imgUrl : default_profile_img;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
@@ -37,7 +34,7 @@ const StudyListItem = ({studies, toggleScrap, d, index}) => {
 
     const GoNextDetailPage = () => {
         // console.log(d.id);
-        navigate(`/studydetail/${d.studyId}`, { state: { id: d.studyId } });
+        navigate(`/studydetail/${studies.studyId}`, { state: { id: studies.studyId } });
 
     }
 
