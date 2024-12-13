@@ -13,13 +13,11 @@ import Loading from "../../components/repeat_etc/Loading";
 
 const Study = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [studies, setStudies] = useState([]);
     const [isStudiesInitialized, setStudiesInitialized] = useState(false);
     const [scrapStates, setScrapStates] = useState([]);
-    const [likeStates, setLikeStates] = useState([]);
     const [isScrapStates, setIsScrapStates] = useState(false);
-    const [isLikeStates, setIsLikeStates] = useState(false);
-    const location = useLocation();
     const pageparams = location.state ? location.state.page : 1;
     const [showStudyInsert, setShowStudyInsert] = useState(false);
     const [studiesChanged, setStudiesChanged] = useState(false);
@@ -30,6 +28,7 @@ const Study = () => {
     const [itemsPerPage, setItemsPerPage] = useState(9);
     const [loading, setLoading] = useState(false);
     const [isOnlyRecruting, setIsOnlyRecruting] = useState(false);
+    const [filter, setFilter] = useState(''); // SearchBar에서 전달받은 필터
 
     const query = new URLSearchParams(location.search).get("q") || "";
     const option = new URLSearchParams(location.search).get("select") || "";
@@ -177,41 +176,6 @@ const Study = () => {
         navigate(`/study/page=${selectedPage}`);
     };
 
-    const fetchLikeScrap = (pageNumber) => {
-        // if (accessToken && isLoggedInUserId) {
-        //     const res_like = axios.get("/api/study/stars", {
-        //         params: {
-        //             page: pageNumber,
-        //         },
-        //         withCredentials: true,
-        //         headers: {
-        //             'Authorization': `Bearer ${accessToken}`
-        //         }
-        //     }).then((response) => {
-        //         setLikeStates(response.data);
-        //         setIsLikeStates(true);
-        //     }).catch((error) => {
-        //         console.error("공감 가져오기 실패:", error);
-        //     });
-        //
-        //     const res_scrap = axios.get("/api/study/scraps", {
-        //         params: {
-        //             page: pageNumber,
-        //         },
-        //         withCredentials: true,
-        //         headers: {
-        //             'Authorization': `Bearer ${accessToken}`
-        //         }
-        //     }).then((response) => {
-        //         setScrapStates(response.data);
-        //         setIsScrapStates(true);
-        //         console.log("스크랩 가져오기 성공");
-        //     }).catch((error) => {
-        //         console.error("스크랩 가져오기 실패:", error);
-        //     });
-        // }
-    };
-
     const fetchStudies = (pageNumber) => {
         setLoading(true);
 
@@ -224,9 +188,14 @@ const Study = () => {
             requestParams.recruitmentType = "RECRUITING";
         }
 
-        if (query && option) {
+        if (filter) {
+            if (filter !== "ALL") {
+                requestParams.activityType = filter;
+            }
+        }
+
+        if (query) {
             requestParams.keyword = query;
-            requestParams.activityType = option;
         }
         console.log(requestParams);
 
@@ -253,15 +222,17 @@ const Study = () => {
 
     useEffect(() => {
         setStudiesInitialized(false);
-        setIsLikeStates(false);
         setIsScrapStates(false);
         fetchStudies(page);
-        fetchLikeScrap(page);
     }, [page]);
 
     useEffect(() => {
         fetchStudies(page);
-    }, [isOnlyRecruting, page, query, option]);
+    }, [isOnlyRecruting, page, query, option, filter]);
+
+    const handleFilterChange = (newFilter) => {
+        setFilter(newFilter);
+    };
 
     useEffect(() => {
         axios.get("/api/studies/search", {
@@ -286,20 +257,6 @@ const Study = () => {
             });
     }, [insertPage])
 
-    useEffect(() => {
-        if (isStudiesInitialized) {
-            if (isLikeStates && isScrapStates) {
-                const studyList = studies;
-                const updateStudies = studyList.map((study, index) => {
-                    study.like = likeStates[index];
-                    study.scrap = scrapStates[index];
-                    return study;
-                });
-                setStudies(updateStudies);
-            }
-        }
-    }, [isStudiesInitialized, isLikeStates, isScrapStates])
-
     return (
         <div className={"main_wrap"} id={"study"}>
             <Header showSideCenter={true}/>
@@ -319,7 +276,8 @@ const Study = () => {
                         navigate('/study/studyInsert')
                     )}
                     <div>
-                        <div><SearchBar isHome={false} handleClickRecrutingBtn={handleClickRecrutingBtn} isOnlyRecruting={isOnlyRecruting}/>
+                        <div>
+                            <SearchBar isHome={false} handleClickRecrutingBtn={handleClickRecrutingBtn} isOnlyRecruting={isOnlyRecruting} onFilterChange={handleFilterChange}/>
                         </div>
                         <div className="study_count">
                             총 {count} 건

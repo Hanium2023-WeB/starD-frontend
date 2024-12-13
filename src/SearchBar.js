@@ -5,16 +5,17 @@ import "./css/study_css/SearchBar.css";
 import axios from "axios";
 
 
-const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting}) => {
+const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting, onFilterChange}) => {
 
 	const [search, setSearch] = useState("");
-	const [selectOption, setSelectOption] = useState("온라인");
+	const [selectOption, setSelectOption] = useState("");
 	const navigate = useNavigate();
 
 	const activityType = [
-		{ name: "ONLINE", value: "온라인" },
-		{ name: "OFFLINE", value: "오프라인" },
-		{ name: "ONLINE_OFFLINE", value: "온/오프라인" },
+		{ value: "ALL", name: "전체"},
+		{ value: "ONLINE_OFFLINE", name: "온/오프라인" },
+		{ value: "ONLINE", name: "온라인" },
+		{ value: "OFFLINE", name: "오프라인" },
 	];
 
 	const handleKeyDown = (e) => {
@@ -25,11 +26,11 @@ const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting}) => {
 		}
 	};
 	const onChange=(e)=>{
-		setSearch(e.target.value)
+		setSearch(e.target.value);
 	}
 
 	const onHandleselect=(e)=>{
-		setSelectOption(e.target.value);
+		onFilterChange(e.target.value);
 		console.log(`value = ${e.target.value}`)
 	};
 
@@ -47,7 +48,7 @@ const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting}) => {
 	return (
 		<div className="Home_wrap study_search">
 			<div className="searchselect">
-				<select onChange={onHandleselect}>
+				<select onChange={onHandleselect} value={activityType.find(type => type.name === selectOption)?.value}>
 					{activityType.map((type, idx) =>
 						<option key={idx} value={type.value}>{type.name}</option>
 					)}
