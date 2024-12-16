@@ -35,15 +35,18 @@ const Community = () => {
     };
 
     const fetchCommunities = (pageNumber) => {
-        axios.get("/api/com", {
-            params: {
-                page: pageNumber,
-            },
+        axios.get("/api/communities", {
+            params: {page: pageNumber},
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         })
             .then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                console.log(res.data);
+                setPosts(res.data.posts);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.posts.length);
             }).catch((error) => {
             console.error("데이터 가져오기 실패:", error);
         });
@@ -57,7 +60,7 @@ const Community = () => {
         axios.get("/api/com", {
             params: {
                 page: 1,
-            }
+            },
         }).then((res) => {
                 setPosts(res.data.content);
                 setItemsPerPage(res.data.pageable.pageSize);
@@ -100,13 +103,12 @@ const Community = () => {
                                             <th>닉네임</th>
                                             <th>날짜</th>
                                             <th>조회수</th>
-                                            <th>공감수</th>
-                                            <th>스크랩수</th>
+                                            <th>좋아요수</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {posts.map((post) => (
-                                            <PostListItem key={post.id}
+                                            <PostListItem key={post.postId}
                                                           setPosts={setPosts}
                                                           posts={post}/>
                                         ))}
