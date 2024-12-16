@@ -144,17 +144,14 @@ const PostDetail = () => {
     }
 
     const handlePostUpdate = (updatedPost) => {
-        setEditing(false);
-
-        console.log("수정 예정 : " + updatedPost.id + ", " + updatedPost.title + ", " + updatedPost.content
+        console.log("수정 예정 : " + updatedPost.postId + ", " + updatedPost.title + ", " + updatedPost.content
             + ", " + updatedPost.category);
 
-        axios.post(`/api/com/${id}`, {
+        axios.put(`/api/communities/${id}`, {
             title: updatedPost.title,
             content: updatedPost.content,
             category: updatedPost.category
         }, {
-            params: { id: updatedPost.id },
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -164,12 +161,14 @@ const PostDetail = () => {
                 console.log("커뮤니티 게시글 수정 성공");
                 alert("게시글이 수정되었습니다.");
 
-                setPostDetail(response.data);
-                const updatedPosts = posts.map(post =>
-                    post.id === updatedPost.id ? updatedPost : post
-                );
-                setPosts(updatedPosts);
-                setPostItem(response.data);
+                // setPostDetail(response.data);
+                // const updatedPosts = posts.map(post =>
+                //     post.postId === updatedPost.postId ? updatedPost : post
+                // );
+                // setPosts(updatedPosts);
+                // setPostItem(response.data);
+                setEditing(false);
+                navigate(`/postdetail/${updatedPost.postId}`);
             })
             .catch(error => {
                 console.error("Error:", error);
@@ -329,9 +328,11 @@ const PostDetail = () => {
                     </div>
                 )}
             </div>
-            <div className="comment_container">
-                <Comment type="comm" />
-            </div>
+            {!editing && (
+                <div className="comment_container">
+                    <Comment type="comm" />
+                </div>
+            )}
         </div>
     )
 }

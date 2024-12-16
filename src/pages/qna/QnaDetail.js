@@ -79,7 +79,7 @@ const QnaDetail = () => {
                 .then((res) => {
                     console.log(res.data);
                     setPostItem(res.data);
-                    if (res.data.isAuthor === isLoggedInUserId) { // 자신의 글인지
+                    if (res.data.isAuthor) { // 자신의 글인지
                         setIsWriter(true);
                     }
                 })
