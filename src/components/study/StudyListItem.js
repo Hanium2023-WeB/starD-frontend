@@ -62,11 +62,13 @@ const StudyListItem = ({studies, toggleScrap, index}) => {
             </div>
             <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>
             <div className="list_tag_wrapper" onClick={GoNextDetailPage}>
-                {studies.tagText.split(',').map((tag, idx) => (
-                    <div key={idx} className="list_tag">
-                      {tag.trim()}
-                    </div>
-                ))}
+                {(studies.tagText ? studies.tagText.split(',') : studies.tags ? studies.tags.split(',') : [])
+                    .filter(tag => tag) // 빈 태그 필터링
+                    .map((tag, idx) => (
+                        <div key={idx} className="list_tag">
+                            {tag.trim()}
+                        </div>
+                    ))}
             </div>
             <div className="list_onoff" onClick={GoNextDetailPage}>{studies.activityType}</div>
             <div className="stroke"></div>
