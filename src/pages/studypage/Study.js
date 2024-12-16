@@ -10,6 +10,7 @@ import axios from "axios";
 import StudyListItem from "../../components/study/StudyListItem";
 import Paging from "../../components/repeat_etc/Paging";
 import Loading from "../../components/repeat_etc/Loading";
+import {toggleScrapStatus} from "../../util/scrapHandler";
 
 const Study = () => {
     const navigate = useNavigate();
@@ -19,10 +20,6 @@ const Study = () => {
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
 
     const [studies, setStudies] = useState([]);
-    const [isStudiesInitialized, setStudiesInitialized] = useState(false);
-    const [isScrapStates, setIsScrapStates] = useState(false);
-
-    const [showStudyInsert, setShowStudyInsert] = useState(false);
     const [studiesChanged, setStudiesChanged] = useState(false);
 
     const [page, setPage] = useState(pageparams);
@@ -38,69 +35,23 @@ const Study = () => {
     const insertPage = location.state && location.state.page;
 
     const toggleScrap = useCallback((index) => {
-        if (!(accessToken && isLoggedInUserId)) {
-            alert("로그인 해주세요");
-            navigate("/login");
-            return;
-        }
-
-        const studyId = studies[index].studyId;
-
-        // 복사본을 만들지 않고 먼저 요청을 처리
-        if (studies[index].isScrapped) {
-            axios.delete(`/api/stars-and-scraps/${studyId}`, {
-                params: {
-                    targetId: studyId,
-                    tableType: "study"
-                },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    console.log("스크랩 취소 성공:", response.data);
-                    // 요청이 성공한 경우에만 상태를 업데이트
-                    setStudies(prevStudies => {
-                        const updatedStudies = [...prevStudies];
-                        updatedStudies[index] = {
-                            ...updatedStudies[index],
-                            isScrapped: false
-                        };
-                        return updatedStudies;
-                    });
-                })
-                .catch(error => {
-                    console.error("스크랩 취소 실패:", error);
+        const study = studies[index];
+        toggleScrapStatus(
+            study,
+            accessToken,
+            isLoggedInUserId,
+            (isScrapped) => {
+                setStudies((prevStudies) => {
+                    const updatedStudies = [...prevStudies];
+                    updatedStudies[index] = { ...study, isScrapped };
+                    return updatedStudies;
                 });
-        } else {
-            axios.post(`/api/stars-and-scraps/${studyId}`, null, {
-                params: {
-                    targetId: studyId,
-                    tableType: "study"
-                },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    console.log("스크랩 성공:", response.data);
-                    // 요청이 성공한 경우에만 상태를 업데이트
-                    setStudies(prevStudies => {
-                        const updatedStudies = [...prevStudies];
-                        updatedStudies[index] = {
-                            ...updatedStudies[index],
-                            isScrapped: true
-                        };
-                        return updatedStudies;
-                    });
-                })
-                .catch(error => {
-                    console.error("스크랩 실패:", error);
-                });
-        }
-    }, [accessToken, isLoggedInUserId, studies, navigate]);
+            },
+            (error) => {
+                console.error("스크랩 상태 변경 실패:", error);
+            }
+        );
+    }, [studies, accessToken, isLoggedInUserId]);
 
     const fetchStudiesData = async (params) => {
         try {
@@ -180,7 +131,7 @@ const Study = () => {
                         <div className="content_container">
                             <div className="study_list">
                                 {studies.map((study, index) => (
-                                    <StudyListItem key={study.id} studies={study} index={index} />
+                                    <StudyListItem key={study.id} studies={study} index={index} toggleScrap={() => toggleScrap(index)}/>
                                 ))}
                             </div>
                         </div>
