@@ -100,7 +100,7 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
             <div className="study_header">
                 <h2 className="study_title">{study.title}</h2>
                 <div>
-                    <div className="study_author_info">
+                    <div className="">
                         <span>
                             <ImageComponent getImgName = {imgUrl} imageSrc={""} />
                             <p className="study_author">

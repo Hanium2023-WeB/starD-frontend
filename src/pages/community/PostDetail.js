@@ -8,6 +8,8 @@ import ScrapButton from "../../components/repeat_etc/ScrapButton";
 import axios from "axios";
 import PostEdit from "../../components/community/PostEdit";
 import Report from "../../components/report/Report";
+import ImageComponent from "../../components/image/imageComponent";
+import default_profile_img from "../../images/default_profile_img.png";
 
 const PostDetail = () => {
     const navigate = useNavigate();
@@ -70,27 +72,24 @@ const PostDetail = () => {
     }, [id]);
 
     useEffect(() => {
-        const config = {
-            headers: {}
-        };
-
-        if (accessToken && isLoggedInUserId) {
-            config.headers['Authorization'] = `Bearer ${accessToken}`;
-        }
-
-        if (initiallyLikeStates && initiallyScrapStates) {
-            axios.get(`/api/com/${id}`, config)
-                .then((res) => {
-                    setPostItem(res.data);
-                    if (res.data.member.id === isLoggedInUserId) { // 자신의 글인지
-                        setIsWriter(true);
-                    }
-                })
-                .catch((error) => {
-                    console.error("커뮤니티 게시글 세부 데이터 가져오기 실패:", error);
-                });
-        }
-    }, [id, accessToken, isLoggedInUserId, initiallyLikeStates, initiallyScrapStates]);
+        axios.get(`/api/communities/${id}`, {
+            params:{commPostId:id},
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then((res) => {
+                console.log(res.data);
+                setPostItem(res.data);
+                if (res.data.isAuthor) { // 자신의 글인지
+                    setIsWriter(true);
+                }
+            })
+            .catch((error) => {
+                console.error("커뮤니티 게시글 세부 데이터 가져오기 실패:", error);
+            });
+    }, [id, accessToken, isLoggedInUserId,]);
 
     const toggleLike = () => {
         if (!(accessToken && isLoggedInUserId)) {
@@ -133,50 +132,6 @@ const PostDetail = () => {
                 });
 
             setLikeStates(true);
-        }
-    };
-
-    const toggleScrap = () => {
-        if (!(accessToken && isLoggedInUserId)) {
-            alert("로그인 해주세요");
-            navigate("/login");
-            return;
-        }
-
-        if (scrapStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`/api/scrap/post/${id}`, {
-                params: { id: id },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    console.log("스크랩 취소 성공 " + response.data);
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    console.log("스크랩 취소 실패");
-                });
-
-            setScrapStates(false);
-        } else {
-            axios.post(`/api/scrap/post/${id}`, null, {
-                params: { id: id },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    console.log("스크랩 성공");
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    console.log("스크랩 실패");
-                });
-
-            setScrapStates(true);
         }
     };
 
@@ -317,15 +272,18 @@ const PostDetail = () => {
                                 </div>
                                 <div className="post_info">
                                     <div className="left">
-                                        <Link
-                                            to={`/${postItem.member.id}/userprofile`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            <span className="post_nickname">{postItem.member.nickname}</span>
-                                        </Link>
+                                        <span className="writer_profile">
+                                            <ImageComponent getImgName = {postItem.profileImg ? postItem.profileImg : default_profile_img} imageSrc={""} />
+                                            <Link
+                                                to={`/${postItem.postId}/userprofile`}
+                                                style={{
+                                                    textDecoration: "none",
+                                                    color: "inherit",
+                                                }}
+                                            >
+                                                <span className="post_nickname">{postItem.writer}</span>
+                                            </Link>
+                                        </span>
                                         <span className="post_created_date">{formatDatetime(postItem.createdAt)}</span>
                                         {postItem.createdAt !== postItem.updatedAt && (
                                           <>
@@ -333,7 +291,7 @@ const PostDetail = () => {
                                             <span>( 수정: {formatDatetime(postItem.updatedAt)} )</span>
                                           </>
                                         )}
-                                        {isLoggedInUserId !== postItem.member.id && (
+                                        {isWriter && (
                                             <>
                                                 <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
                                                 <span className="report_btn" onClick={(e) => handleOpenReportModal(postItem.id, e)}>신고</span>
@@ -347,11 +305,9 @@ const PostDetail = () => {
                                         />
                                     </div>
                                     <div className="right">
-                                    <span className="like_btn"><LikeButton like={likeStates}
-                                                                           onClick={() => toggleLike()} /></span>
-                                        <span className="scrap_btn"><ScrapButton scrap={scrapStates}
-                                                                                 onClick={() => toggleScrap()} /></span>
-                                        <span>조회 <span>{postItem.viewCount}</span></span>
+                                        <span className="like_btn">
+                                            <LikeButton like={likeStates} onClick={() => toggleLike()} /></span>
+                                        <span>조회 <span>{postItem.hit}</span></span>
                                     </div>
                                 </div>
                             </div>
