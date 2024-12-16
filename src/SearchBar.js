@@ -48,18 +48,20 @@ const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting, onFilterCh
 	return (
 		<div className="Home_wrap study_search">
 			<div className="searchselect">
-				<select onChange={onHandleselect} value={activityType.find(type => type.name === selectOption)?.value}>
-					{activityType.map((type, idx) =>
-						<option key={idx} value={type.value}>{type.name}</option>
-					)}
-				</select>
 				{isHome == false && (
-					<div className="onlyrecruting" onClick={handleClickRecrutingBtn}
-						 style={{
-							 backgroundColor: isOnlyRecruting ? "#BBDF9F" : "",
-						 }}>
-						모집중인 스터디 보기
-					</div>
+					<>
+						<select onChange={onHandleselect} value={activityType.find(type => type.name === selectOption)?.value}>
+							{activityType.map((type, idx) =>
+								<option key={idx} value={type.value}>{type.name}</option>
+							)}
+						</select>
+						<div className="onlyrecruting" onClick={handleClickRecrutingBtn}
+							 style={{
+								 backgroundColor: isOnlyRecruting ? "#BBDF9F" : "",
+							 }}>
+							모집중인 스터디 보기
+						</div>
+					</>
 				)}
 			</div>
 			<div className="searchbar">
