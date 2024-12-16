@@ -117,10 +117,12 @@ const Community = () => {
                     </div>
                 )}
             </div>
-            <div className={"paging"}>
-                <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                        handlePageChange={handlePageChange}/>
-            </div>
+            {!showPostInsert && (
+                <div className={"paging"}>
+                    <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+                            handlePageChange={handlePageChange}/>
+                </div>
+            )}
         </div>
     );
 }
