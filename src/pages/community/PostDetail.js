@@ -180,9 +180,8 @@ const PostDetail = () => {
     const handlePostDelete = () => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
-
-            axios.delete(`/api/com/${id}`, {
-                params: { id: id },
+            axios.delete(`/api/communities/${id}`, {
+                // params: { id: id },
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -192,7 +191,7 @@ const PostDetail = () => {
                     console.log("커뮤니티 게시글 삭제 성공 ");
                     alert("게시글이 삭제되었습니다.");
 
-                    const updatedPosts = posts.filter(post => post.id !== postDetail[0].id);
+                    const updatedPosts = posts.filter(post => post.postId !== postDetail[0].postId);
                     setPosts(updatedPosts);
                     navigate("/community/page=1");
                 })
