@@ -70,14 +70,17 @@ const Qna = () => {
 
         let params = isSearchMode
             ? {
-                category: categoryOption,
                 keyword: searchQuery,
                 page: pageNumber,
             }
             : { page: pageNumber };
 
         axios
-            .get(base_url, { params })
+            .get(base_url, {
+                params,
+                withCredentials: true,
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
             .then((res) => {
                 console.log(res.data);
                 const data = res.data;

@@ -9,10 +9,14 @@
 .study_search{
     justify-content: space-between;
 }
+.study .searchbar {
+    margin-right: 0;
+}
 .searchbar {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-right: 20px;
 }
 .searchselect{
     display: flex;

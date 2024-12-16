@@ -2,8 +2,6 @@ import Header from "../../components/repeat_etc/Header";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import {Link, useParams, useNavigate, useLocation} from "react-router-dom";
 import React, {useState, useEffect} from "react";
-import LikeButton from "../../components/repeat_etc/LikeButton";
-import ScrapButton from "../../components/repeat_etc/ScrapButton";
 import axios from "axios";
 import QnaEdit from "../../components/qna/QnaEdit";
 import Comment from "../../components/comment/Comment";
@@ -28,7 +26,6 @@ const QnaDetail = () => {
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
     const [url, setUrl] = useState(null);
     const [initiallyUrlStates, setInitiallyUrlStates] = useState(false);
-    const [type, setType] = useState(null);
 
     const [isWriter, setIsWriter] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
@@ -82,7 +79,7 @@ const QnaDetail = () => {
                 .then((res) => {
                     console.log(res.data);
                     setPostItem(res.data);
-                    if (res.data.member.id === isLoggedInUserId) { // 자신의 글인지
+                    if (res.data.isAuthor === isLoggedInUserId) { // 자신의 글인지
                         setIsWriter(true);
                     }
                 })
@@ -193,12 +190,12 @@ const QnaDetail = () => {
                                     <div className="post_title">
                                         {postItem.title}
                                     </div>
-                                    {/*{(isWriter || (isWriter && isAdmin)) && (*/}
+                                    {(isWriter || (isWriter && isAdmin)) && (
                                         <div className="button">
                                             <button style={{marginRight:"5px"}} onClick={handleEditClick}>수정</button>
                                             <button onClick={handlePostDelete}>삭제</button>
                                         </div>
-                                    {/*)}*/}
+                                    )}
                                     {(isAdmin && !isWriter) && (
                                         <div className="button">
                                             <button onClick={handlePostDelete}>삭제</button>
@@ -228,7 +225,7 @@ const QnaDetail = () => {
                                         )}
                                     </div>
                                     <div className="right">
-                                        <span>조회 <span>{postItem.hit}</span></span>
+                                        <span className="hit_count">조회 <span>{postItem.hit}</span></span>
                                     </div>
                                 </div>
                             </div>
