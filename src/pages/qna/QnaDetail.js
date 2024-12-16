@@ -219,7 +219,7 @@ const QnaDetail = () => {
                                                 {postItem.writer}
                                             </td>
                                         )}
-                                        <span className="post_created_date">{formatDatetime(postItem.updatedAt)}</span>
+                                        <span className="post_created_date">{formatDatetime(postItem.createdAt)}</span>
                                         {postItem.createdAt !== postItem.updatedAt && (
                                             <>
                                                 <span>&nbsp;&nbsp;&nbsp;</span>
