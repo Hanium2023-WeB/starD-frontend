@@ -27,6 +27,7 @@ const Community = () => {
     const searchQuery = new URLSearchParams(location.search).get("q");
     const categoryOption = new URLSearchParams(location.search).get("category");
     const [isSearchMode, setIsSearchMode] = useState(!!searchQuery || !!categoryOption);
+    const [filter, setFilter] = useState(''); // SearchBar에서 전달받은 필터
 
     const handleMoveToStudyInsert = (e) => {
         if (accessToken && isLoggedInUserId) {
@@ -61,20 +62,24 @@ const Community = () => {
     }, [page]);
 
     const handleSearchPost = (pageNumber) => {
-        let base_url;
+        let base_url = "/api/communities";
         let params = {
             page:pageNumber
         }
-        if (searchQuery && categoryOption == "전체") {
-            base_url = "/api/communities/search";
-            params.keyword = searchQuery;
-        } else if (!searchQuery && categoryOption) {
+        if (categoryOption && categoryOption !== "전체") {
+            // 특정 카테고리를 선택한 경우
             base_url = "/api/communities/category";
             params.category = categoryOption;
-        } else if (searchQuery && categoryOption) {
-            base_url = "/api/communities/search/category";
+        }
+        if (searchQuery) {
+            // 검색어가 있는 경우
+            base_url = "/api/communities/search";
             params.keyword = searchQuery;
-            params.category = categoryOption;
+            if (categoryOption && categoryOption !== "전체") {
+                // 검색어와 카테고리가 동시에 선택된 경우
+                base_url = "/api/communities/search/category";
+                params.category = categoryOption;
+            }
         }
 
         axios.get(base_url, {
@@ -86,6 +91,8 @@ const Community = () => {
                 console.log(base_url);
                 console.log(params);
                 console.log(res.data);
+                setPosts(res.data.posts);
+                setCount(res.data.posts.length);
             })
             .catch((error) => console.error("데이터 가져오기 실패:", error));
     }
@@ -96,9 +103,15 @@ const Community = () => {
     useEffect(() => {
         setIsSearchMode(!!searchQuery || !!categoryOption);
     }, [searchQuery, categoryOption]);
+
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
         navigate(`/community/page=${selectedPage}`);
+    };
+
+    // 필터 변경 처리
+    const handleFilterChange = (newFilter) => {
+        setFilter(newFilter);
     };
 
     return (
@@ -113,7 +126,7 @@ const Community = () => {
                 {!showPostInsert && (
                     <div>
                         <div className="community_header">
-                            <SearchBar setIsSearchMode={setIsSearchMode}/>
+                            <SearchBar setIsSearchMode={setIsSearchMode} onFilterChange={handleFilterChange}/>
                             <button onClick={handleMoveToStudyInsert} className="new_post_btn">
                                 새 글 작성
                             </button>
@@ -139,6 +152,9 @@ const Community = () => {
                                         ))}
                                     </tbody>
                                 </table>
+                                {posts.length === 0 && (
+                                    <h4 style={{textAlign:"center"}}>검색 결과가 없습니다.</h4>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -4,7 +4,7 @@ import searchicon from "../../images/search.png";
 import axios from "axios";
 
 
-const CommSearchBar = ({setIsSearchMode}) => {
+const CommSearchBar = ({setIsSearchMode, onFilterChange}) => {
 
 	const [search, setSearch] = useState("");
 	const [categoryOption, setCategoryOption] = useState("전체");
@@ -27,22 +27,29 @@ const CommSearchBar = ({setIsSearchMode}) => {
 		console.log("Search", e.target.value);
 		setSearch(e.target.value)
 	}
+	const onHandleselect = (e) => {
+		const selectedCategory = e.target.value;
+		setCategoryOption(selectedCategory);
+		onFilterChange(selectedCategory); // 부모 컴포넌트에 필터 전달
 
-	const onHandleCategory = (e) => {
-        setCategoryOption(e.target.value);
-	}
+		const queryParams = `?category=${encodeURIComponent(selectedCategory)}`;
+		navigate(`/comm/search${queryParams}`, { replace: true });
+	};
 
 	const searchItem = (item)=>{
 		setSearch(item);
 		setIsSearchMode(true);
-		const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}`;
-		navigate(`/comm/search${queryParams}`, {replace:true});
+		const selectedType = tagoptions.find((type) => type.value === categoryOption);
+		if (selectedType) {
+			const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}`;
+			navigate(`/comm/search${queryParams}`, {replace:true});
+		}
 	}
 
 	return (
 		<div className="Home_wrap">
 			<div className="select_search">
-			    <select id="sub" value={categoryOption} onChange={onHandleCategory}>
+			    <select id="sub" value={categoryOption} onChange={onHandleselect}>
                     {tagoptions.map((category, idx) =>
                         <option value={category.value}>{category.name}</option>
                     )}
