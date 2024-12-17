@@ -21,8 +21,9 @@ const PostEdit = ({post, onUpdatePost, onCancel}) => {
         }));
     }
 
-    const handleUpdateClick = () => {
-        onUpdatePost({ ...updatedPost, category: selectedCategory });
+    const handleUpdateClick = (e) => {
+        e.preventDefault();
+        onUpdatePost({ ...updatedPost, category: selectedCategory, e });
     }
 
     return (

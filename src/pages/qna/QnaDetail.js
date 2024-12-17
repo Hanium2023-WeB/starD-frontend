@@ -121,8 +121,9 @@ const QnaDetail = () => {
             .then(response => {
                 console.log("qna 수정 성공:", response.data);
                 alert("게시글이 수정되었습니다.");
+                setPostItem(response.data)
                 setEditing(false); // 수정 모드 비활성화
-                navigate(`/qnadetail/${updatedPost.postId}`); // 수정된 게시글로 이동
+                // navigate(`/qnadetail/${updatedPost.postId}`); // 수정된 게시글로 이동
             })
             .catch(error => {
                 console.error("qna 수정 실패:", error.response || error.message);
