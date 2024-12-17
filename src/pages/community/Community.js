@@ -24,6 +24,10 @@ const Community = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const insertPage = location.state && location.state.page;
 
+    const searchQuery = new URLSearchParams(location.search).get("q");
+    const categoryOption = new URLSearchParams(location.search).get("category");
+    const [isSearchMode, setIsSearchMode] = useState(!!searchQuery || !!categoryOption);
+
     const handleMoveToStudyInsert = (e) => {
         if (accessToken && isLoggedInUserId) {
             e.preventDefault();
@@ -56,21 +60,42 @@ const Community = () => {
         fetchCommunities(page);
     }, [page]);
 
-    useEffect(() => {
-        axios.get("/api/com", {
-            params: {
-                page: 1,
-            },
-        }).then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
-            })
-            .catch((error) => {
-                console.error("데이터 가져오기 실패:", error);
-            });
-    }, [insertPage]);
+    const handleSearchPost = (pageNumber) => {
+        let base_url;
+        let params = {
+            page:pageNumber
+        }
+        if (searchQuery && categoryOption == "전체") {
+            base_url = "/api/communities/search";
+            params.keyword = searchQuery;
+        } else if (!searchQuery && categoryOption) {
+            base_url = "/api/communities/category";
+            params.category = categoryOption;
+        } else if (searchQuery && categoryOption) {
+            base_url = "/api/communities/search/category";
+            params.keyword = searchQuery;
+            params.category = categoryOption;
+        }
 
+        axios.get(base_url, {
+            params,
+            withCredentials: true,
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+        })
+            .then((res) => {
+                console.log(base_url);
+                console.log(params);
+                console.log(res.data);
+            })
+            .catch((error) => console.error("데이터 가져오기 실패:", error));
+    }
+    useEffect(() => {
+        handleSearchPost(page);
+    }, [page, location.search]);
+
+    useEffect(() => {
+        setIsSearchMode(!!searchQuery || !!categoryOption);
+    }, [searchQuery, categoryOption]);
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
         navigate(`/community/page=${selectedPage}`);
@@ -88,7 +113,7 @@ const Community = () => {
                 {!showPostInsert && (
                     <div>
                         <div className="community_header">
-                            <SearchBar/>
+                            <SearchBar setIsSearchMode={setIsSearchMode}/>
                             <button onClick={handleMoveToStudyInsert} className="new_post_btn">
                                 새 글 작성
                             </button>

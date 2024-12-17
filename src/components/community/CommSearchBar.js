@@ -4,13 +4,11 @@ import searchicon from "../../images/search.png";
 import axios from "axios";
 
 
-const CommSearchBar = () => {
+const CommSearchBar = ({setIsSearchMode}) => {
 
 	const [search, setSearch] = useState("");
-	const [selectOption, setSelectOption] = useState("제목");
 	const [categoryOption, setCategoryOption] = useState("전체");
 	const navigate = useNavigate();
-
 
 	const tagoptions = [
 	    { value: "전체", name: "전체" },
@@ -30,19 +28,15 @@ const CommSearchBar = () => {
 		setSearch(e.target.value)
 	}
 
-	const onHandleselect = (e)=>{
-		setSelectOption(e.target.value);
-		console.log(`value = ${e.target.value}`)
-	}
-
 	const onHandleCategory = (e) => {
         setCategoryOption(e.target.value);
 	}
 
 	const searchItem = (item)=>{
 		setSearch(item);
-		const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}&select=${encodeURIComponent(selectOption)}`;
-		navigate(`/comm/search${queryParams}`);
+		setIsSearchMode(true);
+		const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}`;
+		navigate(`/comm/search${queryParams}`, {replace:true});
 	}
 
 	return (
@@ -53,11 +47,6 @@ const CommSearchBar = () => {
                         <option value={category.value}>{category.name}</option>
                     )}
 			    </select>
-				<select id="sub" value={selectOption} onChange={onHandleselect}>
-					<option value="제목">제목</option>
-					<option value="내용">내용</option>
-					<option value="작성자">작성자</option>
-				</select>
 			</div>
 
 			<div className="searchbar">
