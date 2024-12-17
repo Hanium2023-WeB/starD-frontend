@@ -79,6 +79,11 @@ const MyScrapStudy = () => {
                 </div>
                 <div className="content_container">
                     <div className="study_list">
+                        {scrapStudies.length === 0 && (
+                            <div className="no_scrap">
+                                <h2>스크랩한 스터디가 없습니다.</h2>
+                            </div>
+                        )}
                         {scrapStudies.map((study, index) => (
                             <StudyListItem key={study.id} studies={study} index={index} toggleScrap={() => toggleScrap(index)} />
                         ))}
