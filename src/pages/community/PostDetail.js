@@ -73,7 +73,6 @@ const PostDetail = () => {
 
     useEffect(() => {
         axios.get(`/api/communities/${id}`, {
-            params:{commPostId:id},
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -89,7 +88,7 @@ const PostDetail = () => {
             .catch((error) => {
                 console.error("커뮤니티 게시글 세부 데이터 가져오기 실패:", error);
             });
-    }, [id, accessToken, isLoggedInUserId,]);
+    }, [id, accessToken, isLoggedInUserId]);
 
     const toggleLike = () => {
         if (!(accessToken && isLoggedInUserId)) {
@@ -148,27 +147,22 @@ const PostDetail = () => {
             + ", " + updatedPost.category);
 
         axios.put(`/api/communities/${id}`, {
-            title: updatedPost.title,
-            content: updatedPost.content,
-            category: updatedPost.category
-        }, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
+                title: updatedPost.title,
+                content: updatedPost.content,
+                category: updatedPost.category
+            }, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
             .then(response => {
                 console.log("커뮤니티 게시글 수정 성공");
                 alert("게시글이 수정되었습니다.");
 
-                // setPostDetail(response.data);
-                // const updatedPosts = posts.map(post =>
-                //     post.postId === updatedPost.postId ? updatedPost : post
-                // );
-                // setPosts(updatedPosts);
-                // setPostItem(response.data);
+                setPostItem(response.data);
                 setEditing(false);
-                navigate(`/postdetail/${updatedPost.postId}`);
+                // navigate(`/postdetail/${updatedPost.postId}`);
             })
             .catch(error => {
                 console.error("Error:", error);
