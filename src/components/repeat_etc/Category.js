@@ -157,7 +157,7 @@ const category = () => {
 									color: "inherit",
 								}}
 							>
-							<li>스크랩한 게시글</li>
+							<li>좋아요한 게시글</li>
 							</Link>
 						</ul>
 					</nav>

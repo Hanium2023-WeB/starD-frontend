@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 
-const PostListItem = ({posts, setPosts}) => {
+const PostListItem = ({posts, isMyLikePost}) => {
     const formatDatetime = (datetime) => {
         const date = new Date(datetime);
         const year = date.getFullYear();
@@ -25,7 +25,9 @@ const PostListItem = ({posts, setPosts}) => {
             <td className="community_nickname">{posts.writer}</td>
             <td className="community_datetime">{formatDatetime(posts.createdAt)}</td>
             <td>{posts.hit}</td>
-            <td>{posts.starCount}</td>
+            {!isMyLikePost && (
+                <td>{posts.starCount}</td>
+            )}
         </tr>
     )
 }
