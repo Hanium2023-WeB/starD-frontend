@@ -277,7 +277,7 @@ function App() {
                     <Route
                         path="/comm/search"
                         element={
-                            <CommSearchResult/>
+                            <Community />
                         }
                     />
                     <Route

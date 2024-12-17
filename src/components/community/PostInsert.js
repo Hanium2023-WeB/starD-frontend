@@ -88,7 +88,7 @@ const PostInsert = () => {
             })
             .then((res) => {
                 console.log(res.data);
-                const id = res.data.id;
+                const id = res.data.postId;
                 alert("게시글이 등록되었습니다.");
                 window.location.href = `/postdetail/${id}`;
             }).catch((error) => {

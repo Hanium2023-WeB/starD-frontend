@@ -29,11 +29,6 @@ const Study = () => {
     const [isOnlyRecruting, setIsOnlyRecruting] = useState(false);
     const [filter, setFilter] = useState(''); // SearchBar에서 전달받은 필터
 
-    const query = new URLSearchParams(location.search).get("q") || "";
-    const option = new URLSearchParams(location.search).get("select") || "";
-
-    const insertPage = location.state && location.state.page;
-
     const toggleScrap = useCallback((index) => {
         const study = studies[index];
         toggleScrapStatus(
