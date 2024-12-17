@@ -81,7 +81,7 @@ const MyScrapStudy = () => {
             <div className="container">
                 <Category/>
                 <div className="main_container">
-                    <p id={"entry-path"}> 홈 > 마이페이지 > 프로필 </p>
+                    <p id={"entry-path"}> 홈 > 마이페이지 > 스크랩한 스터디 </p>
                     <Backarrow subname={"스크랩한 스터디"}/>
                     <div className="content_container">
                         <div className="study_list">

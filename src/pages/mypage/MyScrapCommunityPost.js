@@ -89,7 +89,7 @@ const MyScrapCommunityPost = () => {
             <div className="container">
                 <Category/>
                 <div className="main_container">
-                    <p id={"entry-path"}> 홈 > 마이페이지 > 프로필 </p>
+                    <p id={"entry-path"}> 홈 > 마이페이지 > 좋아요한 게시글 </p>
                     <Backarrow subname={"좋아요한 게시글"}/>
                     {showPostInsert && (
                         <PostInsert />
