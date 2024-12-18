@@ -6,7 +6,7 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 
 const FaqInsert = () => {
     //console.log("type: ",postType);
-    const postType = "qna"
+    const postType = "FAQ"
     const navigate = useNavigate();
     const [dataId, setDataId] = useState(0);
     const [posts, setPosts] = useState([]);
@@ -64,16 +64,9 @@ const FaqInsert = () => {
         }
         setFormData(onInsertPost(formData));
 
-        // let url;
-        // if (postType === "FAQ") {
-        //     url = "http://localhost:8080/faq"
-        // } else if (postType === "QNA") {
-        //     url = "http://localhost:8080/qna"
-        // }
-
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("/api/faq",
+        const response = axios.post("/api/faqs",
             {
                 title: formData.title,
                 content: formData.content,
@@ -86,7 +79,7 @@ const FaqInsert = () => {
             })
             .then((res) => {
                 console.log(res.data);
-                const id = res.data.id;
+                const id = res.data.postId;
                 alert("게시글이 등록되었습니다.");
                 window.location.href = `/qnadetail/${id}`;
             }).catch((error) => {
@@ -96,27 +89,28 @@ const FaqInsert = () => {
         e.preventDefault();
     }, [formData])
 
-    return (<div className={"main_wrap"} id={"community"}>
+    return (
+        <div className={"main_wrap"} id={"community"}>
             <Header showSideCenter={true}/>
             <div className="community_container">
                 <div className="community_container">
                     <p id={"entry-path"}> 홈 > FAQ </p>
                     <Backarrow subname={"Faq Insert"}/>
                     <form className="new_post_form" onSubmit={handleSubmit}>
-                        <div style={{display: "flex"}}>
-                            <span style={{paddingLeft: "10px", marginTop: "25px"}}>제목</span>
+                        <div style={{display: "flex", alignItems:"center"}}>
+                            <span style={{paddingLeft: "10px"}}>제목</span>
                             <input type="text" name="title" value={formData.title} onChange={handleInputChange}/>
                         </div>
                         <div>
                             <span>카테고리</span>
                             <span className="field_wrapper">
-                    <select name="category" onChange={handleInputChange} disabled>
-                        {postType === 'FAQ' ? (
-                            <option value="qna">FAQ</option>
-                        ) : <option value="faq">QNA</option>
-                        }
-                    </select>
-                </span>
+                            <select name="category" onChange={handleInputChange} disabled>
+                                {postType === 'FAQ' ? (
+                                    <option value="faq">FAQ</option>
+                                ) : <option value="qna">QNA</option>
+                                }
+                            </select>
+                            </span>
                         </div>
                         <div style={{display: "flex"}}>
                             <span style={{paddingLeft: "10px", marginTop: "5px"}}>상세 내용</span>
