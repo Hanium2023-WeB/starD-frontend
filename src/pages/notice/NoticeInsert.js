@@ -65,7 +65,7 @@ const NoticeInsert = () => {
         
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = axios.post("/api/notice",
+        const response = axios.post("/api/notices",
             {
                 title:formData.title,
                 content:formData.content,
@@ -78,7 +78,7 @@ const NoticeInsert = () => {
             })
             .then((res) => {
                 console.log(res.data);
-                const id = res.data.id;
+                const id = res.data.postId;
                 alert("게시글이 등록되었습니다.");
                 window.location.href = `/noticedetail/${id}`;
             }).catch((error) => {
