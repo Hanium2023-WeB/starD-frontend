@@ -386,7 +386,7 @@ function App() {
                     />
                     <Route
                         path="/faqdetail/:id"
-                        element={<FaqDetail/>}
+                        element={<QnaDetail/>}
                     />
 
                     <Route

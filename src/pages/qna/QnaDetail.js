@@ -12,8 +12,8 @@ const QnaDetail = () => {
 
     const {id} = useParams();
     console.log("postId : ", id);
-    const location = useLocation(); // 현재 경로의 정보를 가져옴
-    const { postType } = location.state || {}; // state에서 postType 추출
+    const location = useLocation();
+    const { postType } = location.state || {};
     console.log(postType);
 
     const [postItem, setPostItem] = useState(null);
@@ -41,29 +41,29 @@ const QnaDetail = () => {
         setInitiallyUrlStates(true);
     }, [id]);
 
-    useEffect(() => {
-        axios
-            .get("/api/member/auth", {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-            .then((res) => {
-                const auth = res.data[0].authority;
-
-                if (auth === "ROLE_USER") {
-                    setIsAdmin(false);
-                }
-                else if (auth === "ROLE_ADMIN") {
-                    setIsAdmin(true);
-                }
-            })
-            .catch((error) => {
-                console.error("권한 조회 실패:", error);
-                setIsAdmin(false);
-            });
-    }, [accessToken]);
+    // useEffect(() => {
+    //     axios
+    //         .get("/api/member/auth", {
+    //             withCredentials: true,
+    //             headers: {
+    //                 'Authorization': `Bearer ${accessToken}`
+    //             }
+    //         })
+    //         .then((res) => {
+    //             const auth = res.data[0].authority;
+    //
+    //             if (auth === "ROLE_USER") {
+    //                 setIsAdmin(false);
+    //             }
+    //             else if (auth === "ROLE_ADMIN") {
+    //                 setIsAdmin(true);
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.error("권한 조회 실패:", error);
+    //             setIsAdmin(false);
+    //         });
+    // }, [accessToken]);
 
     useEffect(() => {
         const config = {
@@ -123,7 +123,6 @@ const QnaDetail = () => {
                 alert("게시글이 수정되었습니다.");
                 setPostItem(response.data)
                 setEditing(false); // 수정 모드 비활성화
-                // navigate(`/qnadetail/${updatedPost.postId}`); // 수정된 게시글로 이동
             })
             .catch(error => {
                 console.error("qna 수정 실패:", error.response || error.message);
@@ -134,7 +133,6 @@ const QnaDetail = () => {
     const handlePostDelete = () => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
-
             axios.delete(url, {
                 withCredentials: true,
                 headers: {
@@ -144,7 +142,7 @@ const QnaDetail = () => {
                 .then(response => {
                     console.log("qna 삭제 성공 ");
                     alert("게시글이 삭제되었습니다.");
-                    const updatedPosts = posts.filter(post => post.id !== postDetail[0].id);
+                    const updatedPosts = posts.filter(post => post.postId !== postDetail[0].postId);
                     setPosts(updatedPosts);
                     navigate("/qna/page=1");
                 })
