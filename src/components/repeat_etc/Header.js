@@ -41,7 +41,7 @@ const Header = ({showSideCenter}) => {
 
 
             if (accessToken != null && isLoggedInUserId != null) {
-                axios.get("/api/user/auth/accessToken-expiration", {    // accessToken 만료 여부 확인 function
+                axios.post("/api/members/auth/reissue", {    // accessToken 만료 여부 확인 function
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -50,7 +50,7 @@ const Header = ({showSideCenter}) => {
                     .then((res) => {
                         console.log("accessToken 확인 여부 결과 값 : " + res.data);
 
-                        if (res.data === false)
+                        if (res.data.refreshTokenExpirationTime !== 0)
                             setIsLoggedIn(true);
                         else {
                             console.log("토큰 만료")
@@ -59,7 +59,7 @@ const Header = ({showSideCenter}) => {
                         }
                     })
                     .catch(error => {
-                        console.log(error);
+                        console.log(error.response.data);
                     });
             } else {
                 localStorage.removeItem('accessToken');
