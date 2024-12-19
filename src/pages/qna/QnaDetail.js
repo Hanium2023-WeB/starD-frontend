@@ -12,8 +12,8 @@ const QnaDetail = () => {
 
     const {id} = useParams();
     console.log("postId : ", id);
-    const location = useLocation(); // 현재 경로의 정보를 가져옴
-    const { postType } = location.state || {}; // state에서 postType 추출
+    const location = useLocation();
+    const { postType } = location.state || {};
     console.log(postType);
 
     const [postItem, setPostItem] = useState(null);
@@ -41,29 +41,29 @@ const QnaDetail = () => {
         setInitiallyUrlStates(true);
     }, [id]);
 
-    useEffect(() => {
-        axios
-            .get("/api/member/auth", {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-            .then((res) => {
-                const auth = res.data[0].authority;
-
-                if (auth === "ROLE_USER") {
-                    setIsAdmin(false);
-                }
-                else if (auth === "ROLE_ADMIN") {
-                    setIsAdmin(true);
-                }
-            })
-            .catch((error) => {
-                console.error("권한 조회 실패:", error);
-                setIsAdmin(false);
-            });
-    }, [accessToken]);
+    // useEffect(() => {
+    //     axios
+    //         .get("/api/member/auth", {
+    //             withCredentials: true,
+    //             headers: {
+    //                 'Authorization': `Bearer ${accessToken}`
+    //             }
+    //         })
+    //         .then((res) => {
+    //             const auth = res.data[0].authority;
+    //
+    //             if (auth === "ROLE_USER") {
+    //                 setIsAdmin(false);
+    //             }
+    //             else if (auth === "ROLE_ADMIN") {
+    //                 setIsAdmin(true);
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.error("권한 조회 실패:", error);
+    //             setIsAdmin(false);
+    //         });
+    // }, [accessToken]);
 
     useEffect(() => {
         const config = {
