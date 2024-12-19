@@ -6,6 +6,7 @@ import axios from "axios";
 import QnaEdit from "../../components/qna/QnaEdit";
 import Comment from "../../components/comment/Comment";
 import default_profile_img from "../../images/default_profile_img.png";
+import axiosInstance from "../../api/axiosInstance";
 
 const QnaDetail = () => {
     const navigate = useNavigate();
@@ -41,29 +42,24 @@ const QnaDetail = () => {
         setInitiallyUrlStates(true);
     }, [id]);
 
-    // useEffect(() => {
-    //     axios
-    //         .get("/api/member/auth", {
-    //             withCredentials: true,
-    //             headers: {
-    //                 'Authorization': `Bearer ${accessToken}`
-    //             }
-    //         })
-    //         .then((res) => {
-    //             const auth = res.data[0].authority;
-    //
-    //             if (auth === "ROLE_USER") {
-    //                 setIsAdmin(false);
-    //             }
-    //             else if (auth === "ROLE_ADMIN") {
-    //                 setIsAdmin(true);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.error("권한 조회 실패:", error);
-    //             setIsAdmin(false);
-    //         });
-    // }, [accessToken]);
+    useEffect(() => {
+        axiosInstance
+            .get("/members/auth")
+            .then((res) => {
+                const auth = res.data;
+
+                if (auth === "USER") {
+                    setIsAdmin(false);
+                }
+                else if (auth === "ADMIN") {
+                    setIsAdmin(true);
+                }
+            })
+            .catch((error) => {
+                console.error("권한 조회 실패:", error);
+                setIsAdmin(false);
+            });
+    }, [accessToken]);
 
     useEffect(() => {
         const config = {
