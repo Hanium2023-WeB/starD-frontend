@@ -51,7 +51,7 @@ const Study = () => {
     const fetchStudiesData = async (params) => {
         try {
             setLoading(true);
-            const response = await axios.get("/api/studies/search", {
+            const response = await axios.get("http://star-d.duckdns.org/studies/search", {
                 params,
                 withCredentials: true,
                 headers: { 'Authorization': `Bearer ${accessToken}` }

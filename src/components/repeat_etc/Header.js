@@ -1,244 +1,181 @@
-import React, {useEffect, useState} from "react";
-import axios from "axios";
-import {Link, useNavigate} from "react-router-dom";
-import LOGO from "../../images/Logo.png"
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../api/axiosInstance";
+import { Link, useNavigate } from "react-router-dom";
+import LOGO from "../../images/Logo.png";
 import MemoizedLink from "../../MemoizedLink";
 
-const Header = ({showSideCenter}) => {
-    let [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigate = useNavigate();
-    let accessToken = localStorage.getItem('accessToken');
-    let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
-    const [page, setPage] = useState(1);
+const Header = ({ showSideCenter }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [page, setPage] = useState(1);
 
-    const Side = () => {
-        useEffect(() => {
+    const navigate = useNavigate();
 
-            const logout = (member) => {
-                axios.post("/api/members/auth/sign-out", {}, {
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then(() => {
-                        // console.log("로그아웃 성공");
-                        // localStorage.removeItem('accessToken');
-                        // localStorage.removeItem('isLoggedInUserId');
-                        // setIsLoggedIn(false);
-                        // alert("30분이 지나 자동 로그아웃");
-                        // navigate("/");
-                    })
-                    .catch(error => {
-                        alert("30분이 지나 자동 로그아웃");
-                        localStorage.removeItem('accessToken');
-                        localStorage.removeItem('isLoggedInUserId');
-                        setIsLoggedIn(false);
-                        navigate("/");
-                    });
-            };
+    useEffect(() => {
+        const accessToken = localStorage.getItem("accessToken");
+        const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
 
-
-            if (accessToken != null && isLoggedInUserId != null) {
-                axios.post("/api/members/auth/reissue", {    // accessToken 만료 여부 확인 function
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then((res) => {
-                        console.log("accessToken 확인 여부 결과 값 : " + res.data);
-
-                        if (res.data.refreshTokenExpirationTime !== 0)
-                            setIsLoggedIn(true);
-                        else {
-                            console.log("토큰 만료")
-                            logout(isLoggedInUserId);
-                            setIsLoggedIn(false);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error.response.data);
-                    });
-            } else {
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('isLoggedInUserId');
-                setIsLoggedIn(false);
+        const checkTokenValidity = async () => {
+            try {
+                // accessToken 유효성 확인
+                const res = await axiosInstance.post("/members/auth/reissue");
+                if (res.data.refreshTokenExpirationTime !== 0) {
+                    setIsLoggedIn(true);
+                } else {
+                    console.log("토큰 만료");
+                    handleLogout();
+                }
+            } catch (error) {
+                console.error("토큰 확인 중 오류 발생:", error);
+                handleLogout();
             }
-        }, []);
+        };
 
-        // TODO 권한 조회
-        useEffect(() => {
-            if (accessToken != null && isLoggedInUserId != null) {
-                axios
-                    .get("/api/user/auth/authority", {
-                        withCredentials: true,
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`
-                        }
-                    })
-                    .then((res) => {
-                        const auth = res.data;
-                        console.log("*auth :", auth);
-
-                        if (auth === "ROLE_USER") {
-                            setIsAdmin(false);
-                        } else if (auth === "ROLE_ADMIN") {
-                            setIsAdmin(true);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("권한 조회 실패:", error);
-                        setIsAdmin(false);
-                    });
+        const fetchUserAuthority = async () => {
+            try {
+                // 권한 조회
+                const res = await axiosInstance.get("/user/auth/authority");
+                const auth = res.data;
+                setIsAdmin(auth === "ROLE_ADMIN");
+            } catch (error) {
+                console.error("권한 조회 실패:", error);
+                setIsAdmin(false);
             }
-        }, [accessToken]);
+        };
 
-        return (
-            <div className="headerbar">
-                <nav>
-                    <ul>
-                        {isLoggedIn ? (
-                            <React.Fragment>
-                                <li>
-                                    <MemoizedLink
-                                        to={"/mypage"}
-                                        children={"마이페이지"}
-                                        style={{textDecoration: "none", color: "inherit"}}
-                                    >
-                                    </MemoizedLink>
-                                </li>
-                                <li>
-                                    <MemoizedLink
-                                        to={"/logout"}
-                                        style={{textDecoration: "none", color: "inherit"}}>
-                                        로그아웃
-                                    </MemoizedLink>
-                                </li>
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment>
-                                <li>
-                                    <MemoizedLink
-                                        to={"/login"}
-                                        children={"로그인"}
-                                        style={{textDecoration: "none", color: "inherit"}}
-                                    >
-                                    </MemoizedLink>
-                                </li>
-                                <li>
-                                    <MemoizedLink
-                                        to={"/subinfo/signup"}
-                                        children={"회원가입"}
-                                        style={{textDecoration: "none", color: "inherit"}}
-                                    >
-                                    </MemoizedLink>
-                                </li>
-                            </React.Fragment>
-                        )}
-                    </ul>
-                </nav>
-            </div>
-        );
-    };
+        const handleLogout = () => {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("isLoggedInUserId");
+            setIsLoggedIn(false);
+            navigate("/login");
+        };
 
-    const sideleft = () => {
-        return (
-            <div className="headerbar" title={"홈으로 가기"}>
-                <nav>
-                    <ul>
-                        <li>
-                            <MemoizedLink
-                                to={"/"}
-                                children={(<div className={"Header_logo"}>
+        if (accessToken && isLoggedInUserId) {
+            checkTokenValidity();
+            fetchUserAuthority();
+        } else {
+            handleLogout();
+        }
+    }, [navigate]);
+
+    const renderSideLeft = () => (
+        <div className="headerbar" title={"홈으로 가기"}>
+            <nav>
+                <ul>
+                    <li>
+                        <MemoizedLink
+                            to={"/"}
+                            children={
+                                <div className={"Header_logo"}>
                                     STAR D
                                     <div className={"Header_logo_img"}>
-                                        <img src={LOGO} width={"60px"}/></div>
-                                </div>)}
-                                style={{textDecoration: "none", color: "inherit"}}
-                            >
-                            </MemoizedLink>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        );
-    };
-    const sidecenter = () => {
-        return (
-            <div className="sidebar">
-                <nav>
-                    <ul>
-                        <MemoizedLink to={{
-                            pathname: `/study/page=${page}`,
-                            state: {
-                                page: page,
+                                        <img src={LOGO} width={"60px"} />
+                                    </div>
+                                </div>
                             }
-                        }}
-                                      children={(<li>스터디</li>)}
-                                      style={{textDecoration: "none", color: "inherit"}}>
-                        </MemoizedLink>
-                        <MemoizedLink to={{
-                            pathname: `/community/page=${page}`,
-                            state: {
-                                page: page,
-                            }
-                        }}
-                            children={(<li>커뮤니티</li>)}
-                            style={{textDecoration: "none", color: "inherit"}}
-                        >
-                        </MemoizedLink>
-                        <MemoizedLink to={{
-                            pathname: `/notice/page=${page}`,
-                            state: {
-                                page: page,
-                            }
-                        }}
-                            children={(<li>공지사항</li>)}
-                            style={{textDecoration: "none", color: "inherit"}}
-                        >
-                        </MemoizedLink>
-                        <MemoizedLink to={{
-                            pathname: `/qna/page=${page}`,
-                            state: {
-                                page: page,
-                            }
-                        }}
-                            children={(<li>QNA</li>)}
-                            style={{textDecoration: "none", color: "inherit"}}
-                        >
+                            style={{ textDecoration: "none", color: "inherit" }}
+                        />
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    );
 
-                        </MemoizedLink>
+    const renderSideCenter = () => (
+        <div className="sidebar">
+            <nav>
+                <ul>
+                    <MemoizedLink
+                        to={{ pathname: `/study/page=${page}` }}
+                        children={<li>스터디</li>}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                    />
+                    <MemoizedLink
+                        to={{ pathname: `/community/page=${page}` }}
+                        children={<li>커뮤니티</li>}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                    />
+                    <MemoizedLink
+                        to={{ pathname: `/notice/page=${page}` }}
+                        children={<li>공지사항</li>}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                    />
+                    <MemoizedLink
+                        to={{ pathname: `/qna/page=${page}` }}
+                        children={<li>QNA</li>}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                    />
+                    {isAdmin && (
                         <MemoizedLink
                             to={"/admin/MemberManagement"}
-                            children={(<li>관리자 페이지</li>)}
-                            style={{
-                                textDecoration: "none",
-                                color: "inherit",
-                                display: isAdmin ? "block" : "none"
-                            }}
-                        >
+                            children={<li>관리자 페이지</li>}
+                            style={{ textDecoration: "none", color: "inherit" }}
+                        />
+                    )}
+                </ul>
+            </nav>
+        </div>
+    );
 
-                        </MemoizedLink>
-                    </ul>
-                </nav>
-            </div>
-        );
-    };
+    const renderSideRight = () => (
+        <div className="headerbar">
+            <nav>
+                <ul>
+                    {isLoggedIn ? (
+                        <>
+                            <li>
+                                <MemoizedLink
+                                    to={"/mypage"}
+                                    children={"마이페이지"}
+                                    style={{ textDecoration: "none", color: "inherit" }}
+                                />
+                            </li>
+                            <li>
+                                <MemoizedLink
+                                    to={"/logout"}
+                                    children={"로그아웃"}
+                                    style={{ textDecoration: "none", color: "inherit" }}
+                                />
+                            </li>
+                        </>
+                    ) : (
+                        <>
+                            <li>
+                                <MemoizedLink
+                                    to={"/login"}
+                                    children={"로그인"}
+                                    style={{ textDecoration: "none", color: "inherit" }}
+                                />
+                            </li>
+                            <li>
+                                <MemoizedLink
+                                    to={"/subinfo/signup"}
+                                    children={"회원가입"}
+                                    style={{ textDecoration: "none", color: "inherit" }}
+                                />
+                            </li>
+                        </>
+                    )}
+                </ul>
+            </nav>
+        </div>
+    );
 
     return (
         <div>
             <div className={"header_wrap"}>
                 <header>
-                    <div className="head_left">{sideleft()}</div>
-                    {showSideCenter ? <div className="head_text">{sidecenter()}</div> :
+                    <div className="head_left">{renderSideLeft()}</div>
+                    {showSideCenter ? (
+                        <div className="head_text">{renderSideCenter()}</div>
+                    ) : (
                         <div className="head_text">{""}</div>
-                    }
-                    <div className="head_right">{Side()}</div>
+                    )}
+                    <div className="head_right">{renderSideRight()}</div>
                 </header>
             </div>
         </div>
     );
 };
+
 export default React.memo(Header);
