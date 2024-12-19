@@ -147,7 +147,7 @@ const Community = () => {
                                     <tbody>
                                         {posts.map((post) => (
                                             <PostListItem key={post.postId}
-                                                          setPosts={setPosts}
+                                                          isMyLikePost={false}
                                                           posts={post}/>
                                         ))}
                                     </tbody>
