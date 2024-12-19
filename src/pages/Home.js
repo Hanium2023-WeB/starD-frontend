@@ -57,7 +57,7 @@ const Home = () => {
     useEffect(() => {
         AOS.init();
 
-        axios.get("/api/api/v2/studies/study-ranking")
+        axios.get("/api/studies/study-ranking")
             .then((res) => {
                 setTop5Field(res.data.data.slice(0, 5));
                 setFirstRow(res.data.data.slice(0, 3));
