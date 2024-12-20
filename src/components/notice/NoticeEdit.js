@@ -11,8 +11,9 @@ const NoticeEdit = ({post, onUpdatePost, onCancel}) => {
         }));
     }
 
-    const handleUpdateClick = () => {
-        onUpdatePost(updatedPost);
+    const handleUpdateClick = (e) => {
+        e.preventDefault();
+        onUpdatePost(updatedPost, e);
     }
 
     return (

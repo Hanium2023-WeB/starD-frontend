@@ -12,7 +12,6 @@ import Paging from "../../components/repeat_etc/Paging";
 const Notice = () => {
     const location = useLocation();
     const searchQuery = new URLSearchParams(location.search).get("q");
-    const selectOption = new URLSearchParams(location.search).get("select");
 
     const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
@@ -37,17 +36,16 @@ const Notice = () => {
     };
 
     const fetchNotices = (pageNumber) => {
-        let base_url = "/api/notice/search";
+        let base_url = "/api/notices/search";
         let params = {
-            searchType: selectOption,
-            searchWord: searchQuery,
+            keyword: searchQuery,
             page: pageNumber,
         };
         axios.get(base_url, { params })
             .then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                setPosts(res.data.posts);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.totalPages);
             })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
@@ -56,20 +54,19 @@ const Notice = () => {
 
     useEffect(() => {
         fetchNotices(page);
-    }, [searchQuery, selectOption, page]);
+    }, [searchQuery, page]);
 
     useEffect(() => {
-        let base_url = "/api/notice/search";
+        let base_url = "/api/notices/search";
         let params = {
-            searchType: selectOption,
-            searchWord: searchQuery,
+            keyword: searchQuery,
             page: 1,
         };
         axios.get(base_url, { params })
             .then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                setPosts(res.data.posts);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.totalPages);
             })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
@@ -105,10 +102,9 @@ const Notice = () => {
                                         <th>닉네임</th>
                                         <th>날짜</th>
                                         <th>조회수</th>
-                                        <th>공감수</th>
                                         {posts.map((d, index) => (
                                             <NoticeListItem setPosts={setPosts} posts={d} d={d}
-                                                          index={index} key={d.id}/>
+                                                          index={index} key={d.postId}/>
                                         ))}
                                     </table>
                                 )}
