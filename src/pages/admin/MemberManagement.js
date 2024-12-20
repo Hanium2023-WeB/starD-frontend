@@ -9,8 +9,22 @@ const MemberManagement = () => {
 
     const accessToken = localStorage.getItem('accessToken');
 
-    useEffect(() => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const pageparams = location.state ? location.state.page : 1;
+    const [page, setPage] = useState(pageparams);
+    const [count, setCount] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const insertPage = location.state && location.state.page;
+
+    const handlePageChange = (selectedPage) => {
+        setPage(selectedPage);
+        navigate(`/admin/MemberManagement/page=${selectedPage}`);
+    };
+
+    const fetchReportedMembers = (pageNumber) => {
         axios.get("/api/reports/members", {
+            params: {page: pageNumber},
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -20,12 +34,19 @@ const MemberManagement = () => {
                 console.log("전송 성공");
                 console.log(res.data);
 
-                setMembers(res.data);
+                setMembers(res.data.members);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.posts.length);
             })
             .catch((error) => {
-                console.error('신고 목록을 가져오는 중 오류 발생: ', error);
+                console.error('회원의 누적 신고 목록을 가져오는 중 오류 발생: ', error);
             });
-    }, []);
+    };
+
+    useEffect(() => {
+        fetchReportedMembers(page);
+    }, [page]);
+
     //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
 
 
@@ -84,7 +105,7 @@ const MemberManagement = () => {
                             <tbody>
                             {members.map((member) => (
                                 <tr>
-                                    <td>{member.id}</td>
+                                    <td>{member.memberId}</td>
                                     <td>{member.nickname}</td>
                                     <td>{member.reportCount}</td>
                                     <td>
@@ -98,6 +119,10 @@ const MemberManagement = () => {
                     </div>
                 </div>
             </div>
+                <div className={"paging"}>
+                    <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+                            handlePageChange={handlePageChange}/>
+                </div>
             </div>
         </div>
     )

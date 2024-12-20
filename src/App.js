@@ -350,11 +350,11 @@ function App() {
                     />
                     {/*관리자 페이지*/}
                     <Route
-                        path="/admin/MemberManagement"
+                        path="/admin/MemberManagement/:page"
                         element={<MemberManagement/>}
                     />
                     <Route
-                        path="/admin/ReportManagement"
+                        path="/admin/ReportManagement/:page"
                         element={<ReportManagement/>}
                     />
                     <Route
