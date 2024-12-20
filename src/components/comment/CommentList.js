@@ -79,7 +79,7 @@ const CommentList = ({ comments, onEditClick, onRemoveClick, onReplySubmit, user
                   <>
                     <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
                     <span className="comment_report_btn"
-                          onClick={() => handleOpenReportModal(comment.updatedAt)}>신고</span>
+                          onClick={() => handleOpenReportModal(comment.replyId)}>신고</span>
                   </>
               )}
             </li>
@@ -90,6 +90,7 @@ const CommentList = ({ comments, onEditClick, onRemoveClick, onReplySubmit, user
           handleClose={handleCloseReportModal}
           onReportSubmit={handleReportSubmit}
           targetId={reportCommentId}
+          targetType={"reply"}
       />
     </div>
   );

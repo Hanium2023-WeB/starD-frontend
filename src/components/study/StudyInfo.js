@@ -116,10 +116,10 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
                             </p>
                         </span>
                         <p className="study_created_date">{formatDatetime(study.createdAt)}</p>
-                        {(study.recruitStatus !== 'RECRUITMENT_COMPLETE') | (study.recruiter !== isLoggedInUserId)  && (
+                        {(study.recruitmentType !== 'COMPLETED') && (study.isAuthor === false)  && (
                             <>
                                 <p>&nbsp;&nbsp; | &nbsp;&nbsp;</p>
-                                <p className="report_btn" onClick={() => handleOpenReportModal(study.id)}>신고</p>
+                                <p className="report_btn" onClick={() => handleOpenReportModal(study.studyId)}>신고</p>
                             </>
                         )}
                         <Report
@@ -127,6 +127,7 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
                             handleClose={handleCloseReportModal}
                             onReportSubmit={handleReportSubmit}
                             targetId={reportStudyId}
+                            targetType={"study"}
                         />
                         <>
                             <p>&nbsp;&nbsp; | &nbsp;&nbsp;</p>
