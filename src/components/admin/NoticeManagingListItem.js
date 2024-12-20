@@ -21,8 +21,7 @@ const NoticeManagingListItem = ({posts, setPosts}) => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
 
-            axios.delete(`/api/notice/${id}`, {
-                params: { id: id },
+            axios.delete(`/api/notices/${id}`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -44,19 +43,20 @@ const NoticeManagingListItem = ({posts, setPosts}) => {
 
     return (
         <tr className="post_list">
-            <Link to={`/noticedetail/${posts.id}`}
-                  style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                  }}>
-                <td className="community_title">{posts.title}</td>
-            </Link>
+            <td>
+                <Link to={`/noticedetail/${posts.postId}`}
+                      style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                      }}>
+                    <span className="community_title">{posts.title}</span>
+                </Link>
+            </td>
             <td className="community_nickname">관리자</td>
             <td className="community_datetime">{formatDatetime(posts.createdAt)}</td>
-            <td>{posts.viewCount}</td>
-            <td>{posts.starCount}</td>
+            <td>{posts.hit}</td>
             <td>
-                <button className="withdraw_btn" onClick={() => handlePostDelete(posts.id)}> 삭제 </button>
+                <button className="withdraw_btn" onClick={() => handlePostDelete(posts.postId)}> 삭제 </button>
             </td>
         </tr>
     )

@@ -51,7 +51,7 @@ const AdminCategory = () => {
                                           textDecoration: "none",
                                           color: "inherit"
                                       }}>
-                                    공지사항 등록
+                                    공지사항 관리
                                 </Link>
 
                             </li>

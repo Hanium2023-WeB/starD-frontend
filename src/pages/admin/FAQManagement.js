@@ -26,13 +26,13 @@ const FAQManagement = () => {
 
     //페이지 수마다 가져오기
     const fetchQnaAndFaq = (pageNumber) => {
-        axios.get("/api/faq", {
+        axios.get("/api/faqs-and-qnas", {
             params: {
                 page: pageNumber,
             },
         })
             .then((res) => {
-                setPosts(res.data.content);
+                setPosts(res.data.posts);
                 setItemsPerPage(res.data.pageable.pageSize);
                 setCount(res.data.totalElements);
                 console.log("전송 성공");
@@ -43,12 +43,12 @@ const FAQManagement = () => {
     };
 
     useEffect(() => {
-        axios.get("/api/faq", {
+        axios.get("/api/faqs-and-qnas", {
             params: {
                 page: 1,
             }
         }).then((res) => {
-            setPosts(res.data.content);
+            setPosts(res.data.posts);
             setItemsPerPage(res.data.pageable.pageSize);
             setCount(res.data.totalElements);
         })
@@ -60,55 +60,6 @@ const FAQManagement = () => {
     useEffect(() => {
         fetchQnaAndFaq(page);
     }, [page]);
-
-
-    //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
-    useEffect(() => {
-        axios.get("/api/reports/members", {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log("전송 성공");
-                console.log(res.data);
-
-                setMembers(res.data);
-            })
-            .catch((error) => {
-                console.error('신고 횟수가 1이상인 멤버 리스트 가져오는 중 오류 발생: ', error);
-            });
-    }, []);
-
-    //TODO 강제탈퇴
-    const handleWithdraw = useCallback((member) => {
-        const confirmWithdraw = window.confirm("정말로 강제 탈퇴 시키겠습니까?");
-
-        if (confirmWithdraw) {
-            axios.post(`/api/reports/members/${member.id}`, null,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    },
-                }).then((res) => {
-                console.log("API Response:", res.data);
-                alert("탈퇴 처리되었습니다.");
-
-                // 탈퇴 후 회원 목록 갱신 로직 추가
-                setMembers((prevMembers) => {
-                    return prevMembers.filter((prevMember) => prevMember.id !== member.id);
-                });
-
-            }).catch((error) => {
-                console.log(error);
-                alert("탈퇴 처리에 실패하였습니다.");
-            })
-        }
-    }, []);
-
-
 
     return (
         <div>
@@ -125,18 +76,16 @@ const FAQManagement = () => {
                         <div className="admin_table_wrapper">
                             <table className="member_admin_table">
                                 <thead>
-                                        <th>카테고리</th>
                                         <th>제목</th>
                                         <th>닉네임</th>
                                         <th>날짜</th>
                                         <th>조회수</th>
-                                        <th>공감수</th>
                                         <th>삭제</th>
                                 </thead>
                                 <tbody>
                                  {posts.map((d, index) => (
                                         <FaqManagingListItem setPosts={setPosts} posts={d} d={d}
-                                                     index={index} key={d.id}/>
+                                                     index={index} key={d.postId}/>
                                     ))}
                                 </tbody>
                             </table>
