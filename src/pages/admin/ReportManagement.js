@@ -28,7 +28,6 @@ const ReportManagement = () => {
     };
 
     //TODO 신고목록 조회
-    // TODO 5회 이상 신고된 목록 가져오기
     useEffect(() => {
         axios.get("/api/reports", {
             withCredentials: true,
@@ -51,7 +50,7 @@ const ReportManagement = () => {
 
     const openReasonModal = (report) => {
         // TODO 신고 사유 조회
-        axios.get(`/api/reports/${report.reportId}`, {
+        axios.get(`/api/reports/${report.targetId}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -88,34 +87,6 @@ const ReportManagement = () => {
             return "댓글";
         } else if (report.postType === "STUDYPOST") {
             return "스터디 게시글";
-        }
-    }
-
-    const tableTypeID = (report) => {
-        if (report.tableType === "COMM") {
-            return report.post.id;
-        } else if (report.tableType === "STUDY") {
-            return report.study.id;
-        }
-        // 예시: 삭제할 대상이 댓글인 경우
-        else if (report.tableType === "REPLY") {
-            return report.reply.id;
-        } else if (report.tableType === "STUDYPOST") {
-            return report.studyPost.id;
-        }
-    }
-
-    const getTitleOrContent = (report) => {
-        if (report.tableType === "COMM") {
-            return report.post.title;
-        } else if (report.tableType === "STUDY") {
-            return report.study.title;
-        }
-        // 예시: 삭제할 대상이 댓글인 경우
-        else if (report.tableType === "REPLY") {
-            return report.reply.content;
-        } else if (report.tableType === "STUDYPOST") {
-            return report.studyPost.title;
         }
     }
 
@@ -175,68 +146,52 @@ const ReportManagement = () => {
         }
     }
 
-    const getTranslatedReason = (reason) => {
-        switch (reason) {
-            case 'ABUSE':
-                return '욕설/비방';
-            case 'PROMOTION':
-                return '광고';
-            case 'ADULT':
-                return '음란물';
-            case 'SPAM':
-                return '도배성 글';
-            default:
-                return reason;
-        }
-    };
-
     // TODO 제목 클릭 시 해당 게시글 팝업 창 띄우기
     const openPopup = (report) => {
         let popupUrl;
         if (report.postType === 'COMM') {
-            popupUrl = `/postdetail/${report.reportId}`;
+            popupUrl = `/postdetail/${report.targetId}`;
             window.open(popupUrl, '_blank', 'width=800,height=600');
         } else if (report.postType === 'STUDY') {
-            popupUrl = `/studydetail/${report.reportId}`;
+            popupUrl = `/studydetail/${report.targetId}`;
             window.open(popupUrl, '_blank', 'width=800,height=600');
         } else if (report.postType === 'REPLY') {
-            // // TODO 댓글 id로 댓글 객체 가져오기
-            // axios.get(`/api/replies/${report.reply.id}`, {
-            //     withCredentials: true,
-            //     headers: {
-            //         'Authorization': `Bearer ${accessToken}`
-            //     }
-            // })
-            //     .then((res) => {
-            //         if (res.data.type === "STUDY") {
-            //             popupUrl = `/studydetail/${res.data.study.id}`;
-            //         } else if (res.data.type === "COMM") {
-            //             popupUrl = `/postdetail/${res.data.post.id}`;
-            //         } else if (res.data.type === "STUDYPOST") {
-            //             popupUrl = `/${res.data.study.id}/teamblog/TeamCommunity/studypostdetail/${res.data.studyPost.id}`;
-            //         }
-            //
-            //         window.open(popupUrl, '_blank', 'width=800,height=600');
-            //     })
-            //     .catch((error) => {
-            //         console.error('댓글 객체를 가져오는 중 오류 발생: ', error);
-            //     });
+            // // TODO 댓글 id로 게시글 정보 가져오기
+            axios.get(`/api/replies/${report.targetId}/parent`, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => {
+                    if (res.data.parentPostType === "STUDY") {
+                        popupUrl = `/studydetail/${res.data.parentId}`;
+                    } else if (res.data.parentPostType === "COMM") {
+                        popupUrl = `/postdetail/${res.data.parentId}`;
+                    } else if (res.data.parentPostType === "STUDYPOST") {
+                        popupUrl = `/${res.data.parentId}/teamblog/TeamCommunity/studypostdetail/${res.data.targetId}`;
+                    }
+
+                    window.open(popupUrl, '_blank', 'width=800,height=600');
+                })
+                .catch((error) => {
+                    console.error('댓글의 부모 게시글 정보를 가져오는 중 오류 발생: ', error);
+                });
         } else if (report.tableType === 'STUDYPOST') {
             // TODO studypost id로 study id 알아오기
-            // axios.get(`/api/study/post/${report.studyPost.id}`, {
-            //     withCredentials: true,
-            //     headers: {
-            //         'Authorization': `Bearer ${accessToken}`
-            //     }
-            // })
-            //     .then((res) => {
-            //         let studyId = res.data.study.id;
-            //         popupUrl = `/${studyId}/teamblog/TeamCommunity/studypostdetail/${tableTypeID(report)}`;
-            //         window.open(popupUrl, '_blank', 'width=800,height=600');
-            //     })
-            //     .catch((error) => {
-            //         console.error('스터디 id를 가져오는 중 오류 발생: ', error);
-            //     });
+            axios.get(`/api/studies/${report.targetId}/parent`, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then((res) => {
+                    popupUrl = `/${res.data.parentId}/teamblog/TeamCommunity/studypostdetail/${res.data.targetId}`;
+                    window.open(popupUrl, '_blank', 'width=800,height=600');
+                })
+                .catch((error) => {
+                    console.error('팀블로그 id로 스터디 정보를 가져오는 중 오류 발생: ', error);
+                });
         }
     };
 
@@ -267,7 +222,7 @@ const ReportManagement = () => {
                             </thead>
                             <tbody>
                             {reports.map((report, index) => (
-                                <tr key={report.reportId}>
+                                <tr key={report.targetId}>
                                     <td>{tableType(report)}</td>
                                     <td>
                                         <div className="report_title"
