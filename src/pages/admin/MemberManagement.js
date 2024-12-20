@@ -36,7 +36,7 @@ const MemberManagement = () => {
 
                 setMembers(res.data.members);
                 setItemsPerPage(res.data.currentPage);
-                setCount(res.data.posts.length);
+                setCount(res.data.totalPage);
             })
             .catch((error) => {
                 console.error('회원의 누적 신고 목록을 가져오는 중 오류 발생: ', error);

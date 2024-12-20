@@ -41,7 +41,7 @@ const ReportManagement = () => {
 
                 setReports(res.data.reports);
                 setItemsPerPage(res.data.currentPage);
-                setCount(res.data.posts.length);
+                setCount(res.data.totalPage);
             })
             .catch((error) => {
                 console.error('신고 목록을 가져오는 중 오류 발생: ', error);
@@ -92,11 +92,10 @@ const ReportManagement = () => {
 
     //TODO 신고승인
     const handleReportAccept = (report) => {
-        console.log("**** ", report.id);
         const confirmReject = window.confirm("신고를 승인하시겠습니까?");
 
         if (confirmReject) {
-            axios.post(`/api/reports/accept/${report.id}`, null, {
+            axios.post(`/api/reports/${report.targetId}/approve?postType=${report.postType}`, null, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -108,7 +107,7 @@ const ReportManagement = () => {
 
                     // 리포트 삭제 또는 갱신 로직 추가
                     setReports((prevReports) => {
-                        return prevReports.filter((prevReport) => prevReport.id !== report.id);
+                        return prevReports.filter((prevReport) => prevReport.targetId !== report.targetId);
                     });
                 })
                 .catch((error) => {
@@ -123,7 +122,7 @@ const ReportManagement = () => {
         const confirmReject = window.confirm("신고를 반려하시겠습니까?");
 
         if (confirmReject) {
-            axios.delete(`/api/reports/${report.id}`, {
+            axios.post(`/api/reports/${report.targetId}/reject?postType=${report.postType}`, null, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -135,7 +134,7 @@ const ReportManagement = () => {
 
                     // 리포트 삭제 또는 갱신 로직 추가
                     setReports((prevReports) => {
-                        return prevReports.filter((prevReport) => prevReport.id !== report.id);
+                        return prevReports.filter((prevReport) => prevReport.targetId !== report.targetId);
                     });
                 })
                 .catch((error) => {
