@@ -22,6 +22,7 @@ const MemberManagement = () => {
         navigate(`/admin/MemberManagement/page=${selectedPage}`);
     };
 
+    //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
     const fetchReportedMembers = (pageNumber) => {
         axios.get("/api/reports/members", {
             params: {page: pageNumber},
@@ -47,28 +48,24 @@ const MemberManagement = () => {
         fetchReportedMembers(page);
     }, [page]);
 
-    //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
-
-
-
     //TODO 강제탈퇴
     const handleWithdraw = useCallback((member) => {
         const confirmWithdraw = window.confirm("정말로 강제 탈퇴 시키겠습니까?");
 
         if (confirmWithdraw) {
-            axios.post(`/api/reports/members/${member.id}`, null,
+            axios.post(`/api/reports/members/${member.memberId}`, null,
                 {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     },
                 }).then((res) => {
-                console.log("API Response:", res.data);
+                console.log(res.data.deletedMemberId, "번 회원이", res.data.message);
                 alert("탈퇴 처리되었습니다.");
 
                 // 탈퇴 후 회원 목록 갱신 로직 추가
                 setMembers((prevMembers) => {
-                    return prevMembers.filter((prevMember) => prevMember.id !== member.id);
+                    return prevMembers.filter((prevMember) => prevMember.memberId !== member.memberId);
                 });
 
             }).catch((error) => {
@@ -77,7 +74,7 @@ const MemberManagement = () => {
             })
         }
     }, []);
-    // onCategoryChange={handleCategoryChange}
+
     return (
         <div>
             <Header showSideCenter={true}/>
