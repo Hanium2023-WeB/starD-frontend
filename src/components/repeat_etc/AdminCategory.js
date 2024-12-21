@@ -15,7 +15,8 @@ const AdminCategory = () => {
                     <nav>
                         <ul>
                             <li>
-                                <Link to={`/admin/MemberManagement`}
+                                <Link to={`/admin/MemberManagement/page=${page}`}
+                                      page={page}
                                       style={{
                                           textDecoration: "none",
                                           color: "inherit"
@@ -24,7 +25,8 @@ const AdminCategory = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/admin/ReportManagement`}
+                                <Link to={`/admin/ReportManagement/page=${page}`}
+                                      page={page}
                                       style={{
                                           textDecoration: "none",
                                           color: "inherit"
@@ -49,7 +51,7 @@ const AdminCategory = () => {
                                           textDecoration: "none",
                                           color: "inherit"
                                       }}>
-                                    공지사항 등록
+                                    공지사항 관리
                                 </Link>
 
                             </li>

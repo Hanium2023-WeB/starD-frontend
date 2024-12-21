@@ -9,8 +9,23 @@ const MemberManagement = () => {
 
     const accessToken = localStorage.getItem('accessToken');
 
-    useEffect(() => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const pageparams = location.state ? location.state.page : 1;
+    const [page, setPage] = useState(pageparams);
+    const [count, setCount] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const insertPage = location.state && location.state.page;
+
+    const handlePageChange = (selectedPage) => {
+        setPage(selectedPage);
+        navigate(`/admin/MemberManagement/page=${selectedPage}`);
+    };
+
+    //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
+    const fetchReportedMembers = (pageNumber) => {
         axios.get("/api/reports/members", {
+            params: {page: pageNumber},
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -20,34 +35,37 @@ const MemberManagement = () => {
                 console.log("전송 성공");
                 console.log(res.data);
 
-                setMembers(res.data);
+                setMembers(res.data.members);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.totalPage);
             })
             .catch((error) => {
-                console.error('신고 목록을 가져오는 중 오류 발생: ', error);
+                console.error('회원의 누적 신고 목록을 가져오는 중 오류 발생: ', error);
             });
-    }, []);
-    //TODO 신고 횟수 1이상인 멤버 리스트 가져오기
+    };
 
-
+    useEffect(() => {
+        fetchReportedMembers(page);
+    }, [page]);
 
     //TODO 강제탈퇴
     const handleWithdraw = useCallback((member) => {
         const confirmWithdraw = window.confirm("정말로 강제 탈퇴 시키겠습니까?");
 
         if (confirmWithdraw) {
-            axios.post(`/api/reports/members/${member.id}`, null,
+            axios.post(`/api/reports/members/${member.memberId}`, null,
                 {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     },
                 }).then((res) => {
-                console.log("API Response:", res.data);
+                console.log(res.data.deletedMemberId, "번 회원이", res.data.message);
                 alert("탈퇴 처리되었습니다.");
 
                 // 탈퇴 후 회원 목록 갱신 로직 추가
                 setMembers((prevMembers) => {
-                    return prevMembers.filter((prevMember) => prevMember.id !== member.id);
+                    return prevMembers.filter((prevMember) => prevMember.memberId !== member.memberId);
                 });
 
             }).catch((error) => {
@@ -56,7 +74,7 @@ const MemberManagement = () => {
             })
         }
     }, []);
-    // onCategoryChange={handleCategoryChange}
+
     return (
         <div>
             <Header showSideCenter={true}/>
@@ -84,7 +102,7 @@ const MemberManagement = () => {
                             <tbody>
                             {members.map((member) => (
                                 <tr>
-                                    <td>{member.id}</td>
+                                    <td>{member.memberId}</td>
                                     <td>{member.nickname}</td>
                                     <td>{member.reportCount}</td>
                                     <td>
@@ -98,6 +116,10 @@ const MemberManagement = () => {
                     </div>
                 </div>
             </div>
+                <div className={"paging"}>
+                    <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+                            handlePageChange={handlePageChange}/>
+                </div>
             </div>
         </div>
     )

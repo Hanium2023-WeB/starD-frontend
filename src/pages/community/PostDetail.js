@@ -218,10 +218,10 @@ const PostDetail = () => {
                                             <span>( 수정: {formatDatetime(postItem.updatedAt)} )</span>
                                           </>
                                         )}
-                                        {isWriter && (
+                                        {!isWriter && (
                                             <>
                                                 <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
-                                                <span className="report_btn" onClick={(e) => handleOpenReportModal(postItem.id, e)}>신고</span>
+                                                <span className="report_btn" onClick={(e) => handleOpenReportModal(postItem.postId, e)}>신고</span>
                                             </>
                                         )}
                                         <Report
@@ -229,6 +229,7 @@ const PostDetail = () => {
                                             handleClose={handleCloseReportModal}
                                             onReportSubmit={handleReportSubmit}
                                             targetId={reportPostId}
+                                            targetType={"comm"}
                                         />
                                     </div>
                                     <div className="right">

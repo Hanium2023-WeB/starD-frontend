@@ -301,6 +301,7 @@ const StudyPostDetail = ( ) => {
                                                 handleClose={handleCloseReportModal}
                                                 onReportSubmit={handleReportSubmit}
                                                 targetId={reportPostId}
+                                                targetType={"studypost"}
                                             />
                                         </div>
                                         <div className="right">

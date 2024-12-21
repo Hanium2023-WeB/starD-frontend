@@ -34,9 +34,9 @@ const Header = ({ showSideCenter }) => {
         const fetchUserAuthority = async () => {
             try {
                 // 권한 조회
-                const res = await axiosInstance.get("/user/auth/authority");
+                const res = await axiosInstance.get("/members/auth");
                 const auth = res.data;
-                setIsAdmin(auth === "ROLE_ADMIN");
+                setIsAdmin(auth === "ADMIN");
             } catch (error) {
                 console.error("권한 조회 실패:", error);
                 setIsAdmin(false);
@@ -107,7 +107,7 @@ const Header = ({ showSideCenter }) => {
                     />
                     {isAdmin && (
                         <MemoizedLink
-                            to={"/admin/MemberManagement"}
+                            to={`/admin/MemberManagement/page=${page}`}
                             children={<li>관리자 페이지</li>}
                             style={{ textDecoration: "none", color: "inherit" }}
                         />

@@ -2,61 +2,27 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import "../../css/report_css/Report.css";
 
-const Report = ({ show, handleClose, onReportSubmit, targetId }) => {
+const Report = ({ show, handleClose, onReportSubmit, targetId, targetType }) => {
     const [selectedReason, setSelectedReason] = useState(null);
-    const [customReason, setCustomReason] = useState(null);
+    const [customReason, setCustomReason] = useState("");
     const accessToken = localStorage.getItem('accessToken');
-    const [type, setType] = useState(null);
-
-    // TODO - 신고 대상 글 타입 알아오기
-    useEffect(() => {
-        if (targetId) {
-            axios
-                .get(`/api/replies/type/${targetId}`, {
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                .then((response) => {
-                    const type = response.data;
-                    setType(type);
-                    console.log("신고 게시글 id, 타입: ", targetId, type);
-                })
-                .catch((error) => {
-                    console.error("스터디 타입을 가져오는 중 에러 발생:", error);
-                });
-        }
-    }, [targetId, accessToken]);
-
 
     const handleReportReasonClick = (reason) => {
         setSelectedReason(reason);
-        if (reason === "ETC") {
+        if (reason === "기타(사용자 입력)") {
             setCustomReason("");
         }
     };
 
     const handleReport = () => {
-        let url;
-        if (type === "QNA" || type === 'COMM') {
-            url = "/api/reports/posts";
-        } else if (type === "STUDY") {
-            url = "/api/reports/studies";
-        } else if (type === "REPLY") {
-            url = "/api/reports/replies";
-        } else if (type === "STUDYPOST") {
-            url = "/api/reports/studyposts";
-        }
-
         let reasonToSend = selectedReason;
 
         if (reasonToSend && accessToken) {
-            axios.post(
-                url,
+            axios.post("/api/reports",
                 {
-                    id: targetId,
-                    reason: reasonToSend,
+                    targetId: targetId,
+                    postType: targetType,
+                    reportReason: reasonToSend,
                     customReason: customReason,
                 }, {
                     withCredentials: true,
@@ -83,7 +49,7 @@ const Report = ({ show, handleClose, onReportSubmit, targetId }) => {
     };
 
     const renderCustomReasonInput = () => {
-        if (selectedReason === "ETC") {
+        if (selectedReason === "기타(사용자 입력)") {
             return (
                 <div>
                     <textarea
@@ -115,32 +81,32 @@ const Report = ({ show, handleClose, onReportSubmit, targetId }) => {
                             <div id="modal-content">
                                 <h3>신고 사유 선택</h3>
                                 <div
-                                    className={`report-reason ${selectedReason === 'ABUSE' ? 'selected' : ''}`}
-                                    onClick={() => handleReportReasonClick('ABUSE')}
+                                    className={`report-reason ${selectedReason === '욕설/비방' ? 'selected' : ''}`}
+                                    onClick={() => handleReportReasonClick('욕설/비방')}
                                 >
                                     욕설/비방
                                 </div>
                                 <div
-                                    className={`report-reason ${selectedReason === 'PROMOTION' ? 'selected' : ''}`}
-                                    onClick={() => handleReportReasonClick('PROMOTION')}
+                                    className={`report-reason ${selectedReason === '광고' ? 'selected' : ''}`}
+                                    onClick={() => handleReportReasonClick('광고')}
                                 >
                                     광고
                                 </div>
                                 <div
-                                    className={`report-reason ${selectedReason === 'ADULT' ? 'selected' : ''}`}
-                                    onClick={() => handleReportReasonClick('ADULT')}
+                                    className={`report-reason ${selectedReason === '음란물' ? 'selected' : ''}`}
+                                    onClick={() => handleReportReasonClick('음란물')}
                                 >
                                     음란물
                                 </div>
                                 <div
-                                    className={`report-reason ${selectedReason === 'SPAM' ? 'selected' : ''}`}
-                                    onClick={() => handleReportReasonClick('SPAM')}
+                                    className={`report-reason ${selectedReason === '도배성 글' ? 'selected' : ''}`}
+                                    onClick={() => handleReportReasonClick('도배성 글')}
                                 >
                                     도배성 글
                                 </div>
                                 <div
-                                    className={`report-reason ${selectedReason === 'ETC' ? 'selected' : ''}`}
-                                    onClick={() => handleReportReasonClick('ETC')}
+                                    className={`report-reason ${selectedReason === '기타(사용자 입력)' ? 'selected' : ''}`}
+                                    onClick={() => handleReportReasonClick('기타(사용자 입력)')}
                                 >
                                     기타(사용자 입력)
                                 </div>
