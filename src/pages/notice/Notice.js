@@ -36,22 +36,21 @@ const Notice = () => {
         }
     };
 
-    // TODO 권한 조회
     useEffect(() => {
         axios
-            .get("/api/member/auth", {
+            .get("/api/members/auth", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             })
             .then((res) => {
-                const auth = res.data[0].authority;
+                const auth = res.data;
                 console.log("auth :", auth);
 
-                if (auth === "ROLE_USER") {
+                if (auth === "USER") {
                     setUserIsAdmin(false);
-                } else if (auth === "ROLE_ADMIN") {
+                } else if (auth === "ADMIN") {
                     setUserIsAdmin(true);
                 }
             })
@@ -62,15 +61,15 @@ const Notice = () => {
     }, [accessToken]);
 
     const fetchNotices = (pageNumber) => {
-        axios.get("/api/notice", {
+        axios.get("/api/notices", {
             params: {
                 page: pageNumber,
             },
         })
             .then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                setPosts(res.data.posts);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.totalPages);
             }).catch((error) => {
             console.error("데이터 가져오기 실패:", error);
         });
@@ -81,14 +80,14 @@ const Notice = () => {
     }, [page]);
 
     useEffect(() => {
-        axios.get("/api/notice", {
+        axios.get("/api/notices", {
             params: {
                 page: 1,
             }
         }).then((res) => {
-            setPosts(res.data.content);
-            setItemsPerPage(res.data.pageable.pageSize);
-            setCount(res.data.totalElements);
+            setPosts(res.data.posts);
+            setItemsPerPage(res.data.currentPage);
+            setCount(res.data.totalPages);
         })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
@@ -128,15 +127,14 @@ const Notice = () => {
                         </div>
                         <div className="community">
                             <div>
-                                <table className="notice_table" key={posts.id}>
+                                <table className="notice_table" key={posts.postId}>
                                     <th>제목</th>
                                     <th>닉네임</th>
                                     <th>날짜</th>
                                     <th>조회수</th>
-                                    <th>공감수</th>
                                     {posts.map((d, index) => (
                                         <NoticeListItem setPosts={setPosts} posts={d} d={d}
-                                                        index={index} key={d.id}/>
+                                                        index={index} key={d.postId}/>
                                     ))}
                                 </table>
                             </div>

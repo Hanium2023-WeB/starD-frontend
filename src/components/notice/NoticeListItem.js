@@ -15,7 +15,7 @@ const NoticeListItem = ({posts, setPosts}) => {
 
     return (
         <tr className="post_list">
-            <Link to={`/noticedetail/${posts.id}`}
+            <Link to={`/noticedetail/${posts.postId}`}
                   style={{
                       textDecoration: "none",
                       color: "inherit",
@@ -24,8 +24,7 @@ const NoticeListItem = ({posts, setPosts}) => {
             </Link>
             <td className="community_nickname">관리자</td>
             <td className="community_datetime">{formatDatetime(posts.createdAt)}</td>
-            <td>{posts.viewCount}</td>
-            <td>{posts.starCount}</td>
+            <td>{posts.hit}</td>
         </tr>
     )
 }
