@@ -107,7 +107,7 @@ const TeamBlog = () => {
             });
 
 
-        axios.get(`/api/api/v2/studies/${id}`, {
+        axios.get(`/api/studies/${id}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
