@@ -161,7 +161,7 @@ const TeamBlog = () => {
 
 
     useEffect(() => {
-        axios.get(`/api/schedule/${studyIdAsNumber}`, {
+        axios.get(`/api/studies/${studyIdAsNumber}/schedules`, {
             params: {
                 year: Year, month: Month,
             }, withCredentials: true, headers: {
@@ -255,8 +255,8 @@ const TeamBlog = () => {
                                             ) : (
                                                 <ul id="todocontent">
                                                     {filteredSchedule.map((item) => (
-                                                        <li key={item.id}>
-                                                            <div id="todotext">{item.study.title} |</div>
+                                                        <li key={item.scheduleId}>
+                                                            {/*<div id="todotext">{item.study.title} |</div>*/}
                                                             <div id="todotext">{item.title}</div>
                                                         </li>
                                                     ))}
