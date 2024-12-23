@@ -20,6 +20,7 @@ import communityfield from "../images/communityfield.png";
 import communityscrap from "../images/communityscrap.png";
 import axios from "axios";
 import MemoizedLink from "../MemoizedLink";
+import axiosInstance from "../api/axiosInstance";
 // import {EventSourcePolyfill} from 'event-source-polyfill';
 
 const CenteredDiv = styled.div`
@@ -57,13 +58,14 @@ const Home = () => {
     useEffect(() => {
         AOS.init();
 
-        axios.get("/api/studies/study-ranking")
+        axiosInstance.get("/studies")
             .then((res) => {
+                console.log(res.data);
                 setTop5Field(res.data.data.slice(0, 5));
                 setFirstRow(res.data.data.slice(0, 3));
                 setSecondRow(res.data.data.slice(3, 5));
             }).catch(error => {
-            console.log('Top 5 전송 실패', error);
+            console.log(error);
         });
 
         axios.get(`/api/todo/all`, {
