@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import attachments from "../../images/attachments.png";
 
-const TeamPostListItem = ({posts, setPosts}) => {
+const TeamPostListItem = ({key, posts, setPosts}) => {
     const formatDatetime = (datetime) => {
         const date = new Date(datetime);
         const year = date.getFullYear();
@@ -15,20 +15,20 @@ const TeamPostListItem = ({posts, setPosts}) => {
 
     return (
         <tr className="post_list">
-            <Link to={`/${posts.study.id}/teamblog/TeamCommunity/studypostdetail/${posts.id}`}
+            <Link to={`/${key}/teamblog/TeamCommunity/studypostdetail/${posts.studyPostId}`}
                   style={{
                       textDecoration: "none",
                       color: "inherit",
                   }}>
                 <td className="community_title">
                     {posts.title}
-                    {posts.fileName && (<img src={attachments} style={{ paddingLeft: "10px", width: "15px" }}/>)}
+                    {posts.totalFiles > 0 && (<img src={attachments} style={{ paddingLeft: "10px", width: "15px" }}/>)}
                 </td>
             </Link>
-            <td className="community_nickname">{posts.member.nickname}</td>
+            <td className="community_nickname">{posts.writer}</td>
             <td className="community_datetime">{formatDatetime(posts.createdAt)}</td>
-            <td>{posts.viewCount}</td>
-            <td>{posts.starCount}</td>
+            <td>{posts.hit}</td>
+            <td>{posts.scrapCount}</td>
         </tr>
     )
 }

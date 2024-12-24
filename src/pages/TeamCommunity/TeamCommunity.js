@@ -31,7 +31,7 @@ const TeamCommunity = () => {
     };
 
     useEffect(() => {
-        axios.get("/api/study/post", {
+        axios.get(`/api/studies/${studyIdAsNumber}/study-posts`, {
             params: { studyId: studyIdAsNumber },
             withCredentials: true,
             headers: {
@@ -39,7 +39,8 @@ const TeamCommunity = () => {
             }
         })
             .then((res) => {
-                setPosts(res.data);
+                console.log(res.data.items);
+                setPosts(res.data.items);
             })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
@@ -74,12 +75,12 @@ const TeamCommunity = () => {
                                                 <th>닉네임</th>
                                                 <th>날짜</th>
                                                 <th>조회수</th>
-                                                <th>공감수</th>
+                                                <th>좋아요수</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {posts.map((post) => (
-                                                <PostListItem key={post.id}
+                                                <PostListItem key={post.studyId}
                                                               setPosts={setPosts}
                                                               posts={post}/>
                                             ))}
