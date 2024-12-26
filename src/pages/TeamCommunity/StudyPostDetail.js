@@ -3,13 +3,14 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import Category from "../../components/repeat_etc/Category.js";
 import {Link, useParams, useNavigate, useLocation} from "react-router-dom";
 import Comment from "../../components/comment/Comment";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import LikeButton from "../../components/repeat_etc/LikeButton";
 import axios from "axios";
 import PostEdit from "../../components/teamcommunity/TeamPostEdit";
 import Report from "../../components/report/Report";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import {toggleLikeStatus} from "../../util/likeHandler";
 
 const StudyPostDetail = ( ) => {
     const navigate = useNavigate();
@@ -20,9 +21,6 @@ const StudyPostDetail = ( ) => {
 
     const [postItem, setPostItem] = useState(null);
 
-    const [likeStates, setLikeStates] = useState(false);
-    const [initiallyLikeStates, setInitiallyLikeStates] = useState(false);
-
     const [posts, setPosts] = useState([]);
     const [editing, setEditing] = useState(false);
     const [postDetail, setPostDetail] = useState([]);
@@ -31,24 +29,6 @@ const StudyPostDetail = ( ) => {
     const isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
 
     const [isWriter, setIsWriter] = useState(false);
-
-    useEffect(() => {
-        axios.get(`/api/star/studypost/${postId}`, {
-            params: { postid: postId },
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then(response => {
-                setLikeStates(response.data);
-                setInitiallyLikeStates(true);
-            })
-            .catch(error => {
-                console.log("공감 불러오기 실패", error);
-                setInitiallyLikeStates(false);
-            });
-    }, [postId]);
 
     useEffect(() => {
         axios.get(`/api/studies/${studyId}/study-posts/${postId}`, {
@@ -65,45 +45,29 @@ const StudyPostDetail = ( ) => {
             .catch((error) => {
                 console.error("팀 커뮤니티 게시글 세부 데이터 가져오기 실패:", error);
             });
-    }, [postId, accessToken, isLoggedInUserId, initiallyLikeStates]);
+    }, [postId, accessToken, isLoggedInUserId]);
 
-    const toggleLike = () => {
-        if (likeStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`/api/star/studypost/${postId}`, {
-                params: { postid: postId },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    console.log("공감 취소 성공 " + response.data);
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    console.log("공감 취소 실패");
-                });
-
-            setLikeStates(false);
-        } else {
-            axios.post(`/api/star/studypost/${postId}`, null, {
-                params: { postid: postId },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    console.log("공감 성공");
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    console.log("공감 실패");
-                });
-
-            setLikeStates(true);
+    const toggleLike = useCallback(() => {
+        if (!postItem) {
+            console.warn("postItem이 아직 초기화되지 않았습니다.");
+            return;
         }
-    };
+        console.log(postItem);
+        toggleLikeStatus(
+            postItem,
+            accessToken,
+            isLoggedInUserId,
+            (existsScrap) => {
+                setPostItem((prevPost) => ({
+                    ...prevPost,
+                    existsScrap,
+                }));
+            },
+            (error) => {
+                console.error("좋아요 상태 변경 실패:", error.response.data);
+            }
+        );
+    }, [postItem, accessToken, isLoggedInUserId]);
 
     const handleEditClick = () => {
         setEditing(true);
@@ -143,7 +107,7 @@ const StudyPostDetail = ( ) => {
 
                 setPostDetail(response.data);
                 const updatedPosts = posts.map(post =>
-                    post.id === updatedPost.id ? updatedPost : post
+                    post.studyPostId === updatedPost.studyPostId ? updatedPost : post
                 );
                 setPosts(updatedPosts);
                 setPostItem(response.data);
@@ -214,7 +178,6 @@ const StudyPostDetail = ( ) => {
         })
         // 이동을 안 함.
     }
-
 
     const formatDatetime = (datetime) => {
         const date = new Date(datetime);
@@ -304,8 +267,8 @@ const StudyPostDetail = ( ) => {
                                             />
                                         </div>
                                         <div className="right">
-                                            <span className="like_btn"><LikeButton like={likeStates}
-                                                                                   onClick={() => toggleLike()} /></span>
+                                            <span className="like_btn">
+                                                <LikeButton like={postItem.existsScrap} onClick={() => toggleLike()} /></span>
                                             <span>조회 <span>{postItem.hit}</span></span>
                                         </div>
                                     </div>

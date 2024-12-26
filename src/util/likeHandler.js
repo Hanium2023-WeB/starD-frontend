@@ -6,14 +6,15 @@ export const toggleLikeStatus = async (post, accessToken, isLoggedInUserId, onSu
         return;
     }
 
-    const postId = post.postId;
+    const postId = post.postId || post.studyPostId;
+    const tableType = post.studyPostId ? "studyPost" : "post";
 
     try {
-        if (post.existsStar) {
+        if (post.existsStar || post.existsScrap) {
             const response = await axios.delete(`/api/stars-and-scraps/${postId}`, {
                 params: {
                     targetId: postId,
-                    tableType: "post"
+                    tableType: tableType,
                 },
                 withCredentials: true,
                 headers: {
@@ -26,7 +27,7 @@ export const toggleLikeStatus = async (post, accessToken, isLoggedInUserId, onSu
             const response = await axios.post(`/api/stars-and-scraps/${postId}`, null, {
                 params: {
                     targetId: postId,
-                    tableType: "post"
+                    tableType: tableType,
                 },
                 withCredentials: true,
                 headers: {
