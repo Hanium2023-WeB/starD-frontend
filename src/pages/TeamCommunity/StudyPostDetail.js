@@ -119,8 +119,7 @@ const StudyPostDetail = ( ) => {
         console.log("수정 예정 : " + updatedPost.id + ", " + updatedPost.title + ", " + updatedPost.content);
 
         const postData = new FormData();
-        postData.append('title', updatedPost.title);
-        postData.append('content', updatedPost.content);
+
         if (updatedPost.fileChanged === true) {
             postData.append('file', updatedPost.file);
             postData.append('fileUpdateStatus', true);
@@ -128,8 +127,12 @@ const StudyPostDetail = ( ) => {
             postData.append('fileUpdateStatus', false);
         }
 
-        axios.post(`/api/study/post/${postId}`, postData, {
-            params: { postid: updatedPost.id },
+        postData.append("requestDto", JSON.stringify({
+            title: updatedPost.title,
+            content: updatedPost.content,
+        }))
+
+        axios.put(`/api/studies/${studyId}/study-posts/${postId}`, postData, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -137,7 +140,6 @@ const StudyPostDetail = ( ) => {
         })
             .then(response => {
                 console.log("팀블로그 커뮤니티 게시글 수정 성공");
-                alert("게시글이 수정되었습니다.");
 
                 setPostDetail(response.data);
                 const updatedPosts = posts.map(post =>
@@ -145,6 +147,8 @@ const StudyPostDetail = ( ) => {
                 );
                 setPosts(updatedPosts);
                 setPostItem(response.data);
+
+                alert("게시글이 수정되었습니다.");
             })
             .catch(error => {
                 console.error("Error:", error);
@@ -312,12 +316,12 @@ const StudyPostDetail = ( ) => {
                             {postItem && (
                                 <div>
                                     <div className="post_content" dangerouslySetInnerHTML={{ __html: postItem.content.replace(/\n/g, '<br>') }} />
-                                    {postItem.fileName && (
-                                        <div className="download_box">
-                                            {postItem.fileName}
-                                            <FontAwesomeIcon icon={faArrowDown} onClick={handleDownloadClick} className="download_btn"/>
+                                    {postItem.fileUrl && postItem.fileUrl.map((file, index) => (
+                                        <div className="download_box" key={index}>
+                                            <p>{file.fileName}</p>
+                                            <FontAwesomeIcon icon={faArrowDown} onClick={handleDownloadClick} className="download_btn" />
                                         </div>
-                                    )}
+                                    ))}
                                 </div>
                             )}
 
