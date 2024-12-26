@@ -12,6 +12,8 @@ import Pagination from "../../css/study_css/Pagination.css";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import ImageComponent from "../../components/image/imageComponent";
+import StudyListItem from "../../components/study/StudyListItem";
+import {toggleScrapStatus} from "../../util/scrapHandler";
 
 const MyOpenStudy = ({sideheader}) => {
     const [studies, setStudies] = useState([]);
@@ -26,46 +28,6 @@ const MyOpenStudy = ({sideheader}) => {
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
-    const [imgUrl, setImgUrl] = useState("");
-    useEffect(() => {
-        if (accessToken && isLoggedInUserId) {
-            axios.get("/api/mypage/study/star-scrap", { // 공감
-                params: {
-                    page: page,
-                    status: "open",
-                    type: "star",
-                },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    setLikeStates(response.data);
-                })
-                .catch(error => {
-                    console.log("공감 불러오기 실패", error);
-                });
-
-            axios.get("/api/mypage/study/star-scrap", { // 스크랩
-                params: {
-                    page: page,
-                    status: "open",
-                    type: "scrap",
-                },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-                .then(response => {
-                    setScrapStates(response.data);
-                })
-                .catch(error => {
-                    console.log("스크랩 불러오기 실패", error);
-                });
-        }
-    }, []);
 
     const handlePageChange = ({page, itemsPerPage, totalItemsCount}) => {
         setPage(page);
@@ -126,187 +88,55 @@ const MyOpenStudy = ({sideheader}) => {
             console.error("데이터 가져오기 실패:", error);
         });
 
-
-
         setItemsPerPage(itemsPerPage);
         setCount(totalItemsCount);
     };
 
     useEffect(() => {
-        axios.get("/api/user/mypage/open-study", {
+        axios.get("/api/members/studies/open", {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         })
             .then((res) => {
-                console.log("전송 성공 : ", res.data);
+                console.log("전송 성공 : ", res.data.studyRecruitPosts);
 
-                const studyList = res.data.content;
+                setStudies(res.data.studyRecruitPosts);
+                localStorage.setItem("ApplyStudy",JSON.stringify(res.data.studyRecruitPosts));
 
-                const updateStudies = res.data.content.map((study, index) => {
-                    study.like = likeStates[index];
-                    study.scrap = scrapStates[index];
-
-                    return study;
-                });
-
-                setStudies(updateStudies);
-                setImgUrl(res.data.content.recruiter.profile.imgUrl);
-				setItemsPerPage(res.data.pageable.pageSize);
-				setCount(res.data.totalElements);
+				setItemsPerPage(res.data.currentPage);
+				setCount(res.data.totalPages);
             })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
             });
     }, [accessToken, likeStates, scrapStates]);
 
-    const toggleScrap = (index) => {
-        setStudies((prevStudies) => {
-            const newStudies = [...prevStudies];
-            const studyId = newStudies[index].id;
-            if (newStudies[index].scrap) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-                axios.delete(`/api/scrap/study/${studyId}`, {
-                    params: { id: studyId },
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then(response => {
-                        console.log("스크랩 취소 성공 " + response.data);
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        console.log("스크랩 취소 실패");
-                    });
-            } else {
-                axios.post(`/api/scrap/study/${studyId}`, null, {
-                    params: { id: studyId },
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then(response => {
-                        console.log("스크랩 성공");
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        console.log("스크랩 실패");
-                    });
+    const toggleScrap = useCallback((index) => {
+        const study = studies[index];
+        toggleScrapStatus(
+            study,
+            accessToken,
+            isLoggedInUserId,
+            (isScrapped) => {
+                setStudies((prevStudies) => {
+                    const updatedStudies = [...prevStudies];
+                    updatedStudies[index] = { ...study, isScrapped };
+                    return updatedStudies;
+                });
+            },
+            (error) => {
+                console.error("스크랩 상태 변경 실패:", error);
             }
-            newStudies[index] = {...newStudies[index], scrap: !newStudies[index].scrap};
-            setStudiesChanged(true); // Mark studies as changed
-            return newStudies;
-        });
-    };
-
-    const toggleLike = (index) => {
-        setStudies((prevStudies) => {
-            const newStudies = [...prevStudies];
-            const studyId = newStudies[index].id;
-            if (newStudies[index].like) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-                axios.delete(`/api/star/study/${studyId}`, {
-                    params: { id: studyId },
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then(response => {
-                        console.log("공감 취소 성공 " + response.data);
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        console.log("공감 취소 실패");
-                    });
-            } else {
-                axios.post(`/api/star/study/${studyId}`, null, {
-                    params: { id: studyId },
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then(response => {
-                        console.log("공감 성공");
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        console.log("공감 실패");
-                    });
-            }
-            newStudies[index] = {...newStudies[index], like: !newStudies[index].like};
-            setStudiesChanged(true); // Mark studies as changed
-            return newStudies;
-        });
-    };
-
-    function calculateDateDifference(startDate, endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-
-        const timeDifference = end - start;
-        const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
-
-        return daysDifference;
-    }
+        );
+    }, [studies, accessToken, isLoggedInUserId]);
 
     const mypartistudylist = () => {
         return (
             <div className="study_list">
-                {studies.map((d, index) => (
-                    <div className="list" key={d.id}>
-
-                        <div className="list_header">
-                            <div className="list_sub_header">
-                                <div className="list_day">
-                                    {calculateDateDifference(d.activityStart, d.activityDeadline)}일간의 우주여행
-                                </div>
-                                {d.recruitStatus === "RECRUITING" ? (
-                                    <div className="list_status">모집중</div>
-                                ) : (<div className="list_status">진행중</div>)}
-
-                            </div>
-                            <div className="list_btn">
-                                <div className="list_like">
-                                    <LikeButton like={studies[index].like}
-                                                onClick={() => toggleLike(index)}/>
-                                </div>
-                                <div className="list_scrap">
-                                    {/* 스크랩 버튼을 클릭하면 해당 스터디 리스트 항목의 스크랩 상태를 토글 */}
-                                    <ScrapButton scrap={studies[index].scrap}
-                                                 onClick={() => toggleScrap(index)}/>
-                                </div>
-                            </div>
-                        </div>
-                        <Link
-                            to={`/studydetail/${d.id}`}
-                            style={{
-                                textDecoration: "none",
-                                color: "inherit",
-                            }}
-                        >
-                            <div className="list_founder">
-                                <ImageComponent getImgName = {imgUrl} imageSrc={""} />
-                                <span>{d.recruiter.nickname}</span>
-                            </div>
-                            <div className="list_title">{d.title}</div>
-                            <div className="list_tag_wrapper">
-                                {d.tags.split(',').map((tag, idx) => (
-                                    <div key={idx} className="list_tag">
-                                        {tag.trim()}
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="list_onoff">{d.onOff}</div>
-                            <div className="stroke"></div>
-                            <div className="list_deadline">
-                                마감일 | {d.recruitmentDeadline}
-                            </div>
-                        </Link>
-                    </div>
+                {studies.map((study, index) => (
+                    <StudyListItem key={study.studyId} studies={study} index={index} toggleScrap={() => toggleScrap(index)} />
                 ))}
             </div>
         );

@@ -25,8 +25,6 @@ const MyApplyStudy = ({sideheader}) => {
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
     const [scrapTwoStates, setScrapTwoStates] = useState([]);
-    const [likeTwoStates, setLikeTwoStates] = useState([]);
-    const [imgUrl, setImgUrl] = useState("");
 
     useEffect(() => {
         axios.get("/api/members/studies/apply", {
@@ -38,7 +36,6 @@ const MyApplyStudy = ({sideheader}) => {
             .then((res) => {
                 console.log("전송 성공 : ", res.data.studyRecruitPosts);
                 setStudies(res.data.studyRecruitPosts);
-                setImgUrl(res.data.studyRecruitPosts.profileImg);
                 localStorage.setItem("ApplyStudy",JSON.stringify(res.data.studyRecruitPosts));
             })
             .catch((error) => {
