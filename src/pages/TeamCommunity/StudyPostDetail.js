@@ -160,9 +160,7 @@ const StudyPostDetail = ( ) => {
     const handlePostDelete = () => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
-
-            axios.delete(`/api/study/post/${postId}`, {
-                params: { postId: postId },
+            axios.delete(`/api/studies/${studyId}/study-posts/${postId}`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -172,7 +170,7 @@ const StudyPostDetail = ( ) => {
                     console.log("팀 커뮤니티 게시글 삭제 성공 ");
                     alert("게시글이 삭제되었습니다.");
 
-                    const updatedPosts = posts.filter(post => post.id !== postDetail[0].id);
+                    const updatedPosts = posts.filter(post => post.studyPostId !== postDetail[0].studyPostId);
                     setPosts(updatedPosts);
                     navigate(`/${studyId}/teamblog/TeamCommunity`, {
                         state: {
