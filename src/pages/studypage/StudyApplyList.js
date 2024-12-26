@@ -198,41 +198,21 @@ const StudyApplyList = () => {
                     .then((res) => {
                         console.log(res.data);
                         console.log("모집 완료");
-                        alert("모집 완료. 팀블로그로 이동합니다.");
-                        navigate(`/${id}/teamblog`, {
-                            state: {
-                                "studyId": id,
-                            }
-                        })
 
-                    //     const requestData = {
-                    //         studyId: id
-                    //     };
-                    //     axios.post('/api/chat/room', requestData, {
-                    //         withCredentials: true,
-                    //         headers: {
-                    //             'Authorization': `Bearer ${accessToken}`
-                    //         }
-                    //     })
-                    //         .then((response) => {
-                    //             if (response.data === "SUCCESS") {
-                    //                 console.log(id, " 채팅방 생성 완료");
-                    //             }
-                    //         })
-                    //         .catch((error) => {
-                    //             console.error(error);
-                    //         });
-                    //
-                    //     if (res.data !== "SUCCESS") {
-                    //         console.log("모집 완료 실패");
-                    //     } else {
-                    //         alert("모집 완료. 팀블로그로 이동합니다.");
-                    //         navigate(`/${id}/teamblog`, {
-                    //             state: {
-                    //                 "studyId": id,
-                    //             }
-                    //         })
-                    //     }
+                        axios.post(`/api/chats/rooms/${id}`, null, {
+                            withCredentials: true,
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                        }).then(res => {
+                            console.log("채팅방 생성 완료");
+                            alert("모집 완료. 팀블로그로 이동합니다.");
+                            navigate(`/${id}/teamblog`, {
+                                state: {
+                                    "studyId": id,
+                                }
+                            })
+                        })
                     })
                     .catch((error) => {
                         console.error("참여완료 데이터 전송 실패:", error);
