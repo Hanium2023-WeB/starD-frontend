@@ -229,9 +229,8 @@ const StudyPostDetail = ( ) => {
         return formattedDatetime;
     };
 
-    const handleDownloadClick = () => {
-        axios.get(`/api/study/post/download/${postId}`, {
-            params: { postId: postId },
+    const handleDownloadClick = (studyPostFileId, fileName, fileUrl) => {
+        axios.get(`/api/studies/${studyId}/study-posts/download/${studyPostFileId}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -242,10 +241,11 @@ const StudyPostDetail = ( ) => {
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = postItem.fileName;
+                a.download = fileName;  // 파일 이름을 지정
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                console.log(res.data);
             })
             .catch(error => {
                 console.error('파일 다운로드 중 오류 발생 :', error);
@@ -319,7 +319,7 @@ const StudyPostDetail = ( ) => {
                                     {postItem.fileUrl && postItem.fileUrl.map((file, index) => (
                                         <div className="download_box" key={index}>
                                             <p>{file.fileName}</p>
-                                            <FontAwesomeIcon icon={faArrowDown} onClick={handleDownloadClick} className="download_btn" />
+                                            <FontAwesomeIcon icon={faArrowDown} onClick={() => handleDownloadClick(file.studyPostFileId, file.fileName, file.fileUrl)} className="download_btn" />
                                         </div>
                                     ))}
                                 </div>
