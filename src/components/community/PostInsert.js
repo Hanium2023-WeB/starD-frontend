@@ -92,7 +92,7 @@ const PostInsert = () => {
                 alert("게시글이 등록되었습니다.");
                 window.location.href = `/postdetail/${id}`;
             }).catch((error) => {
-                console.log('전송 실패', error);
+                console.log('전송 실패', error.response.data);
             })
         e.preventDefault();
     }, [formData])
