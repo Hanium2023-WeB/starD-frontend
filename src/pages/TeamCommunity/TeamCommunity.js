@@ -19,6 +19,7 @@ const TeamCommunity = () => {
 
     const location = useLocation();
     const {studyIdAsNumber,progressStatus} = location.state;
+    console.log(studyIdAsNumber);
 
     const handleMoveToPostInsert = (e) => {
         if(progressStatus ==="DISCONTINUE"){
@@ -80,7 +81,7 @@ const TeamCommunity = () => {
                                         </thead>
                                         <tbody>
                                             {posts.map((post) => (
-                                                <PostListItem key={post.studyId}
+                                                <PostListItem studyId={studyIdAsNumber}
                                                               setPosts={setPosts}
                                                               posts={post}/>
                                             ))}

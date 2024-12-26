@@ -20,9 +20,9 @@ const Comment = ({ type }) => {
   const {id} = useParams();
   targetId = id;
 
-  const {postid} = useParams(); // 팀블로그 커뮤니티의 postId
-  if (postid != null) {
-    targetId = postid;
+  const {postId} = useParams(); // 팀블로그 커뮤니티의 postId
+  if (postId != null) {
+    targetId = postId;
   }
 
   const [studyStatus, setStudyStatus] = useState("");

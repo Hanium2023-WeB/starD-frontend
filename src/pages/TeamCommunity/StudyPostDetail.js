@@ -14,9 +14,9 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 const StudyPostDetail = ( ) => {
     const navigate = useNavigate();
 
-    const {id, postid} = useParams();
-    console.log("studyId: ", id);
-    console.log("postId : ", postid);
+    const {studyId, postId} = useParams();
+    console.log("studyId: ", studyId);
+    console.log("postId : ", postId);
 
     const [postItem, setPostItem] = useState(null);
 
@@ -33,8 +33,8 @@ const StudyPostDetail = ( ) => {
     const [isWriter, setIsWriter] = useState(false);
 
     useEffect(() => {
-        axios.get(`/api/star/studypost/${postid}`, {
-            params: { postid: postid },
+        axios.get(`/api/star/studypost/${postId}`, {
+            params: { postid: postId },
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -48,32 +48,29 @@ const StudyPostDetail = ( ) => {
                 console.log("공감 불러오기 실패", error);
                 setInitiallyLikeStates(false);
             });
-    }, [postid]);
+    }, [postId]);
 
     useEffect(() => {
-        if (initiallyLikeStates) {
-            axios.get(`/api/study/post/${postid}`, {
-                params: { postid: postid },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            }).then((res) => {
-                    setPostItem(res.data);
-                    if (res.data.member.id === isLoggedInUserId) { // 자신의 글인지
-                        setIsWriter(true);
-                    }
-                })
-                .catch((error) => {
-                    console.error("팀 커뮤니티 게시글 세부 데이터 가져오기 실패:", error);
-                });
-        }
-    }, [postid, accessToken, isLoggedInUserId, initiallyLikeStates]);
+        axios.get(`/api/studies/${studyId}/study-posts/${postId}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then((res) => {
+                console.log(res.data);
+                setPostItem(res.data);
+                setIsWriter(res.data.isAuthor);
+            })
+            .catch((error) => {
+                console.error("팀 커뮤니티 게시글 세부 데이터 가져오기 실패:", error);
+            });
+    }, [postId, accessToken, isLoggedInUserId, initiallyLikeStates]);
 
     const toggleLike = () => {
         if (likeStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함
-            axios.delete(`/api/star/studypost/${postid}`, {
-                params: { postid: postid },
+            axios.delete(`/api/star/studypost/${postId}`, {
+                params: { postid: postId },
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -89,8 +86,8 @@ const StudyPostDetail = ( ) => {
 
             setLikeStates(false);
         } else {
-            axios.post(`/api/star/studypost/${postid}`, null, {
-                params: { postid: postid },
+            axios.post(`/api/star/studypost/${postId}`, null, {
+                params: { postid: postId },
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -131,7 +128,7 @@ const StudyPostDetail = ( ) => {
             postData.append('fileUpdateStatus', false);
         }
 
-        axios.post(`/api/study/post/${postid}`, postData, {
+        axios.post(`/api/study/post/${postId}`, postData, {
             params: { postid: updatedPost.id },
             withCredentials: true,
             headers: {
@@ -160,8 +157,8 @@ const StudyPostDetail = ( ) => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
 
-            axios.delete(`/api/study/post/${postid}`, {
-                params: { postId: postid },
+            axios.delete(`/api/study/post/${postId}`, {
+                params: { postId: postId },
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -173,9 +170,9 @@ const StudyPostDetail = ( ) => {
 
                     const updatedPosts = posts.filter(post => post.id !== postDetail[0].id);
                     setPosts(updatedPosts);
-                    navigate(`/${id}/teamblog/TeamCommunity`, {
+                    navigate(`/${studyId}/teamblog/TeamCommunity`, {
                         state: {
-                            studyId: id,
+                            studyId: studyId,
                         }
                     })
                 })
@@ -207,10 +204,10 @@ const StudyPostDetail = ( ) => {
 
 
     const showTeamCommunity = () => {
-        console.log("id : " + id);
-        navigate(`/${id}/teamblog/TeamCommunity`, {
+        console.log("id : " + studyId);
+        navigate(`/${studyId}/teamblog/TeamCommunity`, {
             state: {
-                studyId: id,
+                studyId: studyId,
             }
         })
         // 이동을 안 함.
@@ -229,8 +226,8 @@ const StudyPostDetail = ( ) => {
     };
 
     const handleDownloadClick = () => {
-        axios.get(`/api/study/post/download/${postid}`, {
-            params: { postId: postid },
+        axios.get(`/api/study/post/download/${postId}`, {
+            params: { postId: postId },
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -282,7 +279,7 @@ const StudyPostDetail = ( ) => {
                                     </div>
                                     <div className="post_info">
                                         <div className="left">
-                                            <span className="post_nickname">{postItem.member.nickname}</span>
+                                            <span className="post_nickname">{postItem.writer}</span>
                                             <span className="post_created_date">{formatDatetime(postItem.createdAt)}</span>
                                             {postItem.createdAt !== postItem.updatedAt && (
                                               <>
@@ -290,12 +287,12 @@ const StudyPostDetail = ( ) => {
                                                 <span>( 수정: {formatDatetime(postItem.updatedAt)} )</span>
                                               </>
                                             )}
-                                            {isLoggedInUserId !== postItem.member.id && (
+                                            {/*{isLoggedInUserId !== postItem.member.id && (*/}
                                                 <>
                                                     <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
-                                                    <span className="report_btn" onClick={() => handleOpenReportModal(postItem.id)}>신고</span>
+                                                    <span className="report_btn" onClick={() => handleOpenReportModal(postItem.studyPostId)}>신고</span>
                                                 </>
-                                            )}
+                                            {/*)}*/}
                                             <Report
                                                 show={showReportModal}
                                                 handleClose={handleCloseReportModal}
@@ -307,7 +304,7 @@ const StudyPostDetail = ( ) => {
                                         <div className="right">
                                             <span className="like_btn"><LikeButton like={likeStates}
                                                                                    onClick={() => toggleLike()} /></span>
-                                            <span>조회 <span>{postItem.viewCount}</span></span>
+                                            <span>조회 <span>{postItem.hit}</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -326,9 +323,9 @@ const StudyPostDetail = ( ) => {
 
                             <div className="btn">
                                 <Link
-                                    to={`/${id}/teamblog/TeamCommunity`}
+                                    to={`/${studyId}/teamblog/TeamCommunity`}
                                     // onClick={showTeamCommunity}
-                                    state={{studyId: id}}
+                                    state={{studyId: studyId}}
                                       style={{
                                           textDecoration: "none",
                                           color: "inherit",

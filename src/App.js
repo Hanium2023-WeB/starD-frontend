@@ -216,7 +216,7 @@ function App() {
                            element={<TeamMember/>} />
 
                     <Route
-                        path="/:id/teamblog/TeamCommunity/studypostdetail/:postid"
+                        path="/:studyId/teamblog/TeamCommunity/studypostdetail/:postId"
                         element={
                             <StudyPostDetail/>
                         }
