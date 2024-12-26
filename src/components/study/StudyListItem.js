@@ -38,7 +38,6 @@ const StudyListItem = ({studies, toggleScrap, index}) => {
 
     }
 
-
     return (
         <div className="list" key={studies.id}>
             <div className="list_header">
