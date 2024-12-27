@@ -10,7 +10,7 @@ export const toggleLikeStatus = async (post, accessToken, isLoggedInUserId, onSu
     const tableType = post.studyPostId ? "studyPost" : "post";
 
     try {
-        if (post.existsStar || post.existsScrap) {
+        if (post.existsStar) {
             const response = await axios.delete(`/api/stars-and-scraps/${postId}`, {
                 params: {
                     targetId: postId,

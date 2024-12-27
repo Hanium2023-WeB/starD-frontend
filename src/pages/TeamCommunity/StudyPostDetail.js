@@ -10,7 +10,8 @@ import PostEdit from "../../components/teamcommunity/TeamPostEdit";
 import Report from "../../components/report/Report";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import {toggleLikeStatus} from "../../util/likeHandler";
+import { toggleScrapStatus } from "../../util/scrapHandler";
+import ScrapButton from "../../components/repeat_etc/ScrapButton";
 
 const StudyPostDetail = ( ) => {
     const navigate = useNavigate();
@@ -47,13 +48,13 @@ const StudyPostDetail = ( ) => {
             });
     }, [postId, accessToken, isLoggedInUserId]);
 
-    const toggleLike = useCallback(() => {
+    const toggleScrap = useCallback(() => {
         if (!postItem) {
             console.warn("postItem이 아직 초기화되지 않았습니다.");
             return;
         }
         console.log(postItem);
-        toggleLikeStatus(
+        toggleScrapStatus(
             postItem,
             accessToken,
             isLoggedInUserId,
@@ -64,7 +65,7 @@ const StudyPostDetail = ( ) => {
                 }));
             },
             (error) => {
-                console.error("좋아요 상태 변경 실패:", error.response.data);
+                console.error("스크랩 상태 변경 실패:", error.response.data);
             }
         );
     }, [postItem, accessToken, isLoggedInUserId]);
@@ -268,7 +269,7 @@ const StudyPostDetail = ( ) => {
                                         </div>
                                         <div className="right">
                                             <span className="like_btn">
-                                                <LikeButton like={postItem.existsScrap} onClick={() => toggleLike()} /></span>
+                                                <ScrapButton scrap={postItem.existsScrap} onClick={() => toggleScrap()} /></span>
                                             <span>조회 <span>{postItem.hit}</span></span>
                                         </div>
                                     </div>

@@ -6,14 +6,15 @@ export const toggleScrapStatus = async (study, accessToken, isLoggedInUserId, on
         return;
     }
 
-    const studyId = study.studyId;
+    const targetId = study.studyPostId ? study.studyPostId : study.studyId;
+    const tableType = study.studyPostId ? "studyPost" : "study";
 
     try {
-        if (study.isScrapped) {
-            const response = await axios.delete(`/api/stars-and-scraps/${studyId}`, {
+        if (study.existsScrap) {
+            const response = await axios.delete(`/api/stars-and-scraps/${targetId}`, {
                 params: {
-                    targetId: studyId,
-                    tableType: "study"
+                    targetId: targetId,
+                    tableType: tableType
                 },
                 withCredentials: true,
                 headers: {
@@ -23,10 +24,10 @@ export const toggleScrapStatus = async (study, accessToken, isLoggedInUserId, on
             console.log("스크랩 취소 성공:", response.data);
             onSuccess(false); // 상태를 false로 설정
         } else {
-            const response = await axios.post(`/api/stars-and-scraps/${studyId}`, null, {
+            const response = await axios.post(`/api/stars-and-scraps/${targetId}`, null, {
                 params: {
-                    targetId: studyId,
-                    tableType: "study"
+                    targetId: targetId,
+                    tableType: tableType
                 },
                 withCredentials: true,
                 headers: {

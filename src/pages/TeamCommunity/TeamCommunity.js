@@ -76,7 +76,7 @@ const TeamCommunity = () => {
                                                 <th>닉네임</th>
                                                 <th>날짜</th>
                                                 <th>조회수</th>
-                                                <th>좋아요수</th>
+                                                <th>스크랩수</th>
                                             </tr>
                                         </thead>
                                         <tbody>
