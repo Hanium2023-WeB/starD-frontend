@@ -58,7 +58,7 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
                 <div className="list_btn">
                     <div className="list_scrap">
                         {/* 스크랩 버튼을 클릭하면 해당 스터디 리스트 항목의 스크랩 상태를 토글 */}
-                        <ScrapButton scrap={studies.isScrapped}
+                        <ScrapButton scrap={studies.existsScrap}
                                      onClick={() => toggleScrap(index)}/>
                     </div>
                 </div>

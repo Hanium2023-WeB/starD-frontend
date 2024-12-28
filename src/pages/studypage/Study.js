@@ -35,10 +35,10 @@ const Study = () => {
             study,
             accessToken,
             isLoggedInUserId,
-            (isScrapped) => {
+            (existsScrap) => {
                 setStudies((prevStudies) => {
                     const updatedStudies = [...prevStudies];
-                    updatedStudies[index] = { ...study, isScrapped };
+                    updatedStudies[index] = { ...study, existsScrap };
                     return updatedStudies;
                 });
             },

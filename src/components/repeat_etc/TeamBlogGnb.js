@@ -44,7 +44,7 @@ const TeamBlogGnb = ({studyIdAsNumber, Member, selectStudy, progressStatus}) => 
     const showTeamCommunity = () => {
         navigate(`/${studyIdAsNumber}/teamblog/TeamCommunity`, {
             state: {
-                studyIdAsNumber: studyIdAsNumber,
+                studyId: studyIdAsNumber,
                 progressStatus:progressStatus,
             }
         })
