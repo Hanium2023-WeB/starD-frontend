@@ -209,14 +209,14 @@ function App() {
                     <Route path="/:id/teamblog/TeamSchedule"
                            element={<TeamSchedule/>} />
 
-                    <Route path="/:id/teamblog/TeamCommunity"
+                    <Route path="/:studyId/teamblog/TeamCommunity"
                            element={<TeamCommunity/>} />
 
                     <Route path="/:id/teamblog/TeamMember"
                            element={<TeamMember/>} />
 
                     <Route
-                        path="/:id/teamblog/TeamCommunity/studypostdetail/:postid"
+                        path="/:studyId/teamblog/TeamCommunity/studypostdetail/:postId"
                         element={
                             <StudyPostDetail/>
                         }

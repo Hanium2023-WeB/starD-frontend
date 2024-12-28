@@ -239,6 +239,10 @@ input{
     margin:0 auto 70px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+.download_box p{
+    margin-bottom: 0;
 }
 .download_box .download_btn{
     cursor: pointer;

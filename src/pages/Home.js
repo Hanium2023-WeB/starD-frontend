@@ -60,10 +60,10 @@ const Home = () => {
 
         axiosInstance.get("/studies")
             .then((res) => {
-                console.log(res.data);
-                setTop5Field(res.data.data.slice(0, 5));
-                setFirstRow(res.data.data.slice(0, 3));
-                setSecondRow(res.data.data.slice(3, 5));
+                console.log(res.data.tags);
+                setTop5Field(res.data.tags.slice(0, 5));
+                setFirstRow(res.data.tags.slice(0, 3));
+                setSecondRow(res.data.tags.slice(3, 5));
             }).catch(error => {
             console.log(error);
         });
@@ -252,7 +252,7 @@ const Home = () => {
                                                      key={index}>
                                                     <p id={"ranking"}>{index + 1}</p>
                                                     <button id={"dashboard_tagbtn"}
-                                                            value={item.field}>{item.field}</button>
+                                                            value={item.tagName}>{item.tagName}</button>
                                                 </div>
                                             )
                                         })

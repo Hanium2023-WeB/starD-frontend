@@ -1,7 +1,8 @@
 import {Link} from "react-router-dom";
 import attachments from "../../images/attachments.png";
 
-const TeamPostListItem = ({key, posts, setPosts}) => {
+const TeamPostListItem = ({studyId, posts, setPosts}) => {
+    console.log(studyId);
     const formatDatetime = (datetime) => {
         const date = new Date(datetime);
         const year = date.getFullYear();
@@ -15,7 +16,7 @@ const TeamPostListItem = ({key, posts, setPosts}) => {
 
     return (
         <tr className="post_list">
-            <Link to={`/${key}/teamblog/TeamCommunity/studypostdetail/${posts.studyPostId}`}
+            <Link to={`/${studyId}/teamblog/TeamCommunity/studypostdetail/${posts.studyPostId}`}
                   style={{
                       textDecoration: "none",
                       color: "inherit",
