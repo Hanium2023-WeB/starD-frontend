@@ -37,13 +37,12 @@ const Qna = () => {
     // 권한 조회
     useEffect(() => {
         axios
-            .get("/api/member/auth", {
+            .get("/api/members/auth", {
                 withCredentials: true,
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
             .then((res) => {
-                const auth = res.data[0].authority;
-                setUserIsAdmin(auth === "ROLE_ADMIN");
+                setUserIsAdmin(res.data === "ADMIN");
             })
             .catch((error) => {
                 console.error("권한 조회 실패:", error);
@@ -70,14 +69,17 @@ const Qna = () => {
 
         let params = isSearchMode
             ? {
-                category: categoryOption,
                 keyword: searchQuery,
                 page: pageNumber,
             }
             : { page: pageNumber };
 
         axios
-            .get(base_url, { params })
+            .get(base_url, {
+                params,
+                withCredentials: true,
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
             .then((res) => {
                 console.log(res.data);
                 const data = res.data;

@@ -169,6 +169,16 @@ input{
     justify-content: space-between;
     align-items: center;
 }
+.community_detail .post_header .post_info .left .writer_profile{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.community_detail .post_header .post_info .left .writer_profile img{
+    width:14px;
+    height:14px;
+    margin-right:5px;
+}
 .community_detail .post_header .post_info .left .post_nickname{
     font-weight: bold;
     margin-right: 30px;
@@ -229,6 +239,10 @@ input{
     margin:0 auto 70px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+.download_box p{
+    margin-bottom: 0;
 }
 .download_box .download_btn{
     cursor: pointer;

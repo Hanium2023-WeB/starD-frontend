@@ -4,13 +4,11 @@ import searchicon from "../../images/search.png";
 import axios from "axios";
 
 
-const CommSearchBar = () => {
+const CommSearchBar = ({setIsSearchMode, onFilterChange}) => {
 
 	const [search, setSearch] = useState("");
-	const [selectOption, setSelectOption] = useState("제목");
 	const [categoryOption, setCategoryOption] = useState("전체");
 	const navigate = useNavigate();
-
 
 	const tagoptions = [
 	    { value: "전체", name: "전체" },
@@ -29,35 +27,33 @@ const CommSearchBar = () => {
 		console.log("Search", e.target.value);
 		setSearch(e.target.value)
 	}
+	const onHandleselect = (e) => {
+		const selectedCategory = e.target.value;
+		setCategoryOption(selectedCategory);
+		onFilterChange(selectedCategory); // 부모 컴포넌트에 필터 전달
 
-	const onHandleselect = (e)=>{
-		setSelectOption(e.target.value);
-		console.log(`value = ${e.target.value}`)
-	}
-
-	const onHandleCategory = (e) => {
-        setCategoryOption(e.target.value);
-	}
+		const queryParams = `?category=${encodeURIComponent(selectedCategory)}`;
+		navigate(`/comm/search${queryParams}`, { replace: true });
+	};
 
 	const searchItem = (item)=>{
 		setSearch(item);
-		const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}&select=${encodeURIComponent(selectOption)}`;
-		navigate(`/comm/search${queryParams}`);
+		setIsSearchMode(true);
+		const selectedType = tagoptions.find((type) => type.value === categoryOption);
+		if (selectedType) {
+			const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}`;
+			navigate(`/comm/search${queryParams}`, {replace:true});
+		}
 	}
 
 	return (
 		<div className="Home_wrap">
 			<div className="select_search">
-			    <select id="sub" value={categoryOption} onChange={onHandleCategory}>
+			    <select id="sub" value={categoryOption} onChange={onHandleselect}>
                     {tagoptions.map((category, idx) =>
                         <option value={category.value}>{category.name}</option>
                     )}
 			    </select>
-				<select id="sub" value={selectOption} onChange={onHandleselect}>
-					<option value="제목">제목</option>
-					<option value="내용">내용</option>
-					<option value="작성자">작성자</option>
-				</select>
 			</div>
 
 			<div className="searchbar">

@@ -118,7 +118,7 @@ const category = () => {
 									color: "inherit",
 								}}
 							>
-								<li>내가 작성한 글</li>
+								<li>내가 작성한 게시글</li>
 							</Link>
 							<Link
 								to={"/MyPage/mycomment/page=1"}
@@ -157,7 +157,7 @@ const category = () => {
 									color: "inherit",
 								}}
 							>
-							<li>스크랩한 게시글</li>
+							<li>좋아요한 게시글</li>
 							</Link>
 						</ul>
 					</nav>

@@ -24,6 +24,11 @@ const Community = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const insertPage = location.state && location.state.page;
 
+    const searchQuery = new URLSearchParams(location.search).get("q");
+    const categoryOption = new URLSearchParams(location.search).get("category");
+    const [isSearchMode, setIsSearchMode] = useState(!!searchQuery || !!categoryOption);
+    const [filter, setFilter] = useState(''); // SearchBar에서 전달받은 필터
+
     const handleMoveToStudyInsert = (e) => {
         if (accessToken && isLoggedInUserId) {
             e.preventDefault();
@@ -35,15 +40,18 @@ const Community = () => {
     };
 
     const fetchCommunities = (pageNumber) => {
-        axios.get("/api/com", {
-            params: {
-                page: pageNumber,
-            },
+        axios.get("/api/communities", {
+            params: {page: pageNumber},
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         })
             .then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                console.log(res.data);
+                setPosts(res.data.posts);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.posts.length);
             }).catch((error) => {
             console.error("데이터 가져오기 실패:", error);
         });
@@ -53,24 +61,57 @@ const Community = () => {
         fetchCommunities(page);
     }, [page]);
 
-    useEffect(() => {
-        axios.get("/api/com", {
-            params: {
-                page: 1,
+    const handleSearchPost = (pageNumber) => {
+        let base_url = "/api/communities";
+        let params = {
+            page:pageNumber
+        }
+        if (categoryOption && categoryOption !== "전체") {
+            // 특정 카테고리를 선택한 경우
+            base_url = "/api/communities/category";
+            params.category = categoryOption;
+        }
+        if (searchQuery) {
+            // 검색어가 있는 경우
+            base_url = "/api/communities/search";
+            params.keyword = searchQuery;
+            if (categoryOption && categoryOption !== "전체") {
+                // 검색어와 카테고리가 동시에 선택된 경우
+                base_url = "/api/communities/search/category";
+                params.category = categoryOption;
             }
-        }).then((res) => {
-                setPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+        }
+
+        axios.get(base_url, {
+            params,
+            withCredentials: true,
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+        })
+            .then((res) => {
+                console.log(base_url);
+                console.log(params);
+                console.log(res.data);
+                setPosts(res.data.posts);
+                setCount(res.data.posts.length);
             })
-            .catch((error) => {
-                console.error("데이터 가져오기 실패:", error);
-            });
-    }, [insertPage]);
+            .catch((error) => console.error("데이터 가져오기 실패:", error));
+    }
+    useEffect(() => {
+        handleSearchPost(page);
+    }, [page, location.search]);
+
+    useEffect(() => {
+        setIsSearchMode(!!searchQuery || !!categoryOption);
+    }, [searchQuery, categoryOption]);
 
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
         navigate(`/community/page=${selectedPage}`);
+    };
+
+    // 필터 변경 처리
+    const handleFilterChange = (newFilter) => {
+        setFilter(newFilter);
     };
 
     return (
@@ -85,7 +126,7 @@ const Community = () => {
                 {!showPostInsert && (
                     <div>
                         <div className="community_header">
-                            <SearchBar/>
+                            <SearchBar setIsSearchMode={setIsSearchMode} onFilterChange={handleFilterChange}/>
                             <button onClick={handleMoveToStudyInsert} className="new_post_btn">
                                 새 글 작성
                             </button>
@@ -100,27 +141,31 @@ const Community = () => {
                                             <th>닉네임</th>
                                             <th>날짜</th>
                                             <th>조회수</th>
-                                            <th>공감수</th>
-                                            <th>스크랩수</th>
+                                            <th>좋아요수</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {posts.map((post) => (
-                                            <PostListItem key={post.id}
-                                                          setPosts={setPosts}
+                                            <PostListItem key={post.postId}
+                                                          isMyLikePost={false}
                                                           posts={post}/>
                                         ))}
                                     </tbody>
                                 </table>
+                                {posts.length === 0 && (
+                                    <h4 style={{textAlign:"center"}}>검색 결과가 없습니다.</h4>
+                                )}
                             </div>
                         </div>
                     </div>
                 )}
             </div>
-            <div className={"paging"}>
-                <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                        handlePageChange={handlePageChange}/>
-            </div>
+            {!showPostInsert && (
+                <div className={"paging"}>
+                    <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+                            handlePageChange={handlePageChange}/>
+                </div>
+            )}
         </div>
     );
 }

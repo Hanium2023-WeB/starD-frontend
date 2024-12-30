@@ -18,7 +18,8 @@ const TeamCommunity = () => {
     const isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
 
     const location = useLocation();
-    const {studyIdAsNumber,progressStatus} = location.state;
+    const {studyId,progressStatus} = location.state;
+    console.log(studyId);
 
     const handleMoveToPostInsert = (e) => {
         if(progressStatus ==="DISCONTINUE"){
@@ -31,15 +32,16 @@ const TeamCommunity = () => {
     };
 
     useEffect(() => {
-        axios.get("/api/study/post", {
-            params: { studyId: studyIdAsNumber },
+        axios.get(`/api/studies/${studyId}/study-posts`, {
+            params: { studyId: studyId },
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             }
         })
             .then((res) => {
-                setPosts(res.data);
+                console.log(res.data.items);
+                setPosts(res.data.items);
             })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
@@ -50,17 +52,17 @@ const TeamCommunity = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="container">
-                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} progressStatus={progressStatus}/>
+                <TeamBlogGnb studyIdAsNumber={studyId} progressStatus={progressStatus}/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
                     <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 커뮤니티</p>
                     <Backarrow subname={"TEAM COMMUNITY LIST"}/>
                     {showPostInsert && (
-                        <PostInsert studyId={studyIdAsNumber}/>
+                        <PostInsert studyId={studyId}/>
                     )}
                     {!showPostInsert && (
                         <div>
                             <div className="community_header">
-                                <SearchBar studyId={studyIdAsNumber} />
+                                <SearchBar studyId={studyId} />
                                 <button onClick={handleMoveToPostInsert} className="new_post_btn">
                                     새 글 작성
                                 </button>
@@ -74,12 +76,12 @@ const TeamCommunity = () => {
                                                 <th>닉네임</th>
                                                 <th>날짜</th>
                                                 <th>조회수</th>
-                                                <th>공감수</th>
+                                                <th>스크랩수</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {posts.map((post) => (
-                                                <PostListItem key={post.id}
+                                                <PostListItem studyId={studyId}
                                                               setPosts={setPosts}
                                                               posts={post}/>
                                             ))}

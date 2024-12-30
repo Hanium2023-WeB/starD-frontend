@@ -65,14 +65,17 @@ const TeamPostInsert = ( {studyId} ) => {
         setFormData(onInsertPost(formData));
 
         const postData = new FormData();
-        postData.append('studyId', studyId);
-        postData.append('title', formData.title);
-        postData.append('content', formData.content);
+
         if (formData.file) {
             postData.append('file', formData.file);
         }
 
-        axios.post("/api/study/post", postData, {
+        postData.append("requestDto", JSON.stringify({
+            title: formData.title,
+            content: formData.content,
+        }))
+
+        axios.post(`/api/studies/${studyId}/study-posts`, postData, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -81,9 +84,9 @@ const TeamPostInsert = ( {studyId} ) => {
         }).then((res) => {
             console.log(res.data);
             alert("게시글이 등록되었습니다.");
-            navigate(`/${studyId}/teamblog/TeamCommunity/studypostdetail/${res.data.id}`)
+            navigate(`/${studyId}/teamblog/TeamCommunity/studypostdetail/${res.data.studyPostId}`)
         }).catch((error) => {
-            console.log('전송 실패', error);
+            console.error('전송 실패', error);
         })
 
         e.preventDefault();

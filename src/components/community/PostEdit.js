@@ -10,6 +10,7 @@ const PostEdit = ({post, onUpdatePost, onCancel}) => {
         { value: "공부", name: "공부" },
         { value: "잡담", name: "잡담" },
         { value: "기타", name: "기타" },
+        { value: "없음", name: "없음" },
     ];
 
     const handleInputChange = (e) => {
@@ -20,8 +21,9 @@ const PostEdit = ({post, onUpdatePost, onCancel}) => {
         }));
     }
 
-    const handleUpdateClick = () => {
-        onUpdatePost({ ...updatedPost, category: selectedCategory });
+    const handleUpdateClick = (e) => {
+        e.preventDefault();
+        onUpdatePost({ ...updatedPost, category: selectedCategory, e });
     }
 
     return (
@@ -30,7 +32,7 @@ const PostEdit = ({post, onUpdatePost, onCancel}) => {
                 <span style={{paddingLeft:"10px"}}>제목</span>
                 <input type="text" name="title" value={updatedPost.title} onChange={handleInputChange}/>
             </div>
-            <div>
+            <div style={{marginLeft:"2px"}}>
                 <span>카테고리</span>
                 <span className="field_wrapper">
                     <select name="category" value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>

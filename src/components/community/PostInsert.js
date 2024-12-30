@@ -18,6 +18,7 @@ const PostInsert = () => {
         { value: "공부", name: "공부" },
         { value: "잡담", name: "잡담" },
         { value: "기타", name: "기타" },
+        { value: "없음", name: "없음" },
     ];
 
     const handleInputChange = (e) => {
@@ -72,8 +73,8 @@ const PostInsert = () => {
         }
         setFormData(onInsertPost(formData));
         const accessToken = localStorage.getItem('accessToken');
-
-        const response = axios.post("/api/com",
+        console.log(formData);
+        const response = axios.post("/api/communities",
             {
                 title:formData.title,
                 category:formData.category,
@@ -87,11 +88,11 @@ const PostInsert = () => {
             })
             .then((res) => {
                 console.log(res.data);
-                const id = res.data.id;
+                const id = res.data.postId;
                 alert("게시글이 등록되었습니다.");
                 window.location.href = `/postdetail/${id}`;
             }).catch((error) => {
-                console.log('전송 실패', error);
+                console.log('전송 실패', error.response.data);
             })
         e.preventDefault();
     }, [formData])
@@ -102,7 +103,7 @@ const PostInsert = () => {
                 <span style={{paddingLeft: "10px"}}>제목</span>
                 <input type="text" name="title" value={formData.title} onChange={handleInputChange}/>
             </div>
-            <div>
+            <div style={{marginLeft:"2px"}}>
                 <span>카테고리</span>
                 <span className="field_wrapper">
                     <select name="category" value={formData.category} onChange={handleInputChange}>

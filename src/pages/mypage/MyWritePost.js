@@ -9,6 +9,8 @@ import PostListItem from "../../components/community/PostListItem";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import Paging from "../../components/repeat_etc/Paging";
+import Category from "../../components/repeat_etc/Category";
+import StudyListItem from "../../components/study/StudyListItem";
 
 const MyWritePost = () => {
     const navigate = useNavigate();
@@ -16,7 +18,6 @@ const MyWritePost = () => {
     const [showPostInsert, setShowPostInsert] = useState(false);
     let accessToken = localStorage.getItem('accessToken');
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
-
 
     const dataId = useRef(0);
     const [state, setState] = useState([]);
@@ -213,22 +214,39 @@ const MyWritePost = () => {
     };
 
     return (
-        <div className={"main_wrap"} id={"community"}>
+        // <div className={"main_wrap"} id={"community"}>
+        //     <Header showSideCenter={true}/>
+        //     <div className="community_container">
+        //         <p id={"entry-path"}> 홈 > 내가 작성한 글 </p>
+        //         <Backarrow subname={"My Write Post"}/>
+        //         <div>
+        //             <div className="community">
+        //                 <div className={"community-content"}>
+        //                     {mypost()}
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </div>
+        //     <div className={"paging"}>
+        //         <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+        //                 handlePageChange={handlePageChange}/>
+        //     </div>
+        // </div>
+        <div>
             <Header showSideCenter={true}/>
-            <div className="community_container">
-                <p id={"entry-path"}> 홈 > 내가 작성한 글 </p>
-                <Backarrow subname={"My Write Post"}/>
-                <div>
-                    <div className="community">
-                        <div className={"community-content"}>
-                            {mypost()}
+            <div className="container">
+                <Category/>
+                <div className="main_container">
+                    <p id={"entry-path"}> 홈 > 마이페이지 > 내가 작성한 게시글 </p>
+                    <Backarrow subname={"내가 작성한 게시글"}/>
+                    <div>
+                        <div className="community">
+                            <div className={"community-content"}>
+                                {mypost()}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className={"paging"}>
-                <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                        handlePageChange={handlePageChange}/>
             </div>
         </div>
     );

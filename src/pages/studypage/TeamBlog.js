@@ -107,7 +107,7 @@ const TeamBlog = () => {
             });
 
 
-        axios.get(`/api/api/v2/studies/${id}`, {
+        axios.get(`/api/studies/${id}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -128,7 +128,7 @@ const TeamBlog = () => {
     }, [accessToken]);
 
     useEffect(() => {
-        axios.get(`/api/todo/${studyIdAsNumber}`, {
+        axios.get(`/api/studies/${studyIdAsNumber}/to-dos`, {
             params: {
                 year: Year, month: Month,
             }, headers: {
@@ -161,7 +161,7 @@ const TeamBlog = () => {
 
 
     useEffect(() => {
-        axios.get(`/api/schedule/${studyIdAsNumber}`, {
+        axios.get(`/api/studies/${studyIdAsNumber}/schedules`, {
             params: {
                 year: Year, month: Month,
             }, withCredentials: true, headers: {
@@ -224,9 +224,9 @@ const TeamBlog = () => {
                                             ) : (
                                                 <ul id="todocontent">
                                                     {filteredToDo.map((todo) => (
-                                                        <li key={todo.id}>
+                                                        <li key={todo.toDoId}>
                                                             {todo.assignees.map((assign)=>(
-                                                                <div id="todotext">{assign.member.nickname}  </div>
+                                                                <div id="todotext">{assign.nickname}  </div>
                                                             ))}
                                                             <div id="todotext"> | </div>
                                                             <div id="todotext">{todo.task}</div>
@@ -255,8 +255,8 @@ const TeamBlog = () => {
                                             ) : (
                                                 <ul id="todocontent">
                                                     {filteredSchedule.map((item) => (
-                                                        <li key={item.id}>
-                                                            <div id="todotext">{item.study.title} |</div>
+                                                        <li key={item.scheduleId}>
+                                                            {/*<div id="todotext">{item.study.title} |</div>*/}
                                                             <div id="todotext">{item.title}</div>
                                                         </li>
                                                     ))}

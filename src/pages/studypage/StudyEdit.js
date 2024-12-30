@@ -116,6 +116,7 @@ const StudyEdit = () => {
                 recruitmentDeadline: updatedStudy.recruitmentDeadline,
             },
             {
+                params:{studyId:updatedStudy.studyId},
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -126,7 +127,7 @@ const StudyEdit = () => {
                 console.log("API Response:", res.data);
                 console.log("수정성공");
             }).catch((error) => {
-            console.log(error);
+            console.log(error.response.data || error);
         })
         navigate(`/studydetail/${study.studyId}`);
     },[updatedStudy]);

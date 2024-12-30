@@ -2,20 +2,19 @@ import Header from "../../components/repeat_etc/Header";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import {Link, useParams, useNavigate, useLocation} from "react-router-dom";
 import React, {useState, useEffect} from "react";
-import LikeButton from "../../components/repeat_etc/LikeButton";
-import ScrapButton from "../../components/repeat_etc/ScrapButton";
 import axios from "axios";
 import QnaEdit from "../../components/qna/QnaEdit";
 import Comment from "../../components/comment/Comment";
 import default_profile_img from "../../images/default_profile_img.png";
+import axiosInstance from "../../api/axiosInstance";
 
 const QnaDetail = () => {
     const navigate = useNavigate();
 
     const {id} = useParams();
     console.log("postId : ", id);
-    const location = useLocation(); // 현재 경로의 정보를 가져옴
-    const { postType } = location.state || {}; // state에서 postType 추출
+    const location = useLocation();
+    const { postType } = location.state || {};
     console.log(postType);
 
     const [postItem, setPostItem] = useState(null);
@@ -28,7 +27,6 @@ const QnaDetail = () => {
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
     const [url, setUrl] = useState(null);
     const [initiallyUrlStates, setInitiallyUrlStates] = useState(false);
-    const [type, setType] = useState(null);
 
     const [isWriter, setIsWriter] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
@@ -45,20 +43,15 @@ const QnaDetail = () => {
     }, [id]);
 
     useEffect(() => {
-        axios
-            .get("/api/member/auth", {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
+        axiosInstance
+            .get("/members/auth")
             .then((res) => {
-                const auth = res.data[0].authority;
+                const auth = res.data;
 
-                if (auth === "ROLE_USER") {
+                if (auth === "USER") {
                     setIsAdmin(false);
                 }
-                else if (auth === "ROLE_ADMIN") {
+                else if (auth === "ADMIN") {
                     setIsAdmin(true);
                 }
             })
@@ -82,7 +75,7 @@ const QnaDetail = () => {
                 .then((res) => {
                     console.log(res.data);
                     setPostItem(res.data);
-                    if (res.data.member.id === isLoggedInUserId) { // 자신의 글인지
+                    if (res.data.isAuthor) { // 자신의 글인지
                         setIsWriter(true);
                     }
                 })
@@ -124,8 +117,8 @@ const QnaDetail = () => {
             .then(response => {
                 console.log("qna 수정 성공:", response.data);
                 alert("게시글이 수정되었습니다.");
+                setPostItem(response.data)
                 setEditing(false); // 수정 모드 비활성화
-                navigate(`/qnadetail/${updatedPost.postId}`); // 수정된 게시글로 이동
             })
             .catch(error => {
                 console.error("qna 수정 실패:", error.response || error.message);
@@ -136,7 +129,6 @@ const QnaDetail = () => {
     const handlePostDelete = () => {
         const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
-
             axios.delete(url, {
                 withCredentials: true,
                 headers: {
@@ -146,7 +138,7 @@ const QnaDetail = () => {
                 .then(response => {
                     console.log("qna 삭제 성공 ");
                     alert("게시글이 삭제되었습니다.");
-                    const updatedPosts = posts.filter(post => post.id !== postDetail[0].id);
+                    const updatedPosts = posts.filter(post => post.postId !== postDetail[0].postId);
                     setPosts(updatedPosts);
                     navigate("/qna/page=1");
                 })
@@ -193,12 +185,12 @@ const QnaDetail = () => {
                                     <div className="post_title">
                                         {postItem.title}
                                     </div>
-                                    {/*{(isWriter || (isWriter && isAdmin)) && (*/}
+                                    {(isWriter || (isWriter && isAdmin)) && (
                                         <div className="button">
                                             <button style={{marginRight:"5px"}} onClick={handleEditClick}>수정</button>
                                             <button onClick={handlePostDelete}>삭제</button>
                                         </div>
-                                    {/*)}*/}
+                                    )}
                                     {(isAdmin && !isWriter) && (
                                         <div className="button">
                                             <button onClick={handlePostDelete}>삭제</button>
@@ -228,7 +220,7 @@ const QnaDetail = () => {
                                         )}
                                     </div>
                                     <div className="right">
-                                        <span>조회 <span>{postItem.hit}</span></span>
+                                        <span className="hit_count">조회 <span>{postItem.hit}</span></span>
                                     </div>
                                 </div>
                             </div>

@@ -3,11 +3,9 @@ import React, {useEffect, useState} from "react";
 import searchicon from "../../images/search.png";
 import axios from "axios";
 
-
 const NoticeSearchBar = () => {
 
 	const [search, setSearch] = useState("");
-	const [selectOption, setSelectOption] = useState("제목");
 	const navigate = useNavigate();
 
 	const handleKeyDown = (e) => {
@@ -21,26 +19,14 @@ const NoticeSearchBar = () => {
 		setSearch(e.target.value)
 	}
 
-	const onHandleselect = (e)=>{
-		setSelectOption(e.target.value);
-		console.log(`value = ${e.target.value}`)
-	}
-
 	const searchItem = (item)=>{
 		setSearch(item);
-		const queryParams = `?q=${encodeURIComponent(item)}&select=${encodeURIComponent(selectOption)}`;
+		const queryParams = `?q=${encodeURIComponent(item)}`;
 		navigate(`/notice/search${queryParams}`);
 	}
 
 	return (
 		<div className="Home_wrap">
-			<div className="select_search">
-				<select id="sub" value={selectOption} onChange={onHandleselect}>
-					<option value="제목">제목</option>
-					<option value="내용">내용</option>
-				</select>
-			</div>
-
 			<div className="searchbar">
 				<div className="searchinput">
 					<input className="input_padding"
