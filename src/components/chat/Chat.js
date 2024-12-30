@@ -12,13 +12,13 @@ const Chat = (props) => {
     const [message, setMessage] = useState('');
     const [greetings, setGreetings] = useState([]);
     const [studyId, setStudyId] = useState(props.studyId);
-    console.log(props);
-    console.log(studyId);
     const [studyTitle, setStudyTitle] = useState(props.studyTitle);
-    console.log(studyTitle);
     const progressStatus= useState(props.progressStatus);
     const [pendingEnter, setPendingEnter] = useState(false);
-    const LogNicname = localStorage.getItem("isLoggedInUserId");
+    const [chatRoomId, setChatRoomId] =  useState(null);
+    const [userNickname, setUserNickname] = useState(null);
+    const memberNickname = localStorage.getItem('memberNickname');
+
 
     useEffect(() => {
         // props.studyId가 업데이트될 때마다 studyId를 설정
@@ -29,7 +29,8 @@ const Chat = (props) => {
 
     const stompClient = useRef(
         new Client({
-            brokerURL: 'ws://localhost:8080/gs-guide-websocket',
+            // brokerURL: 'ws://localhost:8080/gs-guide-websocket',
+            brokerURL: 'ws://52.78.94.86:8080/gs-guide-websocket',
         })
     );
 
@@ -79,7 +80,14 @@ const Chat = (props) => {
     const subscribeToChatRoom = (studyId) => {
         if (stompClient.current.connected) {
             stompClient.current.subscribe(`/topic/greetings/${studyId}`, (greeting) => {
-                showGreeting(JSON.parse(greeting.body));
+                const parsedGreeting = JSON.parse(greeting.body);
+                console.log("fromServer: ", parsedGreeting);
+
+                if (userNickname == null) {
+                    setUserNickname(parsedGreeting.nickname);
+                }
+
+                showGreeting(parsedGreeting);
             });
         }
     };
@@ -89,14 +97,23 @@ const Chat = (props) => {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
             try {
-                const response = await axios.get(`/api/chat/history/${studyId}`, {
+                const response = await axios.get(`/api/chats/history/${studyId}`, {
                     withCredentials: true,
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
 
-                setGreetings(response.data);
+                // 로컬 스토리지에 'authorNickname'이 없으면 한 번만 저장
+                if (!memberNickname) {
+                    const author = response.data.chatMessages.find(msg => msg.isAuthor === true)?.nickname;
+                    if (author) {
+                        localStorage.setItem('memberNickname', author);
+                    }
+                }
+
+                setGreetings(response.data.chatMessages);
+                setChatRoomId(response.data.chatRoomId);
                 console.log(response.data);
 
                 if (stompClient.current.connected) {
@@ -178,18 +195,21 @@ const Chat = (props) => {
             const headers = {
                 Authorization: `${accessToken}`,
             };
-            if (message.length === 0) {
-                if(progressStatus==="DISCONTINUE"){
+
+            if (message.trim().length === 0) {
+                if(progressStatus === "CANCELED"){
                     alert('중단된 스터디는 채팅이 불가능합니다.');
                 } else {
                     alert('메시지를 입력하세요.');
                 }
-            }else {
+                return;
+            } else {
                 stompClient.current.publish({
-                    destination: `/app/chat/${studyId}`,
-                    body: JSON.stringify({type: 'TALK', studyId: studyId, message: `${message}`}),
+                    destination: `/app/chat/${studyId}/${chatRoomId}`,
+                    body: `${message}`,
                     headers: headers,
                 });
+
                 scrollChatToBottom();
                 setMessage('');
             }
@@ -235,22 +255,22 @@ const Chat = (props) => {
                     {greetings.map((greeting, index) => (
                         <tr key={index}>
 
-                            {greeting.type === 'GREETING' ? (
+                            {greeting.messageType === 'GREETING' ? (
                                 <td className={"message-detail"} id={"greet"}>
                                     <span>{greeting.message}</span>
                                 </td>
                             ) : (
-                                greeting.member.id === LogNicname ? (
+                                greeting.nickname === memberNickname ? (
                                     <td className={"message-detail"} id={"my-chats"}>
                                                 <span>
-                                             {greeting.member ? greeting.member.nickname : 'Unknown'}: {greeting.message}
+                                             {greeting.nickname}: {greeting.message}
                                                     <br/><p id={"entry-time"}>[{formatDatetime(greeting.createdAt)}]</p>
                                                         </span>
                                     </td>
                                 ) : (
                                     <td className={"message-detail"} id={"other-chats"}>
                                                 <span>
-                                            {greeting.member ? greeting.member.nickname : 'Unknown'}: {greeting.message}
+                                            {greeting.nickname}: {greeting.message}
                                                     <br/><p id={"entry-time"}>[{formatDatetime(greeting.createdAt)}]</p>
                                                        </span>
                                     </td>
@@ -273,7 +293,7 @@ const Chat = (props) => {
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyDown={onKeyDown}
                     placeholder="내용을 입력하세요"
-                    disabled={progressStatus === 'DISCONTINUE'}
+                    disabled={progressStatus === 'CANCELED'}
                 />
                 <button onClick={sendMessage}>Send</button>
             </div>
