@@ -154,7 +154,7 @@ const MyParticipateStudy = ({sideheader}) => {
     }, [accessToken]);
 
     const goNextTeamBlog = (item) => {
-        navigate(`/${item.studyId}/teamblog`, {
+        navigate(`/teamblog/${item.studyId}`, {
             state: {
                 studyId: item.studyId
             }

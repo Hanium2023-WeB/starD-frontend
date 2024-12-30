@@ -9,7 +9,7 @@ const TeamBlogGnb = ({studyIdAsNumber, Member, selectStudy, progressStatus}) => 
     console.log(selectStudy);
     console.log(progressStatus);
     const goTeamBlogHome = () => {
-        navigate(`/${studyIdAsNumber}/teamblog`,
+        navigate(`/teamblog/${studyIdAsNumber}`,
             {
                 state: {
                     studyId: studyIdAsNumber,
@@ -20,7 +20,7 @@ const TeamBlogGnb = ({studyIdAsNumber, Member, selectStudy, progressStatus}) => 
             })
     }
     const showAllToDo = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamToDoList`,
+        navigate(`/teamblog/${studyIdAsNumber}/todo-list`,
             {
                 state: {
                     studyIdAsNumber: studyIdAsNumber,
@@ -31,7 +31,7 @@ const TeamBlogGnb = ({studyIdAsNumber, Member, selectStudy, progressStatus}) => 
             })
     }
     const showAllSchedule = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamSchedule`, {
+        navigate(`/teamblog/${studyIdAsNumber}/schedule`, {
             state: {
                 studyIdAsNumber: studyIdAsNumber,
                 Member: Member,
@@ -42,7 +42,7 @@ const TeamBlogGnb = ({studyIdAsNumber, Member, selectStudy, progressStatus}) => 
 
     }
     const showTeamCommunity = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamCommunity`, {
+        navigate(`/teamblog/${studyIdAsNumber}/community`, {
             state: {
                 studyId: studyIdAsNumber,
                 progressStatus:progressStatus,
@@ -51,7 +51,7 @@ const TeamBlogGnb = ({studyIdAsNumber, Member, selectStudy, progressStatus}) => 
     }
 
     const showTeamMember = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamMember`, {
+        navigate(`/teamblog/${studyIdAsNumber}/member`, {
             state: {
                 studyIdAsNumber: studyIdAsNumber,
                 Member: Member,

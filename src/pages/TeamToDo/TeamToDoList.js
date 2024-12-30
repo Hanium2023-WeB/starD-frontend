@@ -12,8 +12,12 @@ import TeamToDoList_css from "../../css/todo_css/TeamToDoList.css";
 import Category from "../../components/repeat_etc/Category";
 import TeamBlog from "../studypage/TeamBlog";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
+import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 
 const TeamToDoList = () => {
+
+    const { member, studyItem, progressType, todos, schedules, loading, error } = useTeamBlogContext();
+
     const [selectedTodo, setSelectedTodo] = useState(null);
     const [insertToggle, setInsertToggle] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -25,7 +29,7 @@ const TeamToDoList = () => {
     const {studyIdAsNumber, Member, selecteStudy, progressStatus} = location.state || {};
     const [studies, setStudy] = useState([]);
     const [studyMems, setStudyMems] = useState([]);
-    const [member, setMember] = useState(Member);
+    // const [member, setMember] = useState(Member);
     const [Assignees, setAssignees] = useState([]);
     // const studyIdAsNumber = parseFloat(studyId);
     const [selectedAssigneeIds, setSelectedAssigneeIds] = useState([]); // 선택된 담당자 ID 추적
@@ -76,19 +80,19 @@ const TeamToDoList = () => {
             const removedAssignId = e.target.value;
 
             //해당 닉네임을 가진 담당자를 선택에서 해제
-            const updatedAssignees = Assignees.filter((item) => item.id !== removedAssignId);
+            const updatedAssignees = Assignees.filter((item) => item.memberId !== removedAssignId);
             await setAssignees(updatedAssignees);
 
             console.log("삭제한 후 담당자 상태: ", updatedAssignees);
 
             //되돌릴 멤버
-            const assigneeToAddBack = Member.find((item) => item.member.id === removedAssignId);
+            const assigneeToAddBack = Member.find((item) => item.memberId === removedAssignId);
 
             //member에 다시 집어 넣음
             if (assigneeToAddBack) {
                 const updatedMember = [...member, assigneeToAddBack];
                 console.log("updatedMember-assigneeToAddBack : ", updatedMember);
-                setMember(updatedMember);
+                // setMember(updatedMember);
             }
 
             console.log("삭제 후 선택한 담당자들: ", updatedAssignees);
@@ -289,7 +293,7 @@ const TeamToDoList = () => {
     };
 
     useEffect(() => {
-        setMember(Member);
+        // setMember(Member);
     }, [todoswithAssignee, Member, onUpdate]);
 
 
@@ -393,20 +397,20 @@ const TeamToDoList = () => {
                         <div className={"select_assignee"}>
                             <p>담당자</p>
                             {Array.isArray(member) && member.length > 0 && member.map((item, index) => {
-                                const isSelected = selectedAssigneeIds.includes(item.member.id); // 선택 여부 확인
+                                const isSelected = selectedAssigneeIds.includes(item.memberId); // 선택 여부 확인
                                 return (
                                     <div key={index}>
                                         <div
                                             className="assignees"
-                                            data-assign-id={item.member.id}
-                                            data-assign-name={item.member.nickname}
+                                            data-assign-id={item.memberId}
+                                            data-assign-name={item.nickname}
                                             onClick={handleAddAssignees}
                                             style={{
                                                 backgroundColor: isSelected ? "#99a98f" : "rgba(242, 241, 238, 0.6)", // 선택된 경우 배경색 변경
                                                 color: isSelected ? "white" : "black" // 선택된 경우 텍스트 색상 변경
                                             }}
                                         >
-                                            {item.member.nickname}
+                                            {item.nickname}
                                         </div>
                                     </div>
                                 );
