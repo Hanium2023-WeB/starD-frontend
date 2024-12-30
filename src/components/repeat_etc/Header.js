@@ -23,12 +23,12 @@ const Header = ({showSideCenter}) => {
                     }
                 })
                     .then(() => {
-                        // console.log("로그아웃 성공");
-                        // localStorage.removeItem('accessToken');
-                        // localStorage.removeItem('isLoggedInUserId');
-                        // setIsLoggedIn(false);
-                        // alert("30분이 지나 자동 로그아웃");
-                        // navigate("/");
+                        console.log("로그아웃 성공");
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('isLoggedInUserId');
+                        setIsLoggedIn(false);
+                        alert("30분이 지나 자동 로그아웃");
+                        navigate("/");
                     })
                     .catch(error => {
                         alert("30분이 지나 자동 로그아웃");
@@ -39,9 +39,8 @@ const Header = ({showSideCenter}) => {
                     });
             };
 
-
             if (accessToken != null && isLoggedInUserId != null) {
-                axios.get("/api/user/auth/accessToken-expiration", {    // accessToken 만료 여부 확인 function
+                axios.get("/api/members/auth/token-expiration", {
                     withCredentials: true,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
@@ -49,14 +48,7 @@ const Header = ({showSideCenter}) => {
                 })
                     .then((res) => {
                         console.log("accessToken 확인 여부 결과 값 : " + res.data);
-
-                        if (res.data === false)
-                            setIsLoggedIn(true);
-                        else {
-                            console.log("토큰 만료")
-                            logout(isLoggedInUserId);
-                            setIsLoggedIn(false);
-                        }
+                        setIsLoggedIn(true);
                     })
                     .catch(error => {
                         console.log(error);
@@ -68,11 +60,10 @@ const Header = ({showSideCenter}) => {
             }
         }, []);
 
-        // TODO 권한 조회
         useEffect(() => {
             if (accessToken != null && isLoggedInUserId != null) {
                 axios
-                    .get("/api/user/auth/authority", {
+                    .get("/api/members/auth", {
                         withCredentials: true,
                         headers: {
                             'Authorization': `Bearer ${accessToken}`
