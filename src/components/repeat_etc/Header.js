@@ -14,6 +14,22 @@ const Header = ({ showSideCenter }) => {
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
         const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
+        const currentPath = window.location.pathname; // 현재 경로
+
+        // 로그인 없이 접근 가능한 경로 설정 (동적 경로 포함)
+        const publicPaths = ["/", "/subinfo/signup", "/login/findPW"];
+        const dynamicPublicPaths = [
+            /^\/study\/page=\d+$/ // 정규식으로 숫자 페이지 경로 허용
+        ];
+
+        const isPublicPath = () => {
+            // 정적 경로 체크
+            if (publicPaths.includes(currentPath)) {
+                return true;
+            }
+            // 동적 경로 체크
+            return dynamicPublicPaths.some((regex) => regex.test(currentPath));
+        };
 
         const checkTokenValidity = async () => {
             try {
@@ -44,17 +60,26 @@ const Header = ({ showSideCenter }) => {
         };
 
         const handleLogout = () => {
+            // 현재 경로가 로그인 페이지가 아니면 alert 표시
+            if (currentPath !== "/login") {
+                alert("로그인이 필요합니다."); // 로그인 필요 알림
+            }
             localStorage.removeItem("accessToken");
             localStorage.removeItem("isLoggedInUserId");
             setIsLoggedIn(false);
             navigate("/login");
         };
 
+        if (isPublicPath()) {
+            // 공개 경로일 경우 토큰이 없어도 로그인 페이지로 이동하지 않음
+            return;
+        }
+
         if (accessToken && isLoggedInUserId) {
             checkTokenValidity();
             fetchUserAuthority();
         } else {
-            handleLogout();
+            handleLogout(); // 토큰 없으면 alert 후 로그인 페이지로 이동
         }
     }, [navigate]);
 
