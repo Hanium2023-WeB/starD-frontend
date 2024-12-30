@@ -29,7 +29,7 @@ const category = () => {
 							><li>프로필</li>
 							</Link>
 							<Link
-								to={"/editinfo"}
+								to={"/mypage/editinfo"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -66,7 +66,7 @@ const category = () => {
 					<nav>
 						<ul>
 							<Link
-								to={"/myparticipatestudy"}
+								to={"/mypage/participate-study"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -75,7 +75,7 @@ const category = () => {
 								<li>스터디 참여 내역</li>
 							</Link>
 							<Link
-								to={"/myopenstudy"}
+								to={"/mypage/open-study"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -84,7 +84,7 @@ const category = () => {
 								<li>스터디 개설 내역</li>
 							</Link>
 							<Link
-								to={"/myapplystudy"}
+								to={"/mypage/apply-study"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -112,7 +112,7 @@ const category = () => {
 					<nav>
 						<ul>
 							<Link
-								to={"/MyPage/mypost/page=1"}
+								to={"/mypage/write-post/page=1"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -121,7 +121,7 @@ const category = () => {
 								<li>내가 작성한 게시글</li>
 							</Link>
 							<Link
-								to={"/MyPage/mycomment/page=1"}
+								to={"/mypage/write-comment/page=1"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -142,7 +142,7 @@ const category = () => {
 
 						<ul>
 							<Link
-								to={"/myscrapstudy"}
+								to={"/mypage/scrap-study"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -151,7 +151,7 @@ const category = () => {
 								<li>스크랩한 스터디</li>
 							</Link>
 							<Link
-								to={"/myScrapcommunitypost"}
+								to={"/mypage/scrap-community"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",

@@ -7,17 +7,13 @@ import axios from "axios";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import TeamBlogcss from "../../css/study_css/TeamBlog.css";
 import {useLocation} from "react-router-dom";
-import TeamToDoList from "../TeamToDo/TeamToDoList";
 import MapNaverDefault from "../../components/map/MapNaverDefault";
 import checkbox from "../../images/check.png";
 import uncheckbox from "../../images/unchecked.png";
-import Category from "../../components/repeat_etc/Category";
 import Chat from "../../components/chat/Chat";
-import TeamSchedule from "../TeamSchedule/TeamSchedule";
-import TeamCommunity from "../TeamCommunity/TeamCommunity";
-import TeamMember from "../TeamMember/TeamMember"
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
+import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 
 
 const TeamBlog = () => {
@@ -25,6 +21,8 @@ const TeamBlog = () => {
     const study = useLocation();
     const navigate = useNavigate();
     const {studyId} = study.state;
+
+    const { member, studyItem, progressType, todos, schedules, loading, error } = useTeamBlogContext();
     const [parsedTodos, setParsedTodos] = useState([]);
     const [parsedSchedules, setParsedSchedules] = useState([]);
     const [today, setToday] = useState(new Date());
@@ -39,10 +37,10 @@ const TeamBlog = () => {
     } else {
         console.log("Study ID is undefined.");
     }
-
     const id = parseFloat(studyId);
     const [Member, setMember] = useState([]);
-    const [studyItem, setStudyItem] = useState([]);
+    // const [studyItem, setStudyItem] = useState([]);
+
     const getTodoItemClassName = (checked) => {
         return checked ? "checked" : "unchecked";
     };
@@ -68,27 +66,9 @@ const TeamBlog = () => {
         })
 
     }
-    const showTeamCommunity = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamCommunity`, {
-            state: {
-                studyIdAsNumber: studyIdAsNumber,
-                progressStatus:progressStatus,
-            }
-        })
-    }
-
-    const showTeamMember = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamMember`, {
-            state: {
-                studyIdAsNumber: studyIdAsNumber,
-                Member: Member,
-            }
-        })
-    }
-
 
     useEffect(() => {
-        axios.get(`/api/api/v2/studies/${id}/study-member`, {
+        axios.get(`/api/studies/${studyId}/members`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -96,57 +76,18 @@ const TeamBlog = () => {
         })
             .then((res) => {
                 console.log("참여멤버 get 성공 : ", res.data);
-
-                const studymemberList = res.data;
-
-                setMember(studymemberList.data);
-
+                setMember(res.data);
             })
             .catch((error) => {
                 console.error("참여멤버 get 실패:", error);
             });
 
-
-        axios.get(`/api/studies/${id}`, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        }).then((res) => {
-            setStudyItem(res.data);
-            console.log("스터디 세부 데이터 가져오기 성공:", res.data);
-            console.log(res.data.title);
-            if(res.data.progressStatus == "DISCONTINUE"){
-                alert("중단된 스터디 입니다. 수정은 불가하며 읽기만 가능합니다.");
-                setProgressStatus(res.data.progressStatus);
-            }
-        })
-            .catch((error) => {
-                console.error("스터디 세부 데이터 가져오기 실패:", error);
-            });
-
     }, [accessToken]);
-
-    useEffect(() => {
-        axios.get(`/api/studies/${studyIdAsNumber}/to-dos`, {
-            params: {
-                year: Year, month: Month,
-            }, headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }).then((response) => {
-            console.log('스터디별 투두리스트 가져오기 성공:', response.data);
-            setParsedTodos((prevTodos) => (response.data))
-
-        }).catch((error) => {
-            console.log('스터디별 투두리스트 가져오기 실패:', error);
-        })
-    }, [studyIdAsNumber]);
 
     const [filteredToDo, setFilteredToDo] = useState([]);
     useEffect(() => {
-        if (Array.isArray(parsedTodos)) {
-            const filteredToDo = parsedTodos.filter((todo) => {
+        if (Array.isArray(todos)) {
+            const filteredToDo = todos.filter((todo) => {
                 const todoDueDate = new Date(todo.dueDate).toDateString();
                 const todayDate = today.toDateString();
                 return todoDueDate === todayDate;
@@ -158,26 +99,10 @@ const TeamBlog = () => {
         }
     }, [parsedTodos]);
 
-
-
-    useEffect(() => {
-        axios.get(`/api/studies/${studyIdAsNumber}/schedules`, {
-            params: {
-                year: Year, month: Month,
-            }, withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            console.log("스터디별 일정 가져오기 성공", response.data);
-            setParsedSchedules(response.data);
-        }).catch((error) => {
-            console.error("스터디별 일정 가져오기 실패", error.response.data); // Log the response data
-        });
-    }, []);
     const [filteredSchedule, setFilteredSchedule] = useState([]);
     useEffect(() => {
-        if (Array.isArray(parsedSchedules)) {
-            const filteredSchedule = parsedSchedules.filter((item) => {
+        if (Array.isArray(schedules)) {
+            const filteredSchedule = schedules.filter((item) => {
                 const startDate = new Date(item.startDate).toDateString();
                 const todayDate = today.toDateString();
                 return startDate === todayDate;
@@ -189,11 +114,20 @@ const TeamBlog = () => {
         }
     }, [parsedSchedules]);
 
+    if (loading) {
+        return <div>로딩 중...</div>;
+    }
+
+    if (error) {
+        return <div>에러 발생: {error}</div>;
+    }
+
+
     return (
         <div>
             <Header showSideCenter={true}/>
             <div className={"main_content"}>
-                <TeamBlogGnb  studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={studyItem} progressStatus={progressStatus}/>
+                <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={studyItem} progressStatus={progressStatus}/>
                 <div className="team_blog">
                     <p id={"entry-path"} style={{marginTop:"50px"}}> 스터디 참여 내역 > 팀 블로그 </p>
                     <Backarrow subname={"STUDY TEAM BLOG"}/>
