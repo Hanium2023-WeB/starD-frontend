@@ -18,7 +18,9 @@ const TeamCommunity = () => {
     const isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
 
     const location = useLocation();
-    const {studyId,progressStatus} = location.state;
+    const {studyId, Member, selecteStudy, progressStatus} = location.state || {};
+
+    console.log(progressStatus);
     console.log(studyId);
 
     const handleMoveToPostInsert = (e) => {
@@ -52,7 +54,7 @@ const TeamCommunity = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="container">
-                <TeamBlogGnb studyIdAsNumber={studyId} progressStatus={progressStatus}/>
+                <TeamBlogGnb studyIdAsNumber={studyId} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
                     <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 커뮤니티</p>
                     <Backarrow subname={"TEAM COMMUNITY LIST"}/>

@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/userpage/Login";
@@ -63,343 +63,97 @@ import QnaInsert from "./pages/qna/QnaInsert";
 import FaqInsert from "./pages/admin/FaqInsert";
 import FaqDetail from "./pages/qna/FaqDetail";
 import NoticeInsert from "./pages/notice/NoticeInsert";
+import {TeamBlogProvider} from "./components/datacontext/TeamBlogContext";
 
 function App() {
     return (
         <BrowserRouter>
             <div className="App">
                 <Routes>
-                    <Route
-                        path="/"
-                        element={<Home />}
-                    />
-                    <Route
-                        path="/login"
-                        element={<Login/>}
-                    />
-                    <Route
-                        path="/subinfo/signup"
-                        element={<Signup />}
-                    />
-                    <Route
-                        path="/logout"
-                        element={<Logout/>}
-                    />
-                    <Route
-                        path="/login/findeID"
-                        element={<FindID/>}
-                    />
-                    <Route
-                        path="/login/findedID"
-                        element={<FindedID/>}
-                    />
-                    <Route
-                        path="/login/findPW"
-                        element={<FindPW/>}
-                    />
-                    {/*<Route*/}
-                    {/*    path="/reset-password"*/}
-                    {/*    element={*/}
-                    {/*        <SetNewPw/>*/}
-                    {/*    }*/}
-                    {/*/>*/}
-                    <Route
-                        path="/mypage"
-                        element={<Mypage/>}
-                    />
-                    <Route
-                        path="/mypage/profile"
-                        element={<Profile/>}
-                    />
-                    <Route
-                        path="/mypage/profile/Editprofile"
-                        element={<EditProfile/>}
-                    />
-                    <Route
-                        path="/editinfo"
-                        element={<Editinfo/>}
-                    />
-                    <Route
-                        path="/myparticipatestudy"
-                        element={
-                            <MyParticipateStudy/>
-                        }
-                    />
-                    <Route
-                        path="/myapplystudy"
-                        element={
-                            <MyApplyStudy/>
-                        }
-                    />
-                    <Route
-                        path="/myopenstudy"
-                        element={<MyOpenStudy/>}
-                    />
-                    <Route
-                        path="/myscrapstudy"
-                        element={<MyScrapStudy/>}
-                    />
-                    <Route
-                        path="/studydetail/:id"
-                        element={<StudyDetail/>}
-                    />
-                    <Route
-                        path="/ToDoList"
-                        element={<ToDoList/>}
-                    />
-                    <Route
-                        path="/MyPage/Schedule"
-                        element={<Schedule/>}
-                    />
-                    <Route
-                        path="/studyapplyform/:id"
-                        element={
-                            <StudyApplyForm/>
-                        }
-                    />
-                    <Route
-                        path="/study/:page"
-                        element={
-                            <Study/>
-                        }
-                    />
-                    <Route
-                        path="/study/studyInsert"
-                        element={
-                            <StudyInsert/>
-                        }
-                    />
-                    <Route
-                        path="/:id/StudyDetail/StudyEdit"
-                        element={
-                            <StudyEdit/>
-                        }
-                    />
-                    <Route
-                        path="/subinfo"
-                        element={
-                        <InputSubSign/>
-                        }
-                        />
-                    <Route
-                        path="/search"
-                        element={
-                            <Study/>
-                        }
-                    />
-                    <Route
-                        path="/:id/teamblog"
-                        element={
-                            <TeamBlog/>
-                        }
-                    />
-                    <Route path="/" exact component={Home} />
-                    <Route path="/search" component={SearchResult} />
-                    <Route
-                        path={"/StudyApplyList/:id"}
-                        element={
-                             <StudyApplyList/>
-                        }
-                    />
-                    <Route path={"/:id/teamblog/TeamToDoList"}
-                           element={
-                            <TeamToDoList/>
-                           }
-                    />
-                    <Route path="/:id/teamblog/TeamSchedule"
-                           element={<TeamSchedule/>} />
+                    {/* Main and Authentication Routes */}
+                    <Route path="/" element={<Home />} /> {/* Main page */}
+                    <Route path="/login" element={<Login />} /> {/* Login page */}
+                    <Route path="/logout" element={<Logout />} /> {/* Logout page */}
+                    <Route path="/subinfo/signup" element={<Signup />} /> {/* User signup page */}
+                    <Route path="/login/findeID" element={<FindID />} /> {/* Find ID page */}
+                    <Route path="/login/findedID" element={<FindedID />} /> {/* Found ID page */}
+                    <Route path="/login/findPW" element={<FindPW />} /> {/* Find password page */}
+                    <Route path="/reset-password" element={<ResetPwTokenVerification />} /> {/* Reset password verification */}
+                    <Route path="/update-password" element={<SetNewPw />} /> {/* Update password page */}
 
-                    <Route path="/:studyId/teamblog/TeamCommunity"
-                           element={<TeamCommunity/>} />
+                    {/* Mypage Routes */}
+                    <Route path="/mypage" element={<Mypage />} /> {/* User's personal page */}
+                    <Route path="/mypage/profile" element={<Profile />} /> {/* User profile page */}
+                    <Route path="/mypage/profile/edit" element={<EditProfile />} /> {/* Edit user profile */}
+                    <Route path="/mypage/editinfo" element={<Editinfo />} /> {/* Edit user information */}
+                    <Route path="/mypage/participate-study" element={<MyParticipateStudy />} /> {/* Participated studies */}
+                    <Route path="/mypage/open-study" element={<MyOpenStudy />} /> {/* User's open studies */}
+                    <Route path="/mypage/apply-study" element={<MyApplyStudy />} /> {/* Applied studies */}
+                    <Route path="/mypage/scrap-study" element={<MyScrapStudy />} /> {/* Scrapped studies */}
+                    <Route path="/mypage/scrap-community" element={<MyScrapCommunityPost />} /> {/* Scrapped community posts */}
+                    <Route path="/mypage/write-post/:page" element={<MyWritePost />} /> {/* Posts written by user */}
+                    <Route path="/mypage/write-comment/:page" element={<MyWriteComment />} /> {/* Comments written by user */}
+                    <Route path="/mypage/score" element={<MyScore />} /> {/* User score page */}
+                    <Route path="/mypage/todo-list" element={<ToDoList />} /> {/* User's to-do list */}
+                    <Route path="/mypage/schedule" element={<Schedule />} /> {/* User's schedule */}
+                    <Route path="/mypage/evaluate" element={<MemberEvaluate />} /> {/* Member evaluation page */}
+                    <Route path="/mypage/user-profile/:id" element={<AnotherUserProfile />} /> {/* View another user's profile */}
 
-                    <Route path="/:id/teamblog/TeamMember"
-                           element={<TeamMember/>} />
+                    {/* Study Routes */}
+                    <Route path="/study/:page" element={<Study />} /> {/* Study list page */}
+                    <Route path="/study/detail/:id" element={<StudyDetail />} /> {/* Study detail page */}
+                    <Route path="/study/insert" element={<StudyInsert />} /> {/* Insert new study */}
+                    <Route path="/study/edit/:id" element={<StudyEdit />} /> {/* Edit study */}
+                    <Route path="/study/apply/:id" element={<StudyApplyForm />} /> {/* Study application form */}
+                    <Route path="/study/apply-list" element={<StudyApplyList />} /> {/* List of study applications */}
+                    <Route path="/study/search" element={<SearchResult />} /> {/* Study search results */}
 
-                    <Route
-                        path="/:studyId/teamblog/TeamCommunity/studypostdetail/:postId"
-                        element={
-                            <StudyPostDetail/>
-                        }
-                    />
+                    {/* TeamBlog Nested Routes */}
+                    <Route path="/teamblog/:id/*" element={
+                        <TeamBlogProvider>
+                            <Routes>
+                                <Route index element={<TeamBlog />} /> {/* Default Team Blog page */}
+                                <Route path="todo-list" element={<TeamToDoList />} /> {/* Team to-do list */}
+                                <Route path="schedule" element={<TeamSchedule />} /> {/* Team schedule */}
+                                <Route path="community" element={<TeamCommunity />} /> {/* Team community page */}
+                                <Route path="community/search" element={<TeamCommSearchResult />} /> {/* Community search results */}
+                                <Route path="community/post/:postId" element={<StudyPostDetail />} /> {/* Team blog post detail */}
+                                <Route path="member" element={<TeamMember />} /> {/* Team members */}
+                            </Routes>
+                        </TeamBlogProvider>
+                    } />
 
-                    <Route
-                        path="/:id/teamblog/TeamCommunity/search"
-                        element={
-                            <TeamCommSearchResult/>
-                        }
-                    />
+                    {/* Community and Notice Routes */}
+                    <Route path="/community/:page" element={<Community />} /> {/* Community main page */}
+                    <Route path="/community/post/:id" element={<PostDetail />} /> {/* Community post detail */}
+                    <Route path="/community/search" element={<CommSearchResult />} /> {/* Community search results */}
+                    <Route path="/notice/:page" element={<Notice />} /> {/* Notice main page */}
+                    <Route path="/notice/detail/:id" element={<NoticeDetail />} /> {/* Notice detail page */}
+                    <Route path="/notice/search" element={<NoticeSearchResult />} /> {/* Notice search results */}
 
-                    <Route
-                        path="/community/:page"
-                        element={
-                            <Community/>
-                        }
-                    />
-                    <Route
-                        path="/myScrapcommunitypost"
-                        element={
-                            <MyScrapCommunityPost/>
-                        }
-                    />
-                    <Route
-                        path="/notice/:page"
-                        element={
-                            <Notice/>
-                        }
-                    />
-                    <Route
-                        path="/qna/:page"
-                        element={
-                            <Qna/>
-                        }
-                    />
+                    {/* QnA Routes */}
+                    <Route path="/qna/:page" element={<Qna />} /> {/* QnA main page */}
+                    <Route path="/qna/detail/:id" element={<QnaDetail />} /> {/* QnA detail page */}
+                    <Route path="/qna/insert" element={<QnaInsert />} /> {/* Insert new QnA */}
 
+                    {/* Admin Routes */}
+                    <Route path="/admin" element={<Admin />} /> {/* Admin main page */}
+                    <Route path="/admin/faq-management/:page" element={<FAQManagement />} /> {/* FAQ management */}
+                    <Route path="/admin/member-management/:page" element={<MemberManagement />} /> {/* Member management */}
+                    <Route path="/admin/notice-management/:page" element={<NoticeManagement />} /> {/* Notice management */}
+                    <Route path="/admin/report-management/:page" element={<ReportManagement />} /> {/* Report management */}
+                    <Route path="/admin/faq-insert" element={<FaqInsert />} /> {/* Insert new FAQ */}
 
+                    {/* Miscellaneous Routes */}
+                    <Route path="/chat" element={<Chat />} /> {/* Chat page */}
+                    <Route path="/subscribe" element={<SubscribeComponent />} /> {/* Notification subscription page */}
 
-                    <Route
-                        path="/postdetail/:id"
-                        element={
-                            <PostDetail/>
-                        }
-                    />
-                    <Route
-                        path="/noticedetail/:id"
-                        element={
-                            <NoticeDetail/>
-                        }
-                    />
-                    <Route
-                        path="/qnadetail/:id"
-                        element={
-                            <QnaDetail/>
-                        }
-                    />
-                    <Route
-                        path="/comm/search"
-                        element={
-                            <Community />
-                        }
-                    />
-                    <Route
-                        path="/notice/search"
-                        element={
-                            <NoticeSearchResult/>
-                        }
-                    />
-                    <Route
-                        path="/qna/search"
-                        element={
-                            <Qna/>
-                        }
-                    />
-                    <Route path="/comm/search" component={CommSearchResult} />
-                    <Route
-                        path="/chat"
-                        element={
-                            <Chat/>
-                        }
-                    />
-                    <Route
-                        path="/:id/evaluate"
-                        element={
-                            <MemberEvaluate/>
-                        }
-                    />
-                    <Route
-                        path="/admin"
-                        element={
-                            <Admin/>
-                        }
-                    />
-                    <Route
-                        path="/MyPage/myscore"
-                        element={
-                            <MyScore/>
-                        }
-                    />
-                    <Route
-                        path="/MyPage/mypost/:page"
-                        element={
-                            <MyWritePost/>
-                        }
-                    />
-                    <Route
-                        path="/MyPage/mycomment/:page"
-                        element={
-                            <MyWriteComment/>
-                        }
-                    />
-                    <Route
-                        path="/:id/userprofile"
-                        element={
-                            <AnotherUserProfile/>
-                        }
-                    />
-
-                    <Route
-                        path="/:memberId/profile"
-                        element={
-                            <OtherProfile/>
-                        }
-                    />
-                    <Route
-                        path="/notification"
-                        element={
-                            <SubscribeComponent/>
-                        }
-                    />
-                    {/*관리자 페이지*/}
-                    <Route
-                        path="/admin/MemberManagement/:page"
-                        element={<MemberManagement/>}
-                    />
-                    <Route
-                        path="/admin/ReportManagement/:page"
-                        element={<ReportManagement/>}
-                    />
-                    <Route
-                        path="/admin/FAQManagement/:page"
-                        element={<FAQManagement/>}
-                    />
-
-                    <Route
-                        path="/admin/NoticeManagement/:page"
-                        element={<NoticeManagement/>}
-                    />
-
-                    <Route
-                        path="/reset-password"
-                        element={<ResetPwTokenVerification/>}
-                    />
-
-                    <Route
-                        path="/update-password"
-                        element={<ResetPwTokenVerification/>}
-                    />
-                    <Route
-                        path="/insert-Qna"
-                        element={<QnaInsert/>}
-                    />
-                    <Route
-                        path="/admin/insert-Faq"
-                        element={<FaqInsert/>}
-                    />
-                    <Route
-                        path="/faqdetail/:id"
-                        element={<QnaDetail/>}
-                    />
-
-                    <Route
-                        path="/admin/insert-notice"
-                        element={<NoticeInsert/>}
-                    />
                 </Routes>
-
-                <Footer/>
-
+                <Footer /> {/* Footer displayed on all pages */}
             </div>
         </BrowserRouter>
     );
 }
 
-export default React.memo(App);
+export default React.memo(App); // Memoized component to prevent unnecessary re-renders
+

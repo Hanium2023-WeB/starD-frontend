@@ -108,7 +108,7 @@ const Mypage = ({sideheader}) => {
     };
 
     const ShowAllToDo = () => {
-        navigate("/ToDoList", {
+        navigate("/mypage/todo-list", {
             state: {
                 openStudy: state
             }
@@ -261,7 +261,7 @@ const Mypage = ({sideheader}) => {
                             <div className="tag">
                                 <p>오늘의 할 일</p>
                                 <Link
-                                    to={"/ToDoList"}
+                                    to={"/mypage/todo-list"}
                                     style={{
                                         textDecoration: "none",
                                         color: "inherit",

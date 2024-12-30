@@ -8,6 +8,7 @@ import "../../css/study_css/MyParticipateStudy.css"; // 추후 변경
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
+import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 
 const TeamCommunity = () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -15,7 +16,8 @@ const TeamCommunity = () => {
 
     const location = useLocation();
     const {studyIdAsNumber, Member} = location.state;
-    const [member, setMember] = useState(Member);
+
+    const { member, studyItem, progressType, todos, schedules, loading, error } = useTeamBlogContext();
     const [allow, setAllow] = useState(null); // 사용자 동의 여부 저장
 
     const formatDeleteAllow = (deleteAllow) => {
@@ -90,7 +92,7 @@ const TeamCommunity = () => {
                             <tbody>
                                 {member.map((mem, index) => (
                                     <tr className="evaluate_list">
-                                        <td className="member_name">{mem.member.nickname}</td>
+                                        <td className="member_name">{mem.nickname}</td>
                                         <td className="member_rating">{formatDeleteAllow(mem.deleteAllow)}</td>
                                     </tr>
                                 ))}

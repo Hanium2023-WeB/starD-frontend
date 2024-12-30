@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { toggleScrapStatus } from "../../util/scrapHandler";
 import ScrapButton from "../../components/repeat_etc/ScrapButton";
+import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 
 const StudyPostDetail = ( ) => {
     const navigate = useNavigate();
@@ -218,7 +219,7 @@ const StudyPostDetail = ( ) => {
         <div>
             <Header showSideCenter={true}/>
             <div className="container">
-                <Category/>
+                <TeamBlogGnb studyIdAsNumber={studyId} Member={Member} selectStudy={studyItem} progressStatus={progressStatus}/>
                 <div className="main_schedule_container">
                     <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 커뮤니티</p>
                     <Backarrow subname={"TEAM COMMUNITY LIST"}/>
