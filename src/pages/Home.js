@@ -54,7 +54,6 @@ const Home = () => {
         setUser(user);
     }, []);
 
-    // TODO 가장 인기 있는 분야 Top 5
     useEffect(() => {
         AOS.init();
 

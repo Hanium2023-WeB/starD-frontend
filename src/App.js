@@ -63,6 +63,7 @@ import QnaInsert from "./pages/qna/QnaInsert";
 import FaqInsert from "./pages/admin/FaqInsert";
 import FaqDetail from "./pages/qna/FaqDetail";
 import NoticeInsert from "./pages/notice/NoticeInsert";
+import ResetPasswordEmailSent from "./pages/userpage/ResetPwEmailSent";
 import {TeamBlogProvider} from "./components/datacontext/TeamBlogContext";
 
 function App() {
@@ -148,11 +149,13 @@ function App() {
                     <Route path="/chat" element={<Chat />} /> {/* Chat page */}
                     <Route path="/subscribe" element={<SubscribeComponent />} /> {/* Notification subscription page */}
 
+
                 </Routes>
                 <Footer /> {/* Footer displayed on all pages */}
             </div>
         </BrowserRouter>
     );
+
 }
 
 export default React.memo(App); // Memoized component to prevent unnecessary re-renders

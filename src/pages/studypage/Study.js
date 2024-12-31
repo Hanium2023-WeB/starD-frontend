@@ -51,11 +51,18 @@ const Study = () => {
     const fetchStudiesData = async (params) => {
         try {
             setLoading(true);
-            const response = await axios.get("/api/studies/search", {
-                params,
-                withCredentials: true,
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            });
+            let response;
+            if (accessToken != null) {
+                response = await axios.get("/api/studies/search", {
+                    params,
+                    withCredentials: true,
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+            } else {
+                response = await axios.get("/api/studies/search", {
+                    params
+                });
+            }
             setStudies(response.data.studyInfos);
             setCount(response.data.studyInfos.length);
             setLoading(false);
