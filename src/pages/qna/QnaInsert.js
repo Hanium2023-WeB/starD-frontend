@@ -82,7 +82,7 @@ const QnaInsert = () => {
                 const id = res.data.postId;
                 const postType = res.data.postType;
                 alert("게시글이 등록되었습니다.");
-                navigate(`/qnadetail/${id}`, { state: { postType } });
+                navigate(`/qna/detail/${id}`, { state: { postType } });
             }).catch((error) => {
                 console.log('전송 실패', error);
                 alert("게시글 등록 실패");

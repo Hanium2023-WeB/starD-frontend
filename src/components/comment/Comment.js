@@ -7,6 +7,7 @@ import axios from "axios";
 
 const Comment = ({ type }) => {
   const accessToken = localStorage.getItem('accessToken');
+  const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
   const [userNickname, setUserNickname] = useState("");
   const location = useLocation();
   let targetId = location.state;
@@ -27,66 +28,51 @@ const Comment = ({ type }) => {
 
   const [studyStatus, setStudyStatus] = useState("");
 
-  useEffect(() => {
-    axios.get(`/api/api/v2/studies/${targetId}`, {
-      withCredentials: true,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    }).then((res) => {
-      const studyDetail = res.data;
-      setStudyStatus(studyDetail.recruitStatus);
-    })
-        .catch((error) => {
-          console.error("스터디 개설 여부 가져오기 실패:", error);
-        });
-
-  }, [targetId, accessToken]);
+  // useEffect(() => {
+  //   axios.get(`/api/api/v2/studies/${targetId}`, {
+  //     withCredentials: true,
+  //     headers: {
+  //       'Authorization': `Bearer ${accessToken}`
+  //     }
+  //   }).then((res) => {
+  //     const studyDetail = res.data;
+  //     setStudyStatus(studyDetail.recruitStatus);
+  //   })
+  //       .catch((error) => {
+  //         console.error("스터디 개설 여부 가져오기 실패:", error);
+  //       });
+  //
+  // }, [targetId, accessToken]);
 
   useEffect(() => {
     fetchComments();
     }, [id, accessToken]);
 
-  useEffect(() => {
-    axios
-      .get("/api/member/find-nickname", {
-        withCredentials: true,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-      .then((response) => {
+  const fetchComments = async () => {
+    try {
+      const headers = {};
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
 
-        const member = response.data;
-        setUserNickname(member.nickname);
-      })
-      .catch((error) => {
-        console.error("서버에서 닉네임을 가져오는 중 에러 발생:", error);
-      });
-  }, [accessToken]);
-
-  const fetchComments = () => {
-    axios
-      .get(`/api/replies/${targetId}`, {
-        params:{
-          targetId:targetId,
-          type:type
+      const response = await axios.get(`/api/replies/${targetId}`, {
+        params: {
+          targetId: targetId,
+          type: type,
         },
         withCredentials: true,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-      .then((response) => {
-        setLoading(false);
-        setComments(response.data.replies);
-        console.log(response.data.replies);
-      })
-      .catch((error) => {
-        console.error("댓글 목록을 불러오는 중 에러 발생:", error);
-        throw error;
+        headers,
       });
+
+      setLoading(false);
+      setComments(response.data.replies);
+      console.log(response.data.replies);
+    } catch (error) {
+      console.error("댓글 목록을 불러오는 중 에러 발생:", error);
+      throw error;
+    }
   };
+
 
   const addComment = (newComment) => {
     axios.post(`/api/replies/${targetId}`, {
@@ -185,7 +171,7 @@ const Comment = ({ type }) => {
                 comments={comments}
                 onEditClick={handleEditClick}
                 onRemoveClick={handleRemoveClick}
-                userNickname={userNickname}
+                isLoggedInUserId={isLoggedInUserId}
             />
         )}
       </div>

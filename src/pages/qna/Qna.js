@@ -33,6 +33,7 @@ const Qna = () => {
 
     // 초기 렌더링 또는 검색 상태 확인
     const [isSearchMode, setIsSearchMode] = useState(!!searchQuery || !!categoryOption);
+    const [filter, setFilter] = useState('');
 
     // 권한 조회
     useEffect(() => {
@@ -51,7 +52,7 @@ const Qna = () => {
     }, [accessToken]);
 
     // 데이터 가져오기 함수
-    const fetchQnaAndFaq = (pageNumber) => {
+    const fetchQnaAndFaq = async (pageNumber) => {
         console.log("fetchQnaAndFaq 호출됨", { pageNumber, isSearchMode, categoryOption, searchQuery });
         let base_url;
 
@@ -66,6 +67,7 @@ const Qna = () => {
         } else {
             base_url = "/api/faqs-and-qnas";
         }
+        console.log(base_url);
 
         let params = isSearchMode
             ? {
@@ -74,20 +76,24 @@ const Qna = () => {
             }
             : { page: pageNumber };
 
-        axios
-            .get(base_url, {
-                params,
-                withCredentials: true,
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            })
+        const headers = {};
+        if (accessToken && isLoggedInUserId) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        axios.get(base_url, {
+            params,
+            withCredentials: true,
+            headers
+        })
             .then((res) => {
-                console.log(res.data);
-                const data = res.data;
-                setPosts(data.posts);
-                setItemsPerPage(data.currentPage);
-                setCount(data.totalPages);
+                setPosts(res.data.posts);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.totalPages);
             })
-            .catch((error) => console.error("데이터 가져오기 실패:", error));
+            .catch ((error) => {
+                console.error("데이터 가져오기 실패:", error);
+        })
     };
 
     // 페이지 번호 변경 시 호출

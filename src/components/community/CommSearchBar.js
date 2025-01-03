@@ -33,7 +33,7 @@ const CommSearchBar = ({setIsSearchMode, onFilterChange}) => {
 		onFilterChange(selectedCategory); // 부모 컴포넌트에 필터 전달
 
 		const queryParams = `?category=${encodeURIComponent(selectedCategory)}`;
-		navigate(`/comm/search${queryParams}`, { replace: true });
+		navigate(`/community/search${queryParams}`, { replace: true });
 	};
 
 	const searchItem = (item)=>{
@@ -42,7 +42,7 @@ const CommSearchBar = ({setIsSearchMode, onFilterChange}) => {
 		const selectedType = tagoptions.find((type) => type.value === categoryOption);
 		if (selectedType) {
 			const queryParams = `?q=${encodeURIComponent(item)}&category=${encodeURIComponent(categoryOption)}`;
-			navigate(`/comm/search${queryParams}`, {replace:true});
+			navigate(`/community/search${queryParams}`, {replace:true});
 		}
 	}
 

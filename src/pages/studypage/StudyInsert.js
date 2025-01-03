@@ -302,8 +302,8 @@ const StudyInsert = () => {
                 alert("게시글이 등록되었습니다.");
 
                 console.log(res.data);
-                const id = res.data.id;
-                navigate(`/studydetail/${id}`);
+                const id = res.data;
+                navigate(`/study/detail/${id}`);
             }).catch((error) => {
                 console.log('전송 실패', error.response.data || error);
             })

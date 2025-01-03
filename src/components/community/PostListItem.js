@@ -15,7 +15,7 @@ const PostListItem = ({posts, isMyLikePost}) => {
     return (
         <tr className="post_list">
             <td className="community_category">{posts.category}</td>
-            <Link to={`/postdetail/${posts.postId}`}
+            <Link to={`/community/post/${posts.postId}`}
                   style={{
                       textDecoration: "none",
                       color: "inherit",

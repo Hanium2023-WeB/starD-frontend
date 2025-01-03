@@ -90,7 +90,7 @@ const PostInsert = () => {
                 console.log(res.data);
                 const id = res.data.postId;
                 alert("게시글이 등록되었습니다.");
-                window.location.href = `/postdetail/${id}`;
+                window.location.href = `/community/post/${id}`;
             }).catch((error) => {
                 console.log('전송 실패', error.response.data);
             })

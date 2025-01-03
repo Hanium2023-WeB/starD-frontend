@@ -144,7 +144,7 @@ const MyWriteComment = () => {
                                         </Link>
                                     ) : comment.type === 'QNA' ? (
                                         <Link
-                                            to={`/qnadetail/${comment.post.id}`}
+                                            to={`/qna/detail/${comment.post.id}`}
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",

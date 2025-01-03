@@ -14,30 +14,71 @@ const Header = ({ showSideCenter }) => {
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
         const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
+
+        console.log("accessToken:", accessToken); // 값 확인
+        console.log("isLoggedInUserId:", isLoggedInUserId); // 값 확인
+
         const currentPath = window.location.pathname; // 현재 경로
 
-        // 로그인 없이 접근 가능한 경로 설정 (동적 경로 포함)
-        const publicPaths = ["/", "/subinfo/signup", "/login/findPW"];
+        const publicPaths = [
+            "/",
+            "/subinfo/signup",
+            "/subinfo",
+            "/login/findPW",
+            "/login",
+        ];
+
         const dynamicPublicPaths = [
-            /^\/study\/page=\d+$/ // 정규식으로 숫자 페이지 경로 허용
+            /^\/study\/page=\d+$/,
+            /^\/study\/detail\/\d+$/,
+            /^\/community\/page=\d+$/,
+            /^\/community\/post\/\d+$/,
+            /^\/community\/search(\?.*)?$/,
+            /^\/notice\/page=\d+$/,
+            /^\/notice\/detail\/\d+$/,
+            /^\/qna\/page=\d+$/,
+            /^\/qna\/detail\/\d+$/,
+            /^\/qna\/search(\?.*)?$/,
+            /^\/login$/
         ];
 
         const isPublicPath = () => {
-            // 정적 경로 체크 (로그인 전에는 / 경로 허용)
-            if (currentPath === "/" && !isLoggedIn) {
-                return true;
+            const currentPath = window.location.pathname;
+            const accessToken = localStorage.getItem("accessToken");
+            const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
+
+            console.log("accessToken:", accessToken);
+            console.log("isLoggedInUserId:", isLoggedInUserId);
+
+            // 로그인 상태를 먼저 확인
+            if (!accessToken || !isLoggedInUserId) {
+                console.log("Not logged in. Checking if path is public...");
+
+                // 공개 경로가 맞는지 확인
+                if (publicPaths.includes(currentPath)) {
+                    console.log(`Path ${currentPath} is in publicPaths.`);
+                    return true;
+                }
+
+                // 동적 경로 매칭 확인
+                const matchesDynamicPath = dynamicPublicPaths.some((regex) => regex.test(currentPath));
+                if (matchesDynamicPath) {
+                    console.log(`Path ${currentPath} matches a dynamic public path.`);
+                    return true;
+                } else {
+                    console.log(`Path ${currentPath} does not match any dynamic public path.`);
+                    return false;  // 로그인하지 않은 경우 비공개 경로로 리디렉션
+                }
+            } else {
+                console.log("User is logged in, allowing access.");
+                return true; // 로그인된 경우 모든 경로에 접근 허용
             }
-            // 정적 경로 체크
-            if (publicPaths.includes(currentPath)) {
-                return true;
-            }
-            // 동적 경로 체크
-            return dynamicPublicPaths.some((regex) => regex.test(currentPath));
         };
+
+
 
         const checkTokenValidity = async () => {
             try {
-                // accessToken 유효성 확인
                 const res = await axiosInstance.post("/members/auth/reissue");
                 if (res.data.refreshTokenExpirationTime !== 0) {
                     setIsLoggedIn(true);
@@ -53,7 +94,6 @@ const Header = ({ showSideCenter }) => {
 
         const fetchUserAuthority = async () => {
             try {
-                // 권한 조회
                 const res = await axiosInstance.get("/members/auth");
                 const auth = res.data;
                 setIsAdmin(auth === "ADMIN");
@@ -74,20 +114,20 @@ const Header = ({ showSideCenter }) => {
             navigate("/login");
         };
 
-        if (isPublicPath()) {
-            if (currentPath === "/" && accessToken && isLoggedInUserId) {
-                checkTokenValidity();
+        if (!accessToken || !isLoggedInUserId) {
+            console.log("Not logged in. Checking if path is public...");
+            if (!isPublicPath()) {
+                console.log("Path is not public, triggering logout");
+                handleLogout(); // 비공개 경로 접근 시 로그인 요구
             }
             return;
-        }
-
-        if (accessToken && isLoggedInUserId) {
+        } else {
             checkTokenValidity();
             fetchUserAuthority();
-        } else {
-            handleLogout(); // 토큰 없으면 alert 후 로그인 페이지로 이동
         }
     }, [navigate]);
+
+
 
     const renderSideLeft = () => (
         <div className="headerbar" title={"홈으로 가기"}>

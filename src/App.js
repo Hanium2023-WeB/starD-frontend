@@ -107,7 +107,7 @@ function App() {
                     <Route path="/study/insert" element={<StudyInsert />} /> {/* Insert new study */}
                     <Route path="/study/edit/:id" element={<StudyEdit />} /> {/* Edit study */}
                     <Route path="/study/apply/:id" element={<StudyApplyForm />} /> {/* Study application form */}
-                    <Route path="/study/apply-list" element={<StudyApplyList />} /> {/* List of study applications */}
+                    <Route path="/study/apply-list/:id" element={<StudyApplyList />} /> {/* List of study applications */}
                     <Route path="/study/search" element={<SearchResult />} /> {/* Study search results */}
 
                     {/* TeamBlog Nested Routes */}
@@ -128,13 +128,14 @@ function App() {
                     {/* Community and Notice Routes */}
                     <Route path="/community/:page" element={<Community />} /> {/* Community main page */}
                     <Route path="/community/post/:id" element={<PostDetail />} /> {/* Community post detail */}
-                    <Route path="/community/search" element={<CommSearchResult />} /> {/* Community search results */}
+                    <Route path="/community/search" element={<Community />} /> {/* Community search results */}
                     <Route path="/notice/:page" element={<Notice />} /> {/* Notice main page */}
                     <Route path="/notice/detail/:id" element={<NoticeDetail />} /> {/* Notice detail page */}
                     <Route path="/notice/search" element={<NoticeSearchResult />} /> {/* Notice search results */}
 
                     {/* QnA Routes */}
                     <Route path="/qna/:page" element={<Qna />} /> {/* QnA main page */}
+                    <Route path="/qna/search" element={<Qna />} /> {/* QnA main page */}
                     <Route path="/qna/detail/:id" element={<QnaDetail />} /> {/* QnA detail page */}
                     <Route path="/qna/insert" element={<QnaInsert />} /> {/* Insert new QnA */}
 

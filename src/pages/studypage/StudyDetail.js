@@ -9,7 +9,7 @@ import StudyEdit from "../../pages/studypage/StudyEdit";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import Comment from "../../components/comment/Comment";
 import {useLocation} from "react-router-dom";
-import axios from "axios";
+import axios, {head} from "axios";
 import StudyApplyList from "../../pages/studypage/StudyApplyList";
 
 const StudyDetail = ({sideheader}) => {
@@ -42,11 +42,13 @@ const StudyDetail = ({sideheader}) => {
       studyId = id;
     }
 
+    const headers = accessToken && isLoggedInUserId ? {
+      'Authorization': `Bearer ${accessToken}`,
+    } : {};
+
     axios.get(`/api/studies/${id}`, {
       withCredentials: true,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
+      headers: headers,
     }).then((res) => {
       setStudyItem(res.data);
       console.log(res.data);
@@ -150,7 +152,7 @@ const StudyDetail = ({sideheader}) => {
                       === false && (
                           <div className="btn">
                             <Link
-                                to={`/studyapplyform/${studyItem.studyId}`}
+                                to={`/study/apply/${studyItem.studyId}`}
                                 style={{
                                   textDecoration: "none",
                                   color: "inherit",
@@ -163,7 +165,7 @@ const StudyDetail = ({sideheader}) => {
                   {isApply === false && isRecruiter === true && (
                       <div className="btn">
                         <Link
-                            to={`/StudyApplyList/${studyItem.studyId}`}
+                            to={`/study/apply-list/${studyItem.studyId}`}
                             state={{capacity: studyItem.capacity}}
                             style={{
                               textDecoration: "none",

@@ -14,7 +14,7 @@ const formatDatetime = (datetime) => {
   const formattedDatetime = `${year}-${month}-${day} ${hours}:${minutes}`;
   return formattedDatetime;
 };
-const CommentList = ({ comments, onEditClick, onRemoveClick, onReplySubmit, userNickname }) => {
+const CommentList = ({ comments, onEditClick, onRemoveClick, onReplySubmit }) => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportCommentId, setReportCommentId] = useState(null);
   const navigate = useNavigate();
