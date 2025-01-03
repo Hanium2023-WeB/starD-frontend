@@ -23,6 +23,10 @@ const Header = ({ showSideCenter }) => {
         ];
 
         const isPublicPath = () => {
+            // 정적 경로 체크 (로그인 전에는 / 경로 허용)
+            if (currentPath === "/" && !isLoggedIn) {
+                return true;
+            }
             // 정적 경로 체크
             if (publicPaths.includes(currentPath)) {
                 return true;
@@ -71,7 +75,9 @@ const Header = ({ showSideCenter }) => {
         };
 
         if (isPublicPath()) {
-            // 공개 경로일 경우 토큰이 없어도 로그인 페이지로 이동하지 않음
+            if (currentPath === "/" && accessToken && isLoggedInUserId) {
+                checkTokenValidity();
+            }
             return;
         }
 

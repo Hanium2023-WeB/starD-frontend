@@ -76,6 +76,7 @@ function App() {
                     <Route path="/login" element={<Login />} /> {/* Login page */}
                     <Route path="/logout" element={<Logout />} /> {/* Logout page */}
                     <Route path="/subinfo/signup" element={<Signup />} /> {/* User signup page */}
+                    <Route path="/subinfo" element={<InputSubSign />} /> {/* User signup page */}
                     <Route path="/login/findeID" element={<FindID />} /> {/* Find ID page */}
                     <Route path="/login/findedID" element={<FindedID />} /> {/* Found ID page */}
                     <Route path="/login/findPW" element={<FindPW />} /> {/* Find password page */}
