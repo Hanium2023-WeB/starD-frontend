@@ -42,7 +42,7 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
 
     const GoNextDetailPage = () => {
         // console.log(d.id);
-        navigate(`/studydetail/${studies.studyId}`, { state: { id: studies.studyId } });
+        navigate(`/study/detail/${studies.studyId}`, { state: { id: studies.studyId } });
 
     }
 

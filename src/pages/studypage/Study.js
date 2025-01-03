@@ -101,7 +101,7 @@ const Study = () => {
     const handleMoveToStudyInsert = (e) => {
         if (accessToken && isLoggedInUserId) {
             e.preventDefault();
-            navigate(`/study/studyInsert`);
+            navigate(`/study/insert`);
         } else {
             alert("로그인 해주세요");
             navigate("/login");

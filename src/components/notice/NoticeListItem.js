@@ -15,7 +15,7 @@ const NoticeListItem = ({posts, setPosts}) => {
 
     return (
         <tr className="post_list">
-            <Link to={`/noticedetail/${posts.postId}`}
+            <Link to={`/notice/detail/${posts.postId}`}
                   style={{
                       textDecoration: "none",
                       color: "inherit",

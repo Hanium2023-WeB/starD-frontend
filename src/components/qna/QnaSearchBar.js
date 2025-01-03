@@ -23,7 +23,8 @@ const QnaSearchBar = ({setIsSearchMode}) => {
 	};
 
 	const onHandleCategory = (e) => {
-		setCategoryOption(e.target.value);
+		const selectedCategory = e.target.value;
+		setCategoryOption(selectedCategory);
 	}
 
 	const onChange=(e)=>{

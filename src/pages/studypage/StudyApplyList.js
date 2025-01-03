@@ -207,7 +207,7 @@ const StudyApplyList = () => {
                         }).then(res => {
                             console.log("채팅방 생성 완료");
                             alert("모집 완료. 팀블로그로 이동합니다.");
-                            navigate(`/${id}/teamblog`, {
+                            navigate(`/teamblog/${id}`, {
                                 state: {
                                     "studyId": id,
                                 }

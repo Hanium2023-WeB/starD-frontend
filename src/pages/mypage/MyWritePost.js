@@ -168,7 +168,7 @@ const MyWritePost = () => {
                                         </Link>
                                     ) : post.type === 'QNA'  || post.type === 'FAQ' ? (
                                         <Link
-                                            to={`/qnadetail/${post.id}`}
+                                            to={`/qna/detail/${post.id}`}
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",
