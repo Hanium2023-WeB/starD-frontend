@@ -29,23 +29,31 @@ const PostDetail = () => {
     const [isWriter, setIsWriter] = useState(false);
 
     useEffect(() => {
-        axios.get(`/api/communities/${id}`, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log(res.data);
-                setPostItem(res.data);
-                if (res.data.isAuthor) { // 자신의 글인지
+        const fetchCommunityData = async () => {
+            try {
+                const headers = {};
+                if (accessToken && isLoggedInUserId) {
+                    headers['Authorization'] = `Bearer ${accessToken}`;
+                }
+
+                const response = await axios.get(`/api/communities/${id}`, {
+                    withCredentials: true,
+                    headers,
+                });
+
+                console.log(response.data);
+                setPostItem(response.data);
+                if (response.data.isAuthor) { // 자신의 글인지
                     setIsWriter(true);
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error("커뮤니티 게시글 세부 데이터 가져오기 실패:", error);
-            });
+            }
+        };
+
+        fetchCommunityData();
     }, [id, accessToken, isLoggedInUserId]);
+
 
     const toggleLike = useCallback(() => {
         if (!postItem) {

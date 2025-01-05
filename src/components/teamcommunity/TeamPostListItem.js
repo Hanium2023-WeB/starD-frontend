@@ -16,7 +16,7 @@ const TeamPostListItem = ({studyId, posts, setPosts}) => {
 
     return (
         <tr className="post_list">
-            <Link to={`/${studyId}/teamblog/TeamCommunity/studypostdetail/${posts.studyPostId}`}
+            <Link to={`/teamblog/${studyId}/community/post/${posts.studyPostId}`}
                   style={{
                       textDecoration: "none",
                       color: "inherit",

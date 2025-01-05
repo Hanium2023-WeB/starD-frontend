@@ -9,6 +9,14 @@ const CommentForm = ({addComment}) => {
     const onChange = useCallback(e=>{
         setValue(e.target.value);
     },[]);
+
+    const handleFocus = useCallback(() => {
+        if (!isLoggedInUserId) {
+            alert("로그인 후 이용 가능합니다.");
+            navigate("/login");
+        }
+    }, [isLoggedInUserId, navigate]);
+
     const handleSubmit = (e) => {
         if (accessToken && isLoggedInUserId) {
             e.preventDefault();
@@ -25,8 +33,15 @@ const CommentForm = ({addComment}) => {
     }
     return(
         <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="댓글을 입력해주세요." className="comment_input" value={value} onChange={onChange}/>
-            <input type="submit" value="등록" className="comment_submit_btn"/>
+            <input
+                type="text"
+                placeholder={isLoggedInUserId ? "댓글을 입력해주세요." : "로그인 후 댓글을 입력해주세요."}
+                className="comment_input"
+                value={value}
+                onChange={onChange}
+                onFocus={handleFocus}
+            />
+            <input type="submit" value="등록" className="comment_submit_btn" />
         </form>
     )
 }

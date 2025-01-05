@@ -30,7 +30,7 @@ const QnaListItem = ({posts, setPosts}) => {
                 </Link>
             ) : (
                 <Link
-                    to={`/qnadetail/${posts.postId}`}
+                    to={`/qna/detail/${posts.postId}`}
                     state={{ postType: posts.postType }} // state 전달
                     style={{
                         textDecoration: "none",

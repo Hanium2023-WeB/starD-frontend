@@ -39,22 +39,26 @@ const Community = () => {
         }
     };
 
-    const fetchCommunities = (pageNumber) => {
-        axios.get("/api/communities", {
-            params: {page: pageNumber},
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
+    const fetchCommunities = async (pageNumber) => {
+        try {
+            const headers = {};
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
             }
-        })
-            .then((res) => {
-                console.log(res.data);
-                setPosts(res.data.posts);
-                setItemsPerPage(res.data.currentPage);
-                setCount(res.data.posts.length);
-            }).catch((error) => {
+
+            const response = await axios.get("/api/communities", {
+                params: { page: pageNumber },
+                withCredentials: true,
+                headers,
+            });
+
+            console.log(response.data);
+            setPosts(response.data.posts);
+            setItemsPerPage(response.data.currentPage);
+            setCount(response.data.posts.length);
+        } catch (error) {
             console.error("데이터 가져오기 실패:", error);
-        });
+        }
     };
 
     useEffect(() => {
@@ -82,10 +86,15 @@ const Community = () => {
             }
         }
 
+        const headers = {};
+        if (accessToken && isLoggedInUserId) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
         axios.get(base_url, {
             params,
             withCredentials: true,
-            headers: { 'Authorization': `Bearer ${accessToken}` }
+            headers
         })
             .then((res) => {
                 console.log(base_url);

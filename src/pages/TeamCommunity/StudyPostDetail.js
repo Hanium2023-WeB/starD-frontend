@@ -18,7 +18,8 @@ import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 const StudyPostDetail = ( ) => {
     const navigate = useNavigate();
 
-    const {studyId, postId} = useParams();
+    const {id, postId} = useParams();
+    const studyId = id;
     console.log("studyId: ", studyId);
     console.log("postId : ", postId);
 

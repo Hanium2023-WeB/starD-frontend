@@ -62,7 +62,7 @@ const StudyApplyForm = ({sideheader}) => {
             }
         }).then((res) => {
             console.log(res.data);
-            navigate("/myapplystudy");
+            navigate("/mypage/apply-study");
         })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
