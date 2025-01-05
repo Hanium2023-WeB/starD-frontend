@@ -10,7 +10,7 @@ const FindPW = () => {
       }
   );
 
-  const inputemail = useRef();
+  const inputEmail = useRef();
   const navigate = useNavigate();
 
   const handleEditChange = (e) => {
@@ -61,7 +61,7 @@ const FindPW = () => {
                 </div>
                 <div className={"inputform"}>
                   <input
-                      ref={inputemail}
+                      ref={inputEmail}
                       id="phonecontent"
                       name={"email"}
                       value={state.email}
