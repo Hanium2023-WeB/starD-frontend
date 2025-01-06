@@ -14,7 +14,6 @@ const StudyDetail = ({sideheader}) => {
   const location = useLocation();
   let studyId = location.state;
 
-  console.log("??" + studyId);
   const [studyItem, setStudyItem] = useState();
   const navigate = useNavigate();
   const {id} = useParams();
