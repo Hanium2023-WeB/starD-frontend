@@ -4,11 +4,15 @@ import axios from "axios";
 import {useNavigate} from 'react-router-dom';
 import Header from "../../components/repeat_etc/Header";
 import MemoizedLink from "../../MemoizedLink";
+import Subscribe from "../notification/Subscribe";
+import {useEventSource} from "../notification/EventSourceContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const inputID = useRef();
   const inputPW = useRef();
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const { setAccessToken } = useEventSource();
 
   const [state, setState] = useState({
     email: "",
@@ -51,6 +55,8 @@ const Login = () => {
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('isLoggedInUserId', state.email);
 
+      setAccessToken(accessToken);
+      setIsSubscribed(true);
       navigate('/');
 
     })
@@ -123,6 +129,7 @@ const Login = () => {
             </div>
           </div>
         </div>
+        {isSubscribed && <Subscribe/>} {/* Subscribe를 조건부로 렌더링 */}
       </div>
 
   );
