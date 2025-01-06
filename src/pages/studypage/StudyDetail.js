@@ -3,24 +3,21 @@ import {useParams, Link, useNavigate} from "react-router-dom";
 import Header from "../../components/repeat_etc/Header";
 import "../../css/study_css/StudyDetail.css";
 import "../../css/comment_css/Comment.css";
-
 import StudyInfo from "../../components/study/StudyInfo";
-import StudyEdit from "../../pages/studypage/StudyEdit";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import Comment from "../../components/comment/Comment";
 import {useLocation} from "react-router-dom";
-import axios, {head} from "axios";
-import StudyApplyList from "../../pages/studypage/StudyApplyList";
+import axios from "axios";
 
 const StudyDetail = ({sideheader}) => {
 
   const location = useLocation();
   let studyId = location.state;
-  console.log("studyId : ", studyId);
+
   const [studyItem, setStudyItem] = useState();
   const navigate = useNavigate();
   const {id} = useParams();
-  console.log("studyId : ", id);
+
   const [studies, setStudies] = useState([]);
   const [studyDetail, setStudyDetail] = useState([]);
   const [isApply, setIsApply] = useState(false);
@@ -30,14 +27,7 @@ const StudyDetail = ({sideheader}) => {
   const [isRecruiter, setIsRecruiter] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-
-
   useEffect(() => {
-    if (!accessToken) {
-      alert("로그인 해 주세요.");
-      return navigate('/login');
-    }
-
     if (studyId === null) {
       studyId = id;
     }
@@ -51,48 +41,38 @@ const StudyDetail = ({sideheader}) => {
       headers: headers,
     }).then((res) => {
       setStudyItem(res.data);
-      console.log(res.data);
+
       if (res.data.isAuthor) {
         setIsRecruiter(true);
       }
-    })
-    .catch((error) => {
-      alert("로그인 해 주세요.");
-      navigate('/login');
-      console.error("스터디 세부 데이터 가져오기 실패:", error);
-    });
 
-    axios.get(`/api/api/v2/studies/${studyId}/study-member`, {
-      withCredentials: true,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    }).then((res) => {
-      if (res.data.data.length > 0) {   // 스터디원이 있을 경우 -> 모집 완료
-        console.log("모집 완료");
+      if (res.data.recruitmentType === "RECRUITING") {
+        setIsCompleted(false);
+      } else {
         setIsCompleted(true);
       }
     })
     .catch((error) => {
-      console.error("스터디 모집 여부 데이터 가져오기 실패:", error);
+      console.error("스터디 세부 데이터 가져오기 실패:", error);
     });
 
-    axios.get(`/api/api/v2/studies/${studyId}/apply-reason`, {
-      withCredentials: true,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    }).then((res) => {
-      const result = res.data;
-      if (result.length !== 0) {   // 지원했으면 true
-        console.log("지원 O");
-        setIsApply(true);
-        setApplyReason(res.data.applyReason);
-      }
-    })
-    .catch((error) => {
-      console.error("스터디 지원 여부 데이터 가져오기 실패:", error);
-    });
+    if (accessToken !== null && !isRecruiter) {
+      axios.get(`/api/studies/${id}/application`, {
+        withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }).then((res) => {
+        if (res.data !== null) {
+          setIsApply(true);
+          setApplyReason(res.data.introduce);
+        }
+      })
+      .catch((error) => {
+        console.error("스터디 지원 여부 데이터 가져오기 실패:", error);
+      });
+    }
+
   }, [id]);
 
   const handleStudyDelete = useCallback(() => {
@@ -181,11 +161,10 @@ const StudyDetail = ({sideheader}) => {
           </div>
         </div>
 
-        {accessToken && (
-            <div className="comment_container">
-              <Comment type="study" />
-            </div>
-        )}
+        <div className="comment_container">
+          <Comment type="study"/>
+        </div>
+        )
       </div>
   );
 };

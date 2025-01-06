@@ -1,13 +1,12 @@
-import React, {useState, useRef, useEffect, useCallback} from "react";
+import React, {useState, useRef, useCallback} from "react";
 import "../../css/user_css/Log.css";
 import axios from "axios";
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Header from "../../components/repeat_etc/Header";
 import MemoizedLink from "../../MemoizedLink";
 
 const Login = () => {
   const navigate = useNavigate();
-  const f = false;
   const inputID = useRef();
   const inputPW = useRef();
 
@@ -27,18 +26,6 @@ const Login = () => {
     if (event.keyCode === 13) {
       handleSubmit();
     }
-  };
-  const login = () => {
-    // const accessToken = localStorage.getItem('accessToken');
-    const eventSource = new EventSource(
-        `/api/notifications/subscribe/${state.ID}`);
-
-    eventSource.addEventListener("sse", function (event) {
-      console.log(event.data);
-
-      // const data = JSON.parse(event.data);
-    });
-
   };
 
   const handleSubmit = () => {
@@ -61,13 +48,10 @@ const Login = () => {
     })
     .then((res) => {
       const accessToken = res.data.accessToken;
-      console.log(state);
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('isLoggedInUserId', state.email);
 
-      // // SSE를 구독하기 위해 SSEComponent 호출
-      // login();
-      navigate('/'); // useNavigate를 사용하여 페이지를 이동
+      navigate('/');
 
     })
     .catch(error => {
