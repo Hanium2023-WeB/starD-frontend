@@ -162,11 +162,10 @@ const StudyDetail = ({sideheader}) => {
           </div>
         </div>
 
-        {accessToken && (
-            <div className="comment_container">
-              <Comment type="study"/>
-            </div>
-        )}
+        <div className="comment_container">
+          <Comment type="study"/>
+        </div>
+        )
       </div>
   );
 };
