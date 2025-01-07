@@ -63,7 +63,7 @@ const Subscribe = () => {
         // 연결 오류가 발생했을 때 브라우저가 자동 재연결
         if (eventSource.readyState === EventSource.CLOSED) {
           console.log("EventSource closed. Waiting for automatic reconnect...");
-          setTimeout(() => connect(), 3000);
+          setTimeout(() => connect(), 10000);
         }
       };
 
