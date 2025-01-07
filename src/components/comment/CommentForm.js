@@ -18,7 +18,6 @@ const CommentForm = ({addComment}) => {
     }, [isLoggedInUserId, navigate]);
 
     const handleSubmit = (e) => {
-        console.log("???")
         if (accessToken && isLoggedInUserId) {
             e.preventDefault();
             if (value.trim() === "") {
