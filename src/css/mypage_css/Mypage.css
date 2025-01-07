@@ -439,3 +439,9 @@ li {
 .evaluate_table .reason{
 	width:80%;
 }
+
+.study_list .studyListHover:hover {
+	background-color: #f6f9f2;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	border: 1px dashed #99A98F;
+}
