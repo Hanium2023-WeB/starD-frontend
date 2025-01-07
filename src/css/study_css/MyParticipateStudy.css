@@ -54,11 +54,12 @@ html {
 	margin-right: 20px;
 	margin-bottom: 20px;
 	padding: 30px;
-	border: 1px solid gray;
+	border: 1.2px solid #99A98F;
 	border-radius: 40px;
 	/*display: flex;*/
 	/*flex-direction: column;*/
 	/*justify-content: space-between;*/
+	box-shadow: 0px 5px 5px 0px #eaede8;
 }
 .study_list .list:nth-of-type(3n) {
 	margin-right: 0;
