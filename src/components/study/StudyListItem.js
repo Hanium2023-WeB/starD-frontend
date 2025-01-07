@@ -33,7 +33,7 @@ function checkProgressStatus(recruitStatus, proressStatus){
 }
 
 const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextTeamBlog, goEvaluationPage}) => {
-    console.log(studies);
+    // console.log(studies);
     const imgUrl = studies.imgUrl ? studies.imgUrl : default_profile_img;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
     const recruitStatus = isParticipateStudy ? checkProgressStatus(studies.progressType) : checkRecruitStatus(studies.recruitmentType, studies.progressType);
@@ -91,6 +91,7 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
                         ) : null}
                     </div>
                 )}
+
             </div>
         </div>
     )

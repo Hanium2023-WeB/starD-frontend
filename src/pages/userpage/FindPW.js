@@ -2,6 +2,7 @@ import Header from "../../components/repeat_etc/Header";
 import React, {useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const FindPW = () => {
 
@@ -14,7 +15,6 @@ const FindPW = () => {
   const navigate = useNavigate();
 
   const handleEditChange = (e) => {
-    console.log(e.target.value.toString());
     setState({
       ...state,
       [e.target.name]: e.target.value.toString(),
@@ -22,11 +22,16 @@ const FindPW = () => {
   };
 
   const vaildateCertificate = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(state.email)) {
+      toast.error("유효하지 않은 이메일 형식입니다.");
+      inputEmail.current.focus();
+      return;
+    }
 
     const emailDto = {
       email: state.email
     };
-    console.log(emailDto.email);
 
     axios.post("/api/members/auth/find-password", emailDto)
     .then((res) => {
@@ -64,6 +69,7 @@ const FindPW = () => {
                       ref={inputEmail}
                       id="phonecontent"
                       name={"email"}
+                      type="email"
                       value={state.email}
                       onChange={handleEditChange}
                       placeholder={"이메일을 입력해주세요."}

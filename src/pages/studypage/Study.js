@@ -11,6 +11,7 @@ import StudyListItem from "../../components/study/StudyListItem";
 import Paging from "../../components/repeat_etc/Paging";
 import Loading from "../../components/repeat_etc/Loading";
 import {toggleScrapStatus} from "../../util/scrapHandler";
+import toast from "react-hot-toast";
 
 const Study = () => {
   const navigate = useNavigate();
@@ -104,8 +105,8 @@ const Study = () => {
       e.preventDefault();
       navigate(`/study/insert`);
     } else {
-      alert("로그인 해주세요");
-      navigate("/login");
+      toast.error("로그인 후 이용 가능합니다.");
+      // navigate("/login");
     }
   };
 
