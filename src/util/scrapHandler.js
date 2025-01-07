@@ -1,9 +1,9 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const toggleScrapStatus = async (study, accessToken, isLoggedInUserId, onSuccess, onError) => {
     if (!(accessToken && isLoggedInUserId)) {
-        alert("로그인 해주세요");
-        return;
+        return toast.error("로그인 후 이용 가능합니다.");
     }
 
     const targetId = study.studyPostId ? study.studyPostId : study.studyId;
