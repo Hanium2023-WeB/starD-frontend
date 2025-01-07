@@ -1,11 +1,15 @@
 import CommentForm from "./CommentForm";
-import { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import CommentList from "./CommentList";
 import CommentEdit from "./CommentEdit";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
+import Paging from "../repeat_etc/Paging";
 
-const Comment = ({ type }) => {
+const Comment = ({type}) => {
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
   const accessToken = localStorage.getItem('accessToken');
   const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
   const [userNickname, setUserNickname] = useState("");
@@ -27,42 +31,30 @@ const Comment = ({ type }) => {
 
   const [studyStatus, setStudyStatus] = useState("");
 
-  // useEffect(() => {
-  //   axios.get(`/api/api/v2/studies/${targetId}`, {
-  //     withCredentials: true,
-  //     headers: {
-  //       'Authorization': `Bearer ${accessToken}`
-  //     }
-  //   }).then((res) => {
-  //     const studyDetail = res.data;
-  //     setStudyStatus(studyDetail.recruitStatus);
-  //   })
-  //       .catch((error) => {
-  //         console.error("스터디 개설 여부 가져오기 실패:", error);
-  //       });
-  //
-  // }, [targetId, accessToken]);
-
   useEffect(() => {
     fetchComments();
-    }, [id, accessToken]);
+  }, [id, accessToken]);
 
-  const fetchComments = async () => {
+  const fetchComments = async (selectedPage = page) => {
     try {
       const headers = {};
+
       if (accessToken) {
         headers['Authorization'] = `Bearer ${accessToken}`;
       }
 
       const response = await axios.get(`/api/replies/${targetId}`, {
         params: {
-          targetId: targetId,
+          // targetId: targetId,
           type: type,
+          page: selectedPage
         },
         withCredentials: true,
         headers,
       });
 
+      setPage(response.data.currentPage);
+      setCount(response.data.totalElements);
       setLoading(false);
       setComments(response.data.replies);
     } catch (error) {
@@ -71,27 +63,26 @@ const Comment = ({ type }) => {
     }
   };
 
-
   const addComment = (newComment) => {
     axios.post(`/api/replies/${targetId}`, {
-        type: type,
-        content: newComment,
-      }, {
-        params: {targetId:targetId},
-        withCredentials: true,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-      .then((response) => {
-        alert("댓글이 등록되었습니다.");
-        const newCommentData = response.data;
-        setComments((prevComments) => [...prevComments, newCommentData]);
-        fetchComments();
-      })
-      .catch((error) => {
-        console.error("댓글 추가 중 에러 발생:", error);
-      });
+      type: type,
+      content: newComment,
+    }, {
+      params: {targetId: targetId},
+      withCredentials: true,
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+    .then((response) => {
+      alert("댓글이 등록되었습니다.");
+      const newCommentData = response.data;
+      setComments((prevComments) => [...prevComments, newCommentData]);
+      fetchComments();
+    })
+    .catch((error) => {
+      console.error("댓글 추가 중 에러 발생:", error);
+    });
   };
 
   const handleEditClick = (commentId) => {
@@ -101,87 +92,104 @@ const Comment = ({ type }) => {
 
   const handleCommentSave = (commentId, updatedContent) => {
     axios
-      .put(`/api/replies/${commentId}`, {
-        content: updatedContent,
-      }, {
-        params:{replyId:commentId},
-        withCredentials: true,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-      .then((response) => {
-        alert("댓글이 수정되었습니다.");
+    .put(`/api/replies/${commentId}`, {
+      content: updatedContent,
+    }, {
+      params: {replyId: commentId},
+      withCredentials: true,
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+    .then((response) => {
+      alert("댓글이 수정되었습니다.");
 
-        const updatedCommentData = response.data;
+      const updatedCommentData = response.data;
 
-        const updatedComments = comments.map((comment) =>
+      const updatedComments = comments.map((comment) =>
           comment.replyId === commentId ? updatedCommentData : comment
-        );
-        setEditingComment(null);
-        setComments(updatedComments);
-        fetchComments();
-      })
-      .catch((error) => {
-        console.error("댓글 수정 중 에러 발생:", error);
-      });
+      );
+      setEditingComment(null);
+      setComments(updatedComments);
+      fetchComments();
+    })
+    .catch((error) => {
+      console.error("댓글 수정 중 에러 발생:", error);
+    });
   };
 
   const handleRemoveClick = (commentId) => {
     const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
 
     if (confirmDelete) {
-        axios
-          .delete(`/api/replies/${commentId}`, {
-            params:{replyId:commentId},
-            withCredentials: true,
-            headers: {
-              'Authorization': `Bearer ${accessToken}`
-            }
-          })
-          .then(() => {
-            alert("댓글이 삭제되었습니다.");
-            const updatedComments = comments.filter((comment) => comment.replyId !== commentId);
-            setComments(updatedComments);
-          })
-          .catch((error) => {
-            console.error("댓글 삭제 중 에러 발생:", error);
-          });
+      axios
+      .delete(`/api/replies/${commentId}`, {
+        params: {replyId: commentId},
+        withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+      .then(() => {
+        alert("댓글이 삭제되었습니다.");
+        const updatedComments = comments.filter(
+            (comment) => comment.replyId !== commentId);
+        setComments(updatedComments);
+      })
+      .catch((error) => {
+        console.error("댓글 삭제 중 에러 발생:", error);
+      });
     }
   };
 
   if (loading) {
     return <p>로딩 중...</p>;
   }
-  return (
-    <div className="comment_form">
-      <div>
-        <h2>댓글</h2>
-        {studyStatus === 'RECRUITMENT_COMPLETE' ? null : (
-            <CommentForm addComment={addComment} />
-        )}
 
-        <br/><br/>
-        {comments.length === 0 ? (
-            <p className="comment_empty_message">댓글 내역이 없습니다.</p>
-        ) : (
-            <CommentList
-                comments={comments}
-                onEditClick={handleEditClick}
-                onRemoveClick={handleRemoveClick}
-                isLoggedInUserId={isLoggedInUserId}
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (selectedPage) => {
+    setPage(selectedPage); // 선택된 페이지를 상태에 저장
+    fetchComments(selectedPage); // 해당 페이지의 댓글 데이터를 가져옴
+  };
+
+  return (
+      <div className="comment_form">
+        <div>
+          <h2>💬 댓글 {count}</h2>
+          {studyStatus === 'RECRUITMENT_COMPLETE' ? null : (
+              <CommentForm addComment={addComment}/>
+          )}
+
+          {comments.length === 0 ? (
+              null
+          ) : (
+              <div className="paging">
+                <Paging page={page} totalItemCount={count} itemsPerPage={10}
+                        handlePageChange={handlePageChange}/>
+              </div>
+          )}
+
+          <br/><br/>
+          {comments.length === 0 ? (
+              null
+          ) : (
+              <CommentList
+                  comments={comments}
+                  onEditClick={handleEditClick}
+                  onRemoveClick={handleRemoveClick}
+                  isLoggedInUserId={isLoggedInUserId}
+              />
+          )}
+        </div>
+        {editingComment && (
+            <CommentEdit
+                comment={comments}
+                commentId={editingComment}
+                onCancel={() => setEditingComment(null)}
+                onSave={handleCommentSave}
             />
         )}
       </div>
-      {editingComment && (
-        <CommentEdit
-          comment={comments}
-          commentId={editingComment}
-          onCancel={() => setEditingComment(null)}
-          onSave={handleCommentSave}
-        />
-      )}
-    </div>
   );
 };
 

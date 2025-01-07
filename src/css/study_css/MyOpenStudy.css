@@ -178,15 +178,15 @@ html {
 .study_list .list_tag {
 	width: fit-content;
 	background-color: #ffffff;
-	border: 2px solid rgb(149 149 149);
+	border: 1px dashed #7b8f6e;
 	padding: 7px 10px;
 	border-radius: 50px;
 	margin-right:3px;
 }
 .study_list .list_onoff {
 	width: fit-content;
-	background-color: rgb(149 149 149);
-	border: 2px solid rgb(149 149 149);
+	background-color: #7b8f6e;
+	/*border: 2px solid rgb(149 149 149);*/
 	padding: 7px 10px;
 	border-radius: 50px;
 	color:#fff;
@@ -217,11 +217,11 @@ html {
 	margin-left:10px;
 }
 
-.paging{
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	margin-bottom: 20px;
+.pagingDiv{
+	/*display: flex;*/
+	/*flex-direction: row;*/
+	/*justify-content: center;*/
+	margin-bottom: 30px;
 }
 
 @media (max-width: 1254px) {

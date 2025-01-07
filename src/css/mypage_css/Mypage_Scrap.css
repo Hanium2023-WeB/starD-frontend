@@ -64,7 +64,7 @@
 .study_list .list_onoff {
 	width: fit-content;
 	background-color: rgb(149 149 149);
-	border: 2px solid rgb(149 149 149);
+	border: 1px solid #7b8f6e;
 	padding: 7px 10px;
 	border-radius: 50px;
 	margin-bottom: 5px;
