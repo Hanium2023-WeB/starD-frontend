@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Editcss from "../../css/todo_css/ToDoEdit.css";
 
 const TeamToDoEdit = ({ selectedTodo, onUpdate, Member, onClose }) => {
-    const initialAssignees = selectedTodo?.assignees?.map((item) => ({ id: item.member.id, nickname: item.member.nickname })) || [];
+    const initialAssignees = selectedTodo?.assignees?.map((item) => ({ memberId: item.memberId, nickname: item.nickname })) || [];
     const [todoassignees, setTodoAssignees] = useState(initialAssignees);
     const [task, setTask] = useState('');
 

@@ -50,7 +50,7 @@ import MyScrapCommunityPost from "./pages/mypage/MyScrapCommunityPost";
 import MyWritePost from "./pages/mypage/MyWritePost";
 import MyWriteComment from "./pages/mypage/MyWriteComment";
 import AnotherUserProfile from "./pages/mypage/AnotherUserProfile";
-import Subscribe from "./pages/notification/Subscribe";
+// import Subscribe from "./pages/notification/Subscribe";
 import FAQManagement from "./pages/admin/FAQManagement";
 import MemberManagement from "./pages/admin/MemberManagement";
 import NoticeManagement from "./pages/admin/NoticeManagement";
@@ -65,7 +65,7 @@ import {Toaster} from "react-hot-toast";
 
 function App() {
 
-  Subscribe();
+  // Subscribe();
 
   return (
       <BrowserRouter>

@@ -16,7 +16,9 @@ import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 
 const TeamToDoList = () => {
 
-    const { member, studyItem, progressType, todos, schedules, loading, error } = useTeamBlogContext();
+    const { member, studyItem, progressType, todos, setTodos, schedules, loading, error } = useTeamBlogContext();
+    console.log(todos);
+    console.log(member);
 
     const [selectedTodo, setSelectedTodo] = useState(null);
     const [insertToggle, setInsertToggle] = useState(false);
@@ -29,7 +31,6 @@ const TeamToDoList = () => {
     const {studyIdAsNumber, Member, selecteStudy, progressStatus} = location.state || {};
     const [studies, setStudy] = useState([]);
     const [studyMems, setStudyMems] = useState([]);
-    // const [member, setMember] = useState(Member);
     const [Assignees, setAssignees] = useState([]);
     // const studyIdAsNumber = parseFloat(studyId);
     const [selectedAssigneeIds, setSelectedAssigneeIds] = useState([]); // 선택된 담당자 ID 추적
@@ -59,20 +60,28 @@ const TeamToDoList = () => {
 
     //담당자 추가 핸들러
     const handleAddAssignees = (e) => {
-        const assignId = e.target.getAttribute('data-assign-id');
-        const assignNicName = e.target.getAttribute('data-assign-name');
+        const assignId = parseInt(e.currentTarget.dataset.assignId, 10);
+        const isAlreadySelected = selectedAssigneeIds.includes(assignId);
 
-        // 선택된 담당자 상태 업데이트
-        if (selectedAssigneeIds.includes(assignId)) {
-            // 이미 선택된 담당자라면, 선택 해제
-            setSelectedAssigneeIds((prev) => prev.filter((id) => id !== assignId));
-            setAssignees((prev) => prev.filter((assignee) => assignee.id !== assignId));
-        } else {
-            // 새로운 담당자 선택
-            setSelectedAssigneeIds((prev) => [...prev, assignId]);
-            setAssignees((prev) => [...prev, {id: assignId, nickname: assignNicName}]);
-        }
+        // Update both selectedAssigneeIds and Assignees together
+        setSelectedAssigneeIds((prev) => {
+            const newSelectedIds = isAlreadySelected
+                ? prev.filter((id) => id !== assignId)
+                : [...prev, assignId];
+
+            setAssignees((prevAssignees) => {
+                const newAssignee = member.find((m) => m.memberId === assignId);
+                if (isAlreadySelected) {
+                    return prevAssignees.filter((assignee) => assignee.id !== assignId);
+                } else {
+                    return newAssignee ? [...prevAssignees, newAssignee] : prevAssignees;
+                }
+            });
+
+            return newSelectedIds;
+        });
     };
+
 
     //담당자 삭제 핸들러
     const handleRemoveAssignees = async (e) => {
@@ -102,53 +111,64 @@ const TeamToDoList = () => {
         }
     };
     useEffect(() => {
-        console.log("Assignees ::", Assignees);
+        console.log('Updated assignees:', Assignees);  // assignees 상태 변경 시 로그 출력
     }, [Assignees]);
 
     //할 일 추가
-    const onInsert = useCallback(async (task, studyId, formattedDate, StringAssignees) => {
-        console.log("StringAssignees:", StringAssignees);
+    const onInsert = useCallback((task, studyId, formattedDate, selectedNicknames) => {
+        console.log("StringAssignees:", selectedNicknames);
         const todoData = {
             task: task,
             dueDate: formattedDate,
+            assignees: selectedNicknames,
         };
+        console.log(todoData);
 
-        if (StringAssignees) {
-            const postDataResponse = await axios.post(`/api/todo`, todoData, {
-                params: {
-                    studyId: studyId,
-                    assigneeStr: StringAssignees,
-                },
+        if (selectedNicknames.length > 0) {
+            axios.post(`/api/studies/${studyId}/to-dos`, todoData, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
-            });
-            console.log("전송 성공:", postDataResponse);
-            setAssignees([]);
-            setTodoswithAssignee((prevTodos) => ({
-                ...prevTodos, [dateKey]: [...(prevTodos[dateKey] || []), postDataResponse.data],
-            }));
+            })
+                .then((res) => {
+                    alert("Todo가 등록되었습니다.");
+                    console.log("전송 성공:", res.data);
+                    setAssignees([]);
+                    setTodos((prevTodos) => {
+                        // 새로 추가된 Todo를 기존 todos 배열에 합침
+                        const updatedTodos = [...prevTodos, res.data];
+                        return updatedTodos;
+                    });
+                    nextId.current++;
+                })
+                .catch((error) => {
+                    console.error("전송 실패:", error);
+                    alert("Todo 등록에 실패했습니다.");
+                });
         } else {
             alert("담당자를 지정해주세요.");
             return;
         }
-        nextId.current++;
-
     }, [selectedDate, studies, todoswithAssignee]);
 
-    const filteredTodos = Object.values(todoswithAssignee[dateKey] || []).filter((todo) => {
-        const isCompleted = todo.assignees.some(assignee => assignee.toDoStatus); // 하나라도 완료인 경우 true
-        console.log(isCompleted);
-        if (showIncomplete && !isCompleted) {
-            return true; // 미완료인 경우
-        }
-        if (showCompleted && isCompleted) {
-            return true; // 완료인 경우
-        }
-        return false; // 둘 다 아니면 제외
-    });
+    const filteredTodos = todos.filter((todo) => {
+        // 모든 담당자가 완료했으면 isCompleted가 true
+        const isCompleted = todo.assignees.every(assignee => assignee.toDoStatus);
 
+        // 완료된 할 일만 필터링
+        if (showCompleted && isCompleted) {
+            return true;
+        }
+
+        // 미완료된 할 일만 필터링
+        if (showIncomplete && !isCompleted) {
+            return true;
+        }
+
+        // 조건에 맞지 않으면 제외
+        return false;
+    });
 //할 일 삭제
     const onRemove = useCallback(
         async (id) => {
@@ -229,8 +249,8 @@ const TeamToDoList = () => {
 
             console.log("진행 중이다.");
             try {
-                const response = await axios.post(
-                    `/api/todo/${toDoId}/status`,
+                const response = await axios.put(
+                    `/api/studies/{studyId}/to-dos/${toDoId}/{assigneeId}`,
                     null,
                     {
                         params: {status: !todo_status},
@@ -296,6 +316,9 @@ const TeamToDoList = () => {
         // setMember(Member);
     }, [todoswithAssignee, Member, onUpdate]);
 
+    useEffect(() => {
+        console.log('Updated selectedAssigneeIds:', selectedAssigneeIds);
+    }, [selectedAssigneeIds]);
 
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -322,33 +345,33 @@ const TeamToDoList = () => {
         Month = format(currentMonth, "M")
     }, [currentMonth]);
 
-    useEffect(() => {
-        axios.get(`/api/todo/${studyIdAsNumber}`, {
-            params: {
-                year: Year, month: Month,
-            }, headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }).then((response) => {
-            console.log('스터디별 투두리스트 가져오기 성공:', response.data);
-            const maxId = Math.max(...response.data.map(schedule => schedule.id));
-            nextId.current = maxId + 1;
-            const groupedTodos = {};
-            response.data.forEach((todoItem) => {
-                const dueDate = new Date(todoItem.dueDate).toDateString();
-                if (!groupedTodos[dueDate]) {
-                    groupedTodos[dueDate] = [];
-                }
-                groupedTodos[dueDate].push(todoItem);
-            });
-
-            setTodoswithAssignee((prevTodos) => ({
-                ...prevTodos, ...groupedTodos,
-            }));
-        }).catch((error) => {
-            console.log('스터디별 투두리스트 가져오기 실패:', error);
-        })
-    }, [studyIdAsNumber, currentMonth]);
+    // useEffect(() => {
+    //     axios.get(`/api/studies/${studyIdAsNumber}/to-dos`, {
+    //         params: {
+    //             year: Year, month: Month,
+    //         }, headers: {
+    //             Authorization: `Bearer ${accessToken}`,
+    //         },
+    //     }).then((response) => {
+    //         console.log('스터디별 투두리스트 가져오기 성공:', response.data);
+    //         const maxId = Math.max(...response.data.map(schedule => schedule.id));
+    //         nextId.current = maxId + 1;
+    //         const groupedTodos = {};
+    //         response.data.forEach((todoItem) => {
+    //             const dueDate = new Date(todoItem.dueDate).toDateString();
+    //             if (!groupedTodos[dueDate]) {
+    //                 groupedTodos[dueDate] = [];
+    //             }
+    //             groupedTodos[dueDate].push(todoItem);
+    //         });
+    //
+    //         setTodoswithAssignee((prevTodos) => ({
+    //             ...prevTodos, ...groupedTodos,
+    //         }));
+    //     }).catch((error) => {
+    //         console.log('스터디별 투두리스트 가져오기 실패:', error);
+    //     })
+    // }, [studyIdAsNumber, currentMonth]);
 
     useEffect(() => {
         console.log("todoswithAssignee: ", todoswithAssignee);
@@ -394,7 +417,7 @@ const TeamToDoList = () => {
                                 onChange={(e) => handleDateClick(e.target.value)} // 선택된 날짜를 handleDateClick으로 전달
                             />
                         </div>
-                        <div className={"select_assignee"}>
+                        <div className="select_assignee">
                             <p>담당자</p>
                             {Array.isArray(member) && member.length > 0 && member.map((item, index) => {
                                 const isSelected = selectedAssigneeIds.includes(item.memberId); // 선택 여부 확인
