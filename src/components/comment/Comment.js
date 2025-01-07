@@ -11,7 +11,6 @@ const Comment = ({ type }) => {
   const [userNickname, setUserNickname] = useState("");
   const location = useLocation();
   let targetId = location.state;
-  console.log(targetId);
 
   const [comments, setComments] = useState([]);
   const [editingComment, setEditingComment] = useState(null);
@@ -66,7 +65,6 @@ const Comment = ({ type }) => {
 
       setLoading(false);
       setComments(response.data.replies);
-      console.log(response.data.replies);
     } catch (error) {
       console.error("댓글 목록을 불러오는 중 에러 발생:", error);
       throw error;
