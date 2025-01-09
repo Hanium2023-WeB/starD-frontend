@@ -12,141 +12,147 @@ import NoticeInsert from "../../pages/notice/NoticeInsert";
 import Paging from "../../components/repeat_etc/Paging";
 
 const Notice = () => {
-    const navigate = useNavigate();
-    const [posts, setPosts] = useState([]);
-    const [showPostInsert, setShowPostInsert] = useState(false);
-    let accessToken = localStorage.getItem('accessToken');
-    let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
-    const [userIsAdmin, setUserIsAdmin] = useState(false);
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [showPostInsert, setShowPostInsert] = useState(false);
+  let accessToken = localStorage.getItem('accessToken');
+  let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
+  const [userIsAdmin, setUserIsAdmin] = useState(false);
 
-    const location = useLocation();
-    const pageparams = location.state ? location.state.page : 1;
-    const [page, setPage] = useState(pageparams);
-    const [count, setCount] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
-    const insertPage = location.state && location.state.page;
+  const location = useLocation();
+  const pageparams = location.state ? location.state.page : 1;
+  const [page, setPage] = useState(pageparams);
+  const [count, setCount] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const insertPage = location.state && location.state.page;
 
-    const handleMoveToStudyInsert = (e) => {
-        if (accessToken && isLoggedInUserId) {
-            e.preventDefault();
-            //setShowPostInsert(!showPostInsert);
-        } else {
-            alert("로그인 해주세요");
-            navigate("/login");
-        }
-    };
+  const handleMoveToStudyInsert = (e) => {
+    if (accessToken && isLoggedInUserId) {
+      e.preventDefault();
+      //setShowPostInsert(!showPostInsert);
+    } else {
+      alert("로그인 해주세요");
+      navigate("/login");
+    }
+  };
 
-    useEffect(() => {
-        axios
-            .get("/api/members/auth", {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-            .then((res) => {
-                const auth = res.data;
-                console.log("auth :", auth);
+  useEffect(() => {
+    axios
+    .get("/api/members/auth", {
+      withCredentials: true,
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+    .then((res) => {
+      const auth = res.data;
+      console.log("auth :", auth);
 
-                if (auth === "USER") {
-                    setUserIsAdmin(false);
-                } else if (auth === "ADMIN") {
-                    setUserIsAdmin(true);
-                }
-            })
-            .catch((error) => {
-                console.error("권한 조회 실패:", error);
-                setUserIsAdmin(false);
-            });
-    }, [accessToken]);
+      if (auth === "USER") {
+        setUserIsAdmin(false);
+      } else if (auth === "ADMIN") {
+        setUserIsAdmin(true);
+      }
+    })
+    .catch((error) => {
+      console.error("권한 조회 실패:", error);
+      setUserIsAdmin(false);
+    });
+  }, [accessToken]);
 
-    const fetchNotices = (pageNumber) => {
-        axios.get("/api/notices", {
-            params: {
-                page: pageNumber,
-            },
-        })
-            .then((res) => {
-                setPosts(res.data.posts);
-                setItemsPerPage(res.data.currentPage);
-                setCount(res.data.totalPages);
-            }).catch((error) => {
-            console.error("데이터 가져오기 실패:", error);
-        });
-    };
+  const fetchNotices = (pageNumber) => {
+    axios.get("/api/notices", {
+      params: {
+        page: pageNumber,
+      },
+    })
+    .then((res) => {
+      setPosts(res.data.posts);
+      setItemsPerPage(res.data.currentPage);
+      setCount(res.data.totalPages);
+    }).catch((error) => {
+      console.error("데이터 가져오기 실패:", error);
+    });
+  };
 
-    useEffect(() => {
-        fetchNotices(page);
-    }, [page]);
+  useEffect(() => {
+    fetchNotices(page);
+  }, [page]);
 
-    useEffect(() => {
-        axios.get("/api/notices", {
-            params: {
-                page: 1,
-            }
-        }).then((res) => {
-            setPosts(res.data.posts);
-            setItemsPerPage(res.data.currentPage);
-            setCount(res.data.totalPages);
-        })
-            .catch((error) => {
-                console.error("데이터 가져오기 실패:", error);
-            });
-    }, [insertPage]);
+  useEffect(() => {
+    axios.get("/api/notices", {
+      params: {
+        page: 1,
+      }
+    }).then((res) => {
+      setPosts(res.data.posts);
+      setItemsPerPage(res.data.currentPage);
+      setCount(res.data.totalPages);
+    })
+    .catch((error) => {
+      console.error("데이터 가져오기 실패:", error);
+    });
+  }, [insertPage]);
 
-    const handlePageChange = (selectedPage) => {
-        setPage(selectedPage);
-        navigate(`/notice/page=${selectedPage}`);
-    };
+  const handlePageChange = (selectedPage) => {
+    setPage(selectedPage);
+    navigate(`/notice/page=${selectedPage}`);
+  };
 
-    return (
-        <div className={"main_wrap"} id={"community"}>
-            <Header showSideCenter={true}/>
-            <div className="community_container">
-                <p id={"entry-path"}> 홈 > 공지사항 </p>
-                <Backarrow subname={"NOTICE LIST"}/>
-                {showPostInsert && (
-                    <NoticeInsert/>
-                )}
-                {!showPostInsert && (
-                    <div>
-                        <div className="community_header">
-                            <SearchBar/>
-                            {userIsAdmin ? (
-                                <Link to={`/admin/insert-notice`}
-                                      style={{
-                                          textDecoration: "none",
-                                          color: "inherit",
-                                      }}>
-                                    <button className="new_post_btn">
-                                        새 글 작성
-                                    </button>
-                                </Link>
-                            ) : null}
+  return (
+      <div className={"main_wrap"} id={"community"}>
+        <Header showSideCenter={true}/>
+        <div className="community_container">
+          <p id={"entry-path"}> 홈 > 공지사항 </p>
+          <Backarrow subname={"NOTICE LIST"}/>
+          {showPostInsert && (
+              <NoticeInsert/>
+          )}
+          {!showPostInsert && (
+              <div>
+                <div className="community_header">
+                  <SearchBar/>
+                  {userIsAdmin ? (
+                      <Link to={`/admin/insert-notice`}
+                            style={{
+                              textDecoration: "none",
+                              color: "inherit",
+                            }}>
+                        <button className="new_post_btn">
+                          새 글 작성
+                        </button>
+                      </Link>
+                  ) : null}
 
-                        </div>
-                        <div className="community">
-                            <div>
-                                <table className="notice_table" key={posts.postId}>
-                                    <th>제목</th>
-                                    <th>닉네임</th>
-                                    <th>날짜</th>
-                                    <th>조회수</th>
-                                    {posts.map((d, index) => (
-                                        <NoticeListItem setPosts={setPosts} posts={d} d={d}
-                                                        index={index} key={d.postId}/>
-                                    ))}
-                                </table>
-                            </div>
-                        </div>
-                        <div className={"paging"}>
-                            <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                                    handlePageChange={handlePageChange}/>
-                        </div>
-                    </div>
-                )}
-            </div>
+                </div>
+                <div className="community">
+                  <div>
+                    <table className="notice_table"
+                           key={posts.postId}>
+                      <th>제목</th>
+                      <th>닉네임</th>
+                      <th>날짜</th>
+                      <th>조회수</th>
+                      {posts.map((d, index) => (
+                          <NoticeListItem setPosts={setPosts}
+                                          posts={d} d={d}
+                                          index={index}
+                                          key={d.postId}/>
+                      ))}
+                    </table>
+                  </div>
+                </div>
+                {posts.length !== 0 &&
+                    <div className="pagingDiv">
+                      <Paging page={page} totalItemCount={count}
+                              itemsPerPage={10}
+                              handlePageChange={handlePageChange}/>
+                    </div>}
+
+              </div>
+          )}
         </div>
-    );
+      </div>
+  );
 }
 export default Notice;

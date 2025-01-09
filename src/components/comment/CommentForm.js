@@ -1,5 +1,6 @@
 import {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import toast from "react-hot-toast";
 
 const CommentForm = ({addComment}) => {
     const navigate = useNavigate();
@@ -12,8 +13,7 @@ const CommentForm = ({addComment}) => {
 
     const handleFocus = useCallback(() => {
         if (!isLoggedInUserId) {
-            alert("로그인 후 이용 가능합니다.");
-            navigate("/login");
+            toast.error("로그인 후 이용 가능합니다.");
         }
     }, [isLoggedInUserId, navigate]);
 
@@ -35,13 +35,14 @@ const CommentForm = ({addComment}) => {
         <form onSubmit={handleSubmit}>
             <input
                 type="text"
-                placeholder={isLoggedInUserId ? "댓글을 입력해주세요." : "로그인 후 댓글을 입력해주세요."}
+                placeholder={accessToken ? "댓글을 입력해주세요." : "로그인 후 댓글을 입력해주세요."}
                 className="comment_input"
                 value={value}
                 onChange={onChange}
                 onFocus={handleFocus}
+                disabled={!accessToken}
             />
-            <input type="submit" value="등록" className="comment_submit_btn" />
+            <input type="submit" value="등록" className="comment_submit_btn" disabled={!accessToken} />
         </form>
     )
 }

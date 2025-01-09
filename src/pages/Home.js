@@ -18,9 +18,10 @@ import Chatting from "../images/Chatting.png";
 import community from "../images/community.png";
 import communityfield from "../images/communityfield.png";
 import communityscrap from "../images/communityscrap.png";
-import axios from "axios";
 import MemoizedLink from "../MemoizedLink";
 import axiosInstance from "../api/axiosInstance";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const CenteredDiv = styled.div`
   display: flex;
@@ -64,19 +65,22 @@ const Home = () => {
       console.log(error);
     });
 
-    axios.get(`/api/todo/all`, {
-      params: {
-        year: Year, month: Month,
-      }, headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }).then((response) => {
-      console.log('전체 투두리스트 가져오기 성공:', response.data);
+    if (accessToken) {
+      axios.get(`/api/todo/all`, {
+        params: {
+          year: Year, month: Month,
+        }, headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((response) => {
+        console.log('전체 투두리스트 가져오기 성공:', response.data);
 
-      setParsedTodos((prevTodos) => (response.data))
-    }).catch((error) => {
-      console.log('전체 투두리스트 가져오기 실패:', error);
-    })
+        setParsedTodos((prevTodos) => (response.data))
+      }).catch((error) => {
+        console.log('전체 투두리스트 가져오기 실패:', error);
+      })
+    }
+
   }, []);
 
   const getTodoItemClassName = (checked) => {
@@ -110,9 +114,64 @@ const Home = () => {
 
   };
 
+  const handleTestToast = () => {
+    toast((t) => (
+        <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderRadius: "8px",
+              // fontWeight: "bold",
+              fontSize: "15px"
+            }}
+        >
+            <span>
+              테스트 알림! : <b>이건 테스트입니다!</b>
+            </span>
+          <button
+              onClick={() => toast.dismiss(t.id)}
+              style={{
+                fontSize: "15px",
+                marginLeft: "10px",
+                backgroundColor: "#BBDF9F",
+                color: "white",
+                fontWeight: "bold",
+                borderRadius: "5px",
+                padding: "2px 8px",
+                border: "none",
+                cursor: "pointer",
+                transition: "background-color 0.3s",
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#A7D487")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#BBDF9F")}
+          >
+            close
+          </button>
+        </div>
+    ), {
+      position: "top-right", // 여기에서 위치를 설정할 수 있습니다.
+    });
+  };
+
   return (
+
       <div className="main_wrap">
+
+        {/* 알림 테스트 버튼 */}
+        {/*  <div*/}
+        {/*      className="flex flex-col items-center justify-center min-h-screen bg-gray-100">*/}
+        {/*    /!* 테스트 버튼 *!/*/}
+        {/*    <button*/}
+        {/*        onClick={handleTestToast}*/}
+        {/*        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"*/}
+        {/*    >*/}
+        {/*      테스트 알림 띄우기*/}
+        {/*    </button>*/}
+        {/*</div>*/}
+
         <Header showSideCenter={true}/>
+
         <div className="main_content_wrap">
           <div className="subground">
             <CenteredDiv>
@@ -147,8 +206,8 @@ const Home = () => {
                 <div className="dashboard">
                   <div className="user_wrap">
                     <div className="dashboard_tag_wrap">
-                      <p id={"tag-title"}>STAR_D의 요즘 뜨는 분야</p>
-                      <p id={"tag-subtitle"}>TOP 5</p>
+                      <p id={"tag-title"}>🎯 인기 분야 TOP 5</p>
+                      {/*<p id={"tag-subtitle"}>TOP 5</p>*/}
                       <div className="dashboard_Tags">
                         {top5Field.map((item, index) => {
                           return (
@@ -170,14 +229,14 @@ const Home = () => {
                   </div>
                   <div className="dashboard_todo">
 
-                <span id="today">{`${Year}. ${Month}. ${Dates} / 오늘의 할 일`}
+                <span id="today">📋 {`${Year}. ${Month}. ${Dates} / 오늘의 할 일`}
                   <MemoizedLink to={"/ToDoList"}
                                 style={{
                                   textDecoration: "none",
                                   color: "inherit",
                                 }}> <button
-                      id="todo_more">{`ToDoList Page >>`}</button></MemoizedLink></span>
-                    <hr/>
+                      id="todo_more">{`ToDo Page >>`}</button></MemoizedLink></span>
+                    <hr className="todo_hr" />
                     {filteredToDo.length === 0 ? (
                         <div className="empty_today_todo">
                                           <span>

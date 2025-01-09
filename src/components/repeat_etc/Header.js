@@ -15,8 +15,8 @@ const Header = ({showSideCenter}) => {
     const accessToken = localStorage.getItem("accessToken");
     const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
 
-        console.log("accessToken:", accessToken); // 값 확인
-        console.log("isLoggedInUserId:", isLoggedInUserId); // 값 확인
+    console.log("accessToken:", accessToken); // 값 확인
+    console.log("isLoggedInUserId:", isLoggedInUserId); // 값 확인
 
     const currentPath = window.location.pathname; // 현재 경로
 
@@ -31,53 +31,54 @@ const Header = ({showSideCenter}) => {
     ];
 
     const dynamicPublicPaths = [
-            /^\/study\/page=\d+$/,
-            /^\/study\/detail\/\d+$/,
-            /^\/community\/page=\d+$/,
-            /^\/community\/post\/\d+$/,
-            /^\/community\/search(\?.*)?$/,
-            /^\/notice\/page=\d+$/,
-            /^\/notice\/detail\/\d+$/,
-            /^\/qna\/page=\d+$/,
-            /^\/qna\/detail\/\d+$/,
-            /^\/qna\/search(\?.*)?$/,
-            /^\/login$/
+      /^\/study\/page=\d+$/,
+      /^\/study\/detail\/\d+$/,
+      /^\/community\/page=\d+$/,
+      /^\/community\/post\/\d+$/,
+      /^\/community\/search(\?.*)?$/,
+      /^\/notice\/page=\d+$/,
+      /^\/notice\/detail\/\d+$/,
+      /^\/qna\/page=\d+$/,
+      /^\/qna\/detail\/\d+$/,
+      /^\/qna\/search(\?.*)?$/,
+      /^\/faq\/detail\/\d+$/,
+      /^\/login$/
     ];
 
     const isPublicPath = () => {
-            const currentPath = window.location.pathname;
-            const accessToken = localStorage.getItem("accessToken");
-            const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
+      const currentPath = window.location.pathname;
+      const accessToken = localStorage.getItem("accessToken");
+      const isLoggedInUserId = localStorage.getItem("isLoggedInUserId");
 
-            console.log("accessToken:", accessToken);
-            console.log("isLoggedInUserId:", isLoggedInUserId);
+      console.log("accessToken:", accessToken);
+      console.log("isLoggedInUserId:", isLoggedInUserId);
 
-            // 로그인 상태를 먼저 확인
-            if (!accessToken || !isLoggedInUserId) {
-                console.log("Not logged in. Checking if path is public...");
+      // 로그인 상태를 먼저 확인
+      if (!accessToken || !isLoggedInUserId) {
+        console.log("Not logged in. Checking if path is public...");
 
-                // 공개 경로가 맞는지 확인
-                if (publicPaths.includes(currentPath)) {
-                    console.log(`Path ${currentPath} is in publicPaths.`);
-                    return true;
-                }
+        // 공개 경로가 맞는지 확인
+        if (publicPaths.includes(currentPath)) {
+          console.log(`Path ${currentPath} is in publicPaths.`);
+          return true;
+        }
 
-                // 동적 경로 매칭 확인
-                const matchesDynamicPath = dynamicPublicPaths.some((regex) => regex.test(currentPath));
-                if (matchesDynamicPath) {
-                    console.log(`Path ${currentPath} matches a dynamic public path.`);
-                    return true;
-                } else {
-                    console.log(`Path ${currentPath} does not match any dynamic public path.`);
-                    return false;  // 로그인하지 않은 경우 비공개 경로로 리디렉션
-                }
-            } else {
-                console.log("User is logged in, allowing access.");
-                return true; // 로그인된 경우 모든 경로에 접근 허용
+        // 동적 경로 매칭 확인
+        const matchesDynamicPath = dynamicPublicPaths.some(
+            (regex) => regex.test(currentPath));
+        if (matchesDynamicPath) {
+          console.log(`Path ${currentPath} matches a dynamic public path.`);
+          return true;
+        } else {
+          console.log(
+              `Path ${currentPath} does not match any dynamic public path.`);
+          return false;  // 로그인하지 않은 경우 비공개 경로로 리디렉션
+        }
+      } else {
+        console.log("User is logged in, allowing access.");
+        return true; // 로그인된 경우 모든 경로에 접근 허용
       }
     };
-
-
 
     const checkTokenValidity = async () => {
       try {
@@ -116,20 +117,18 @@ const Header = ({showSideCenter}) => {
       navigate("/login");
     };
 
-        if (!accessToken || !isLoggedInUserId) {
-            console.log("Not logged in. Checking if path is public...");
-            if (!isPublicPath()) {
-                console.log("Path is not public, triggering logout");
-                handleLogout(); // 비공개 경로 접근 시 로그인 요구
+    if (!accessToken || !isLoggedInUserId) {
+      console.log("Not logged in. Checking if path is public...");
+      if (!isPublicPath()) {
+        console.log("Path is not public, triggering logout");
+        handleLogout(); // 비공개 경로 접근 시 로그인 요구
       }
       return;
-        } else {
+    } else {
       checkTokenValidity();
       fetchUserAuthority();
     }
   }, [navigate]);
-
-
 
   const renderSideLeft = () => (
       <div className="headerbar" title={"홈으로 가기"}>

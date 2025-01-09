@@ -16,11 +16,11 @@ function calculateDateDifference(startDate, endDate) {
 
 function checkRecruitStatus(recruitStatus, proressStatus) {
     if (recruitStatus == "RECRUITING")
-        return "모집 중";
+        return "👐🏻 모집 중";
     else if (proressStatus == "DISCONTINUE")
-        return "중단된 스터디";
+        return "⛔️ 중단된 스터디";
     else
-        return "모집 완료";
+        return "✅ 모집 완료";
 }
 
 function checkProgressStatus(recruitStatus, proressStatus){
@@ -33,7 +33,7 @@ function checkProgressStatus(recruitStatus, proressStatus){
 }
 
 const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextTeamBlog, goEvaluationPage}) => {
-    console.log(studies);
+    // console.log(studies);
     const imgUrl = studies.imgUrl ? studies.imgUrl : default_profile_img;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
     const recruitStatus = isParticipateStudy ? checkProgressStatus(studies.progressType) : checkRecruitStatus(studies.recruitmentType, studies.progressType);
@@ -47,11 +47,11 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
     }
 
     return (
-        <div className="list" key={studies.id}>
+        <div className="list studyListHover" key={studies.id}>
             <div className="list_header">
                 <div className="list_sub_header">
                     <div className="list_day">
-                        {daysDifference}일간의 스터디
+                        ✏️ {daysDifference}일간의 스터디
                     </div>
                     <div className="list_status">{recruitStatus}</div>
                 </div>
@@ -91,6 +91,7 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
                         ) : null}
                     </div>
                 )}
+
             </div>
         </div>
     )

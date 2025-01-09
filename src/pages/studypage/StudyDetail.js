@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import {useParams, Link, useNavigate} from "react-router-dom";
 import Header from "../../components/repeat_etc/Header";
 import "../../css/study_css/StudyDetail.css";
@@ -8,6 +8,7 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import Comment from "../../components/comment/Comment";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const StudyDetail = ({sideheader}) => {
 
@@ -63,7 +64,7 @@ const StudyDetail = ({sideheader}) => {
           'Authorization': `Bearer ${accessToken}`
         }
       }).then((res) => {
-        if (res.data !== null) {
+        if (typeof (res.data) !== "string") {
           setIsApply(true);
           setApplyReason(res.data.introduce);
         }
@@ -95,6 +96,15 @@ const StudyDetail = ({sideheader}) => {
       })
     }
   }, [id]);
+
+  const handleApply = () => {
+    if (!accessToken) {
+      return toast.error("로그인 후 이용 가능합니다.");
+    }
+
+    navigate(`/study/apply/${studyItem.studyId}`);
+
+  };
 
   return (
       <div>
@@ -131,15 +141,17 @@ const StudyDetail = ({sideheader}) => {
                   {isApply === false && isRecruiter === false && isCompleted
                       === false && (
                           <div className="btn">
-                            <Link
-                                to={`/study/apply/${studyItem.studyId}`}
-                                style={{
-                                  textDecoration: "none",
-                                  color: "inherit",
-                                }}
-                            >
-                              <button className="apply_btn">참여하기</button>
-                            </Link>
+                            {/*<Link*/}
+                            {/*    to={`/study/apply/${studyItem.studyId}`}*/}
+                            {/*    style={{*/}
+                            {/*      textDecoration: "none",*/}
+                            {/*      color: "inherit",*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            <button onClick={handleApply}
+                                    className="apply_btn">참여하기
+                            </button>
+                            {/*</Link>*/}
                           </div>
                       )}
                   {isApply === false && isRecruiter === true && (
