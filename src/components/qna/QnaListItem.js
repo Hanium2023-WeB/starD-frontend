@@ -19,7 +19,7 @@ const QnaListItem = ({posts, setPosts}) => {
             <td className="community_category">{posts.postType}</td>
             {posts.postType === "FAQ" ? (
                 <Link
-                    to={`/faqdetail/${posts.postId}`}
+                    to={`/faq/detail/${posts.postId}`}
                     state={{ postType: posts.postType }} // state 전달
                     style={{
                         textDecoration: "none",

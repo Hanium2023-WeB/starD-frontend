@@ -146,13 +146,15 @@ const Study = () => {
                 </div>
             )}
             {studies.length === 0 && !loading && <h3>스터디 리스트가 비었습니다.</h3>}
+            <br/>
           </div>
         </div>
-
-        <div className="pagingDiv">
-          <Paging page={page} totalItemCount={count} itemsPerPage={9}
-                  handlePageChange={handlePageChange}/>
-        </div>
+        {studies.length !== 0 &&
+            <div className="pagingDiv">
+              <Paging page={page} totalItemCount={count} itemsPerPage={9}
+                      handlePageChange={handlePageChange}/>
+            </div>
+        }
 
       </div>
   );

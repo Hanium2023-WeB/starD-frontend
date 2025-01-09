@@ -3,17 +3,15 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import {Link, useParams, useNavigate} from "react-router-dom";
 import React, {useState, useEffect} from "react";
 import LikeButton from "../../components/repeat_etc/LikeButton";
-import ScrapButton from "../../components/repeat_etc/ScrapButton";
 import axios from "axios";
 import QnaEdit from "../../components/qna/QnaEdit";
 import Comment from "../../components/comment/Comment";
-import Report from "../../components/report/Report";
+import toast from "react-hot-toast";
 
 const FaqDetail = () => {
     const navigate = useNavigate();
 
     const {id} = useParams();
-    console.log("postId : ", id);
 
     const [postItem, setPostItem] = useState(null);
 
@@ -127,8 +125,7 @@ const FaqDetail = () => {
 
     const toggleLike = () => {
         if (!(accessToken && isLoggedInUserId)) {
-            alert("로그인 해주세요");
-            navigate("/login");
+            return toast.error("로그인 후 이용 가능합니다.");
         }
 
         if (likeStates) { // true -> 활성화되어 있는 상태 -> 취소해야 함

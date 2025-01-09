@@ -10,6 +10,7 @@ import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import QnaInsert from "../qna/QnaInsert";
 import Paging from "../../components/repeat_etc/Paging";
+import toast from "react-hot-toast";
 
 const Qna = () => {
     const navigate = useNavigate();
@@ -118,8 +119,7 @@ const Qna = () => {
             setShowQnaInsert(type === "QNA");
             setShowFaqInsert(type === "FAQ");
         } else {
-            alert("로그인 해주세요");
-            navigate("/login");
+            return toast.error("로그인 후 이용 가능합니다.");
         }
     };
 
@@ -138,14 +138,16 @@ const Qna = () => {
                             <SearchBar setIsSearchMode={setIsSearchMode}/>
                             {userIsAdmin ? (
                                 <button
-                                    onClick={(e) => handleMoveToStudyInsert(e, "FAQ")}
+                                    onClick={(e) => handleMoveToStudyInsert(e,
+                                        "FAQ")}
                                     className="new_post_btn"
                                 >
                                     FAQ 작성
                                 </button>
                             ) : (
                                 <button
-                                    onClick={(e) => handleMoveToStudyInsert(e, "QNA")}
+                                    onClick={(e) => handleMoveToStudyInsert(e,
+                                        "QNA")}
                                     className="new_post_btn"
                                 >
                                     QNA 작성
@@ -170,19 +172,17 @@ const Qna = () => {
                                     </tr>
                                 )}
                                 {posts && posts.map((d, index) => (
-                                    <QnaListItem setPosts={setPosts} posts={d} d={d}
+                                    <QnaListItem setPosts={setPosts} posts={d}
+                                                 d={d}
                                                  index={index} key={d.id}/>
                                 ))}
                                 </tbody>
                             </table>
                         </div>
-                        <div className="paging">
-                            <Paging
-                                page={page}
-                                totalItemCount={count}
-                                itemsPerPage={itemsPerPage}
-                                handlePageChange={handlePageChange}
-                            />
+                        <div className="pagingDiv">
+                            <Paging page={page} totalItemCount={count}
+                                    itemsPerPage={10}
+                                    handlePageChange={handlePageChange}/>
                         </div>
                     </div>
                 )}
