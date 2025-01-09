@@ -169,7 +169,8 @@ const TeamToDoList = () => {
         // 조건에 맞지 않으면 제외
         return false;
     });
-//할 일 삭제
+
+    //할 일 삭제
     const onRemove = useCallback((id) => {
         if (!window.confirm("삭제하시겠습니까?")) {
             return;
@@ -193,7 +194,7 @@ const TeamToDoList = () => {
     }, [studyIdAsNumber, accessToken]);
 
 
-//할 일 업데이트
+    //할 일 업데이트
     const onUpdate = useCallback((UpdatedToDo) => {
         console.log("selectedTodo..:", UpdatedToDo);
         onInsertToggle();
@@ -228,77 +229,48 @@ const TeamToDoList = () => {
 
 
     //체크
-    const onToggle = useCallback(async (assignees, toDoId, currentUserTodoIndex, todo_status) => {
+    const onToggle = useCallback((assigneeId, toDoId, currentUserTodoIndex, todo_status) => {
         console.log("id::", toDoId);
-        if (currentUserTodoIndex == -1) {
+        if (currentUserTodoIndex === -1) {
             alert("당신의 할 일이 아닙니다.");
             return;
         } else {
-            console.log("assignees=>", assignees);
+            console.log("assignees=>", assigneeId);
             console.log("currentUserTodoIndex=>", currentUserTodoIndex);
             console.log("todo_status=>", todo_status);
 
-            const loggedInUserId = localStorage.getItem('isLoggedInUserId');
-            console.log("loggedInUserId=>", loggedInUserId);
-
-            console.log("진행 중이다.");
-            try {
-                const response = await axios.put(
-                    `/api/studies/{studyId}/to-dos/${toDoId}/{assigneeId}`,
-                    null,
-                    {
-                        params: {status: !todo_status},
-                        withCredentials: true,
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`
-                        }
+            axios.put(
+                `/api/studies/${studyIdAsNumber}/to-dos/${toDoId}/${assigneeId}`,
+                null,
+                {
+                    params: { status: !todo_status },
+                    withCredentials: true,
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
                     }
-                );
-                if (response.status === 200) {
-                    console.log("체크 성공:", response);
+                }
+            ).then((res) => {
+                if (res.status === 200) {
+                    console.log("체크 성공:", res.data);
 
                     axios.get(`/api/todo/${studyIdAsNumber}`, {
                         params: {
-                            year: Year, month: Month,
-                        }, headers: {
+                            year: Year,
+                            month: Month,
+                        },
+                        headers: {
                             Authorization: `Bearer ${accessToken}`,
                         },
-                    }).then((response) => {
-                        console.log('스터디별 투두리스트 가져오기 성공:', response.data);
-                        const maxId = Math.max(...response.data.map(schedule => schedule.id));
-                        nextId.current = maxId + 1;
-                        const groupedTodos = {};
-                        response.data.forEach((todoItem) => {
-                            const dueDate = new Date(todoItem.dueDate).toDateString();
-                            if (!groupedTodos[dueDate]) {
-                                groupedTodos[dueDate] = [];
-                            }
-                            groupedTodos[dueDate].push(todoItem);
-                        });
-
-                        setTodoswithAssignee((prevTodos) => ({
-                            ...prevTodos, ...groupedTodos,
-                        }));
+                    }).then((res) => {
+                        console.log('스터디별 투두리스트 가져오기 성공:', res.data);
+                        setTodos(res.data); // 받아온 데이터를 setTodos로 설정
                     }).catch((error) => {
                         console.log('스터디별 투두리스트 가져오기 실패:', error);
-                    })
-
-                    setTodoswithAssignee((prevTodos) => {
-                        const updatedTodos = {...prevTodos};
-                        Object.keys(updatedTodos).forEach((dateKey) => {
-                            updatedTodos[dateKey] = updatedTodos[dateKey].map((todo) => todo.id === toDoId ? {
-                                ...todo,
-                                toDoStatus: !todo_status,
-                            } : todo);
-                        });
-                        return updatedTodos;
                     });
-
                 }
-            } catch (error) {
+            }).catch((error) => {
                 console.error("Error:", error);
-            }
-
+            });
         }
     }, []);
 
