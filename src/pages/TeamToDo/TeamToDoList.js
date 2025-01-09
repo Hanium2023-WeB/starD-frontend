@@ -190,46 +190,36 @@ const TeamToDoList = () => {
         }, []);
 
 //할 일 업데이트
-    const onUpdate = useCallback(async (UpdatedToDo) => {
+    const onUpdate = useCallback((UpdatedToDo) => {
         console.log("selectedTodo..:", UpdatedToDo);
         onInsertToggle();
-        const assigneeIds = UpdatedToDo.assignees.map(assignee => assignee.id);
-        const assigneeStr = assigneeIds.toString();
+        const newAssignees = UpdatedToDo.assignees.map(assignee => assignee.nickname);
+        console.log(newAssignees);
 
         const updateToDo = {
-            task: UpdatedToDo.task, dueDate: UpdatedToDo.dueDate,
+            task: UpdatedToDo.task,
+            dueDate: UpdatedToDo.dueDate,
+            assignees: newAssignees,
         };
-        const toDoId = UpdatedToDo.id;
+        const toDoId = UpdatedToDo.toDoId;
 
-        const postDataResponse = await axios.put(`/api/todo/${toDoId}`, updateToDo, {
-            params: {
-                assigneeStr: assigneeStr,
-            },
-            withCredentials: true, headers: {
+        axios.put(`/api/studies/${studyIdAsNumber}/to-dos/${toDoId}`, updateToDo, {
+            withCredentials: true,
+            headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
-        });
-
-        console.log("전송 성공:", postDataResponse.data);
-
-        setTodoswithAssignee((prevTodos) => {
-
-            const updatedTodos = {
-                ...prevTodos,
-                [dateKey]: prevTodos[dateKey].map((todo) => {
-                    if (todo.id === UpdatedToDo.id) {
-                        return {
-                            ...todo,
-                            task: UpdatedToDo.task,
-                            assignees: postDataResponse.data.assignees,
-                        };
-                    } else {
-                        return todo;
-                    }
-                }),
-            };
-            return updatedTodos;
-        });
+        })
+            .then((res) => {
+                console.log("전송 성공:", res.data);
+                setTodos((prevTodos) =>
+                    prevTodos.map(todo =>
+                        todo.toDoId === toDoId ? res.data : todo
+                    )
+                );
+            })
+            .catch((error) => {
+                console.error("업데이트 실패:", error);
+            });
     }, [studyMems, selectedDate, studies, todoswithAssignee]);
 
 
@@ -466,7 +456,7 @@ const TeamToDoList = () => {
                                 }
                             }))}
                         </ul>
-                        {insertToggle && (<TeamToDoEdit selectedTodo={selectedTodo} onUpdate={onUpdate} Member={Member}
+                        {insertToggle && (<TeamToDoEdit selectedTodo={selectedTodo} onUpdate={onUpdate} Member={member}
                                                         Assignees={Assignees} onClose={() => {
                             setInsertToggle((prev) => !prev);
                         }}/>)}
