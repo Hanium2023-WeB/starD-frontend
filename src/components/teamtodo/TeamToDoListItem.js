@@ -22,9 +22,11 @@ const TeamToDoListItem = ({
     const [showDetails, setShowDetails] = useState(false); // 토글 상태를 관리하는 상태값
     console.log(todo);
     console.log(todos);
+    // console.log(todos);
     const toggleDetails = () => setShowDetails(!showDetails); // 토글 버튼 클릭 시 상태 변경
 
-    const Assignee = todo.assignees.map((item) => item.member.nickname);
+    const Assignee = todo.assignees.map((item) => item.nickname);
+    // const Assignee = null;
 
     useEffect(() => {
         const allChecked = todos.every((todo) => todo.toDoStatus === true);
@@ -43,7 +45,7 @@ const TeamToDoListItem = ({
     //
     //
     const loggedInUserId = localStorage.getItem('isLoggedInUserId');
-    // const currentUserTodoIndex = todos.findIndex(todo => todo.member.id === loggedInUserId);
+    const currentUserTodoIndex = todos.findIndex(todo => todo.nickname === loggedInUserId);
     //
     // 만약 현재 로그인한 사용자의 할 일이 존재한다면 해당 할 일의 상태를 전달합니다.
     // const currentUserTodoStatus = currentUserTodoIndex !== -1 ? todos[currentUserTodoIndex].toDoStatus : false;
@@ -67,7 +69,7 @@ const TeamToDoListItem = ({
     };
 
     return (
-        <li key={todo.id} className="TodoListItem">
+        <li key={todo.toDoId} className="TodoListItem">
             <div className="TodoHeader">
                 {/* 토글 버튼 왼쪽에 배치 */}
                 <TbTriangleInvertedFilled onClick={toggleDetails} style={{cursor:"pointer"}}/>
@@ -87,7 +89,7 @@ const TeamToDoListItem = ({
                 }}>
                     <FaEdit />
                 </div>
-                <div className="Remove" onClick={() => onRemove(todo.id)}>
+                <div className="Remove" onClick={() => onRemove(todo.toDoId)}>
                     <FaTrashAlt />
                 </div>
             </div>
@@ -102,8 +104,8 @@ const TeamToDoListItem = ({
                                 className={cn('checkbox', { checked: todos[index].toDoStatus })}
                                 onClick={() => {
                                     // 현재 사용자가 담당자인 경우에만 체크를 토글
-                                    if (todo.assignees[index].member.id === loggedInUserId) {
-                                        onToggle(assignee, todo.id, todos[index].toDoStatus);
+                                    if (todo.assignees[index].memberId === loggedInUserId) {
+                                        onToggle(assignee.assigneeId, todo.id, currentUserTodoIndex, todos[index].toDoStatus);
                                     } else {
                                         // 체크가 불가능함을 알리는 메시지를 표시할 수 있습니다.
                                         alert("본인만 체크할 수 있습니다.");

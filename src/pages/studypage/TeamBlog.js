@@ -45,7 +45,7 @@ const TeamBlog = () => {
         return checked ? "checked" : "unchecked";
     };
     const ShowAllToDo = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamToDoList`,
+        navigate(`/teamblog/${studyIdAsNumber}/todo-list`,
             {
                 state: {
                     studyIdAsNumber: studyIdAsNumber,

@@ -65,7 +65,6 @@ import {EventSourceProvider} from "./pages/notification/EventSourceContext";
 import Subscribe from "./pages/notification/Subscribe";
 
 function App() {
-
   return (
       <EventSourceProvider>
         <BrowserRouter>
