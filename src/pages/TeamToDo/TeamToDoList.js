@@ -170,24 +170,28 @@ const TeamToDoList = () => {
         return false;
     });
 //할 일 삭제
-    const onRemove = useCallback(
-        async (id) => {
-            alert("삭제하시겠습니까?");
+    const onRemove = useCallback((id) => {
+        if (!window.confirm("삭제하시겠습니까?")) {
+            return;
+        }
 
-            const deleteDataResponse = await axios.delete(`/api/todo/${id}`, {
-                withCredentials: true, headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+        axios.delete(`/api/studies/${studyIdAsNumber}/to-dos/${id}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then((response) => {
+                console.log("삭제 성공:", response.data);
+
+                // 응답 데이터를 기반으로 todos 업데이트
+                setTodos((prevTodos) => prevTodos.filter((todo) => todo.toDoId !== id));
+            })
+            .catch((error) => {
+                console.error("삭제 실패:", error);
             });
-            console.log("삭제 성공:", deleteDataResponse.data);
-            setTodoswithAssignee((prevTodos) => {
-                const updatedTodos = {...prevTodos};
-                Object.keys(updatedTodos).forEach((dateKey) => {
-                    updatedTodos[dateKey] = updatedTodos[dateKey].filter((todo) => todo.id !== id);
-                });
-                return updatedTodos;
-            });
-        }, []);
+    }, [studyIdAsNumber, accessToken]);
+
 
 //할 일 업데이트
     const onUpdate = useCallback((UpdatedToDo) => {
