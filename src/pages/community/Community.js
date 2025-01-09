@@ -9,6 +9,7 @@ import PostListItem from "../../components/community/PostListItem";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import Paging from "../../components/repeat_etc/Paging";
+import toast from "react-hot-toast";
 
 const Community = () => {
     const navigate = useNavigate();
@@ -34,8 +35,7 @@ const Community = () => {
             e.preventDefault();
             setShowPostInsert(!showPostInsert);
         } else {
-            alert("로그인 해주세요");
-            navigate("/login");
+            return toast.error("로그인 후 이용 가능합니다.");
         }
     };
 
@@ -163,15 +163,17 @@ const Community = () => {
                                 </table>
                                 {posts.length === 0 && (
                                     <h4 style={{textAlign:"center"}}>검색 결과가 없습니다.</h4>
+
                                 )}
+                                <br/>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
-            {!showPostInsert && (
-                <div className={"paging"}>
-                    <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
+            {posts.length !== 0 && (
+                <div className="pagingDiv">
+                    <Paging page={page} totalItemCount={count} itemsPerPage={10}
                             handlePageChange={handlePageChange}/>
                 </div>
             )}

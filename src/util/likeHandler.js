@@ -1,9 +1,9 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const toggleLikeStatus = async (post, accessToken, isLoggedInUserId, onSuccess, onError) => {
     if (!(accessToken && isLoggedInUserId)) {
-        alert("로그인 해주세요");
-        return;
+        return toast.error("로그인 후 이용 가능합니다.");
     }
 
     const postId = post.postId || post.studyPostId;

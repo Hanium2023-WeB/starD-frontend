@@ -11,6 +11,7 @@ import Report from "../../components/report/Report";
 import ImageComponent from "../../components/image/imageComponent";
 import default_profile_img from "../../images/default_profile_img.png";
 import {toggleLikeStatus} from "../../util/likeHandler";
+import toast from "react-hot-toast";
 
 const PostDetail = () => {
     const navigate = useNavigate();
@@ -150,8 +151,7 @@ const PostDetail = () => {
             setReportPostId(postId);
             setShowReportModal(true);
         } else {
-            alert("로그인 해주세요");
-            navigate("/login");
+            return toast.error("로그인 후 이용 가능합니다.");
         }
     };
 

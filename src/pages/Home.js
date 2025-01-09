@@ -206,8 +206,8 @@ const Home = () => {
                 <div className="dashboard">
                   <div className="user_wrap">
                     <div className="dashboard_tag_wrap">
-                      <p id={"tag-title"}>STAR_D의 요즘 뜨는 분야</p>
-                      <p id={"tag-subtitle"}>TOP 5</p>
+                      <p id={"tag-title"}>🎯 인기 분야 TOP 5</p>
+                      {/*<p id={"tag-subtitle"}>TOP 5</p>*/}
                       <div className="dashboard_Tags">
                         {top5Field.map((item, index) => {
                           return (
@@ -229,14 +229,14 @@ const Home = () => {
                   </div>
                   <div className="dashboard_todo">
 
-                <span id="today">{`${Year}. ${Month}. ${Dates} / 오늘의 할 일`}
+                <span id="today">📋 {`${Year}. ${Month}. ${Dates} / 오늘의 할 일`}
                   <MemoizedLink to={"/ToDoList"}
                                 style={{
                                   textDecoration: "none",
                                   color: "inherit",
                                 }}> <button
-                      id="todo_more">{`ToDoList Page >>`}</button></MemoizedLink></span>
-                    <hr/>
+                      id="todo_more">{`ToDo Page >>`}</button></MemoizedLink></span>
+                    <hr className="todo_hr" />
                     {filteredToDo.length === 0 ? (
                         <div className="empty_today_todo">
                                           <span>

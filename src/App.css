@@ -318,7 +318,14 @@ input {
 .user_wrap {
   width: 17.5%;
   height: 105%;
-  border: 1px solid #0d0d2a;
+  /*border: 1px solid #0d0d2a;*/
+  /*background-color: #fffef5;*/
+  /*background-color: #f9fce9;*/
+  /*background-image: linear-gradient(to top, #d4ecd6 0%, #deecd4 1%, #eff3e7 100%);*/
+  /*background-color: #b5c3ad;*/
+  box-shadow: 5px 5px rgba(111, 123, 124, 0.15);
+  background-color: #cbefcc;
+  border-radius: 20px;
   margin-left: 10px;
   margin-top: 20px;
   font-family: 'Pretendard-Regular';
@@ -395,11 +402,16 @@ input {
   width: 30%;
   height: 100%;
   font-size: 20px;
-  border: 1px solid #0d0d2a;
+  /*background-color: #ebfad8;*/
+  /*background-color: #fcffeb;*/
+  /*background-color: #fefff2;*/
+  border-radius: 20px;
+  background-color: #faf9b9;
   padding: 10px;
   margin-left: 10px;
   margin-top: 20px;
   font-family: 'Pretendard-Regular';
+  box-shadow: 5px 5px rgba(111, 123, 124, 0.15);
 }
 
 .dashboard_todo #today {
@@ -410,20 +422,30 @@ input {
   font-weight: bold;
 }
 
+.todo_hr {
+  border: 1px solid #99A98F;
+}
+
 button#todo_more {
   border-style: none;
-  color: black;
-  background-color: #F6FFDE;
+  color: white;
+  /*background-color: #F6FFDE;*/
   cursor: pointer;
+  background-color: #d6d8c5;
+  font-weight: bold;
+  border-radius: 20px;
 }
 
 .dashboard_detail {
   width: 45%;
   height: 105%;
-  border: 1px solid #0d0d2a;
+  /*border: 1px solid #0d0d2a;*/
+  border-radius: 20px;
   margin-left: 10px;
   margin-top: 20px;
   font-family: 'Pretendard-Regular';
+  background-color: #ddead8;
+  box-shadow: 5px 5px rgba(111, 123, 124, 0.15);
 
 }
 
