@@ -145,7 +145,16 @@ const Study = () => {
                   </div>
                 </div>
             )}
-            {studies.length === 0 && !loading && <h3>스터디 리스트가 비었습니다.</h3>}
+            {studies.length === 0 && !loading && (
+                <h3>
+                  {isOnlyRecruting
+                      ? "모집중인 스터디가 없습니다." // 모집중 필터 적용 상태
+                      : location.search || filter !== "ALL"
+                          ? "일치하는 스터디가 없습니다." // 검색 상태
+                          : "개설된 스터디가 없습니다." // 일반 상태
+                  }
+                </h3>
+            )}
             <br/>
           </div>
         </div>

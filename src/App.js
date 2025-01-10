@@ -143,7 +143,7 @@ function App() {
                 <Route path="/study/apply-list/:id" element={
                   <StudyApplyList/>}/> {/* List of study applications */}
                 <Route path="/study/search"
-                       element={<SearchResult/>}/> {/* Study search results */}
+                       element={<Study/>}/> {/* Study search results */}
 
                 {/* TeamBlog Nested Routes */}
                 <Route path="/teamblog/:id/*" element={
