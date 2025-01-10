@@ -252,6 +252,10 @@ nav {
   border-radius: 3%;
   font-family: 'Pretendard-Regular';
 }
+#sub optgroup{
+  font-size:10px;
+  color:#99a98f;
+}
 
 input {
   width: 500px;

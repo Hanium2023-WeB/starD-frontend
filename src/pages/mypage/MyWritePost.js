@@ -3,14 +3,10 @@ import React, {useEffect, useRef, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import "../../css/community_css/Community.css";
-import SearchBar from "../../components/community/CommSearchBar";
-import PostInsert from "../../components/community/PostInsert";
-import PostListItem from "../../components/community/PostListItem";
+import "../../css/mypage_css/Mypage_Scrap.css";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
-import Paging from "../../components/repeat_etc/Paging";
 import Category from "../../components/repeat_etc/Category";
-import StudyListItem from "../../components/study/StudyListItem";
 
 const MyWritePost = () => {
     const navigate = useNavigate();
@@ -51,17 +47,45 @@ const MyWritePost = () => {
     const [page, setPage] = useState(pageparams);
     const [count, setCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [studies, setStudies] = useState([]);
+    const [studyId, setStudyId] = useState("");
     const insertPage = location.state && location.state.page;
-    const [selectedCategory, setSelectedCategory] = useState("ALL");
+    const [selectedCategory, setSelectedCategory] = useState("COMM");
 
-    const fetchMyPosts = (pageNumber, selectedCategory) => {
+    useEffect(() => {
+        axios.get("/api/members/studies/participate", {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then((res) => {
+                console.log(res.data.studyRecruitPosts);
+                setStudies(res.data.studyRecruitPosts);
+            })
+            .catch((error) => {
+                console.error("모집완료된 스터디 가져오기 실패:", error);
+            });
+
+    }, [accessToken]);
+
+    const fetchMyPosts = (pageNumber, selectedCategory, studyId) => {
         let url;
 
         if (selectedCategory === "STUDYPOST") {
-            url = "/api/user/mypage/studypost";
-        }
-        else {
-            url = "/api/user/mypage/post";
+            // studyId가 없으면 studies 배열의 첫 번째 스터디를 기본으로 설정
+            const defaultStudyId = studyId || (studies.length > 0 ? studies[0].studyId : null);
+
+            if (defaultStudyId) {
+                url = `/api/members/study-posts/${defaultStudyId}`;
+                console.log(url);
+            } else {
+                console.error("스터디 목록이 비어 있습니다.");
+                return; // studies 배열이 비어 있으면 요청하지 않음
+            }
+        } else {
+            url = "/api/members/communities";
+            console.log(url);
         }
         axios.get(url, {
             params: {
@@ -73,165 +97,137 @@ const MyWritePost = () => {
             }
         })
             .then((res) => {
-                setWrittenPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                console.log(res.data);
+                console.log(res.data.posts);
+                if (selectedCategory === "STUDYPOST") {
+                    const postsWithStudyId = res.data.items.map(post => ({
+                        ...post,
+                        studyId: res.data.studyId, // Attach the studyId from response
+                    }));
+                    setWrittenPosts(postsWithStudyId); // for STUDYPOST, use items
+                    setCount(res.data.items.length);
+                } else {
+                    setWrittenPosts(res.data.posts); // for COMMUNITY, use posts
+                    setCount(res.data.posts.length);
+                }
+                setItemsPerPage(res.data.currentPage);
             }).catch((error) => {
             console.error("작성한 게시물을 가져오는 중 오류 발생:", error);
         });
     };
 
     useEffect(() => {
-        fetchMyPosts(page, selectedCategory);
+        fetchMyPosts(page, selectedCategory, studyId);
     }, [page, selectedCategory]);
 
-    useEffect(() => {
-        axios.get("/api/user/mypage/post", {
-            params: {
-                page: 1,
-            },
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log("전송 성공");
-                console.log(res.data);
-
-                setWrittenPosts(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
-            })
-            .catch((error) => {
-                console.error('작성한 게시물을 가져오는 중 오류 발생: ', error);
-            });
-    }, [insertPage]);
-
-    const handlePageChange = (selectedPage) => {
-        setPage(selectedPage);
-        navigate(`/MyPage/mypost/page=${selectedPage}`);
+    const handleCategorySelect = (category) => {
+        setSelectedCategory(category);
+        setStudyId(""); // 카테고리 변경 시 studyId 초기화
     };
 
-    const handleCategoryChange = (selectedCategory) => {
-        setSelectedCategory(selectedCategory);
-        fetchMyPosts(page);
+    const handleStudySelect = (event) => {
+        setStudyId(event.target.value);
     };
 
     const mypost = () => {
         console.log("Written posts:", writtenPosts);
 
-        if (!Array.isArray(writtenPosts)) {
-            return <p className="no_scrap">작성한 게시글이 없습니다.</p>;
-        }
-
         return (
             <>
-                <div>
-                    <select id="sub"  value={selectedCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
-                        <option value="ALL">전체</option>
-                        <option value="STUDYPOST">팀블로그</option>
-                    </select>
+                <div className="category-wrapper">
+                    <div className="category-box-container">
+                        <div
+                            className={`category-box ${
+                                selectedCategory === 'COMM' ? 'selected' : ''
+                            }`}
+                            onClick={() => handleCategorySelect('COMM')}
+                        >
+                            커뮤니티
+                        </div>
+                        <div
+                            className={`category-box ${
+                                selectedCategory === 'STUDYPOST' ? 'selected' : ''
+                            }`}
+                            onClick={() => handleCategorySelect('STUDYPOST')}
+                        >
+                            팀블로그
+                        </div>
+                    </div>
+
+                    {selectedCategory === 'STUDYPOST' && (
+                        <div style={{marginLeft:"10px"}}>
+                            <select id="teamBlogTitles" onChange={handleStudySelect} value={studyId}>
+                                {studies.map((study, index) => (
+                                    <option key={index} value={study.title}>
+                                        {study.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </div>
                 <br/><br/><br/>
                 <div>
-                {(writtenPosts.length === 0) && <p className="no_scrap">작성한 게시글이 없습니다.</p>}
-                {(writtenPosts.length !== 0) &&
-                    <table className="post_table">
-                        <thead>
-                        <tr>
-                            <th>타입</th>
-                            <th>제목</th>
-                            <th>닉네임</th>
-                            <th>날짜</th>
-                            <th>조회수</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {writtenPosts.map((post) => (
-                            <tr className="post_list" key={post.id}>
-                                <td className="community_category">
-                                    {post.type === 'COMM' ? '커뮤니티'
-                                        : post.type === 'STUDYPOST' ? '팀 커뮤니티'
-                                        : post.type === 'NOTICE' ? '공지사항' : post.type}
-                                </td>
-                                <td className="community_title">
-                                    {post.type === 'COMM' ? (
-                                        <Link
-                                            to={`/postdetail/${post.id}`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {post.title}
-                                        </Link>
-                                    ) : post.type === 'QNA'  || post.type === 'FAQ' ? (
-                                        <Link
-                                            to={`/qna/detail/${post.id}`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {post.title}
-                                        </Link>
-                                    ) : post.type === 'NOTICE' ? (
-                                        <Link
-                                            to={`/noticedetail/${post.id}`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {post.title}
-                                        </Link>
-                                    ) : post.type === 'STUDYPOST' ? (
-                                        <Link
-                                            to={`/${post.study.id}/teamblog/TeamCommunity/studypostdetail/${post.id}`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {post.title}
-                                        </Link>
-                                    ) : (
-                                        <span>{post.title}</span>
-                                    )}
-                                </td>
-                                <td className="community_nickname">{post.member?.nickname || '익명'}</td>
-                                <td className="community_datetime">{formatDatetime(post.createdAt)}</td>
-                                <td>{post.viewCount}</td>
+                    {(writtenPosts.length === 0) && <div className="no_study"><p>작성한 게시글이 없습니다.</p></div>}
+                    {(writtenPosts.length !== 0) && (
+                        <table className="post_table">
+                            <thead>
+                            <tr>
+                                {selectedCategory === "COMM" && (
+                                    <th>카테고리</th>
+                                )}
+                                <th>제목</th>
+                                <th>닉네임</th>
+                                <th>날짜</th>
+                                <th>조회수</th>
                             </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                }
+                            </thead>
+                            <tbody>
+                            {writtenPosts.map((post) => (
+                                <tr className="post_list" key={post.postId}>
+                                    {selectedCategory === "COMM" && (
+                                        <td className="community_category">
+                                            {post.category}
+                                        </td>
+                                    )}
+                                    <td className="community_title">
+                                        {selectedCategory === 'COMM' ? (
+                                            <Link
+                                                to={`/community/post/${post.postId}`}
+                                                style={{
+                                                    textDecoration: "none",
+                                                    color: "inherit",
+                                                }}
+                                            >
+                                                {post.title}
+                                            </Link>
+                                        ) : selectedCategory === 'STUDYPOST' ? (
+                                            <Link
+                                                to={`/teamblog/${post.studyId}/community/post/${post.studyPostId}`}
+                                                style={{
+                                                    textDecoration: "none",
+                                                    color: "inherit",
+                                                }}
+                                            >
+                                                {post.title}
+                                            </Link>
+                                        ) : null}
+                                    </td>
+                                    <td className="community_nickname">{post.writer || '익명'}</td>
+                                    <td className="community_datetime">{formatDatetime(post.createdAt)}</td>
+                                    <td>{post.hit}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </>
         );
     };
 
+
     return (
-        // <div className={"main_wrap"} id={"community"}>
-        //     <Header showSideCenter={true}/>
-        //     <div className="community_container">
-        //         <p id={"entry-path"}> 홈 > 내가 작성한 글 </p>
-        //         <Backarrow subname={"My Write Post"}/>
-        //         <div>
-        //             <div className="community">
-        //                 <div className={"community-content"}>
-        //                     {mypost()}
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        //     <div className={"paging"}>
-        //         <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-        //                 handlePageChange={handlePageChange}/>
-        //     </div>
-        // </div>
         <div>
             <Header showSideCenter={true}/>
             <div className="container">

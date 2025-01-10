@@ -31,12 +31,12 @@
 	display: flex;
 	flex-wrap: wrap;
 }
-.study_list .no_study{
+.no_study{
 	width: 100%;
 	text-align: center;
 	margin: 70px 0 100px;
 }
-.study_list .no_study p{
+.no_study p{
 	font-size: 16px;
 }
 
@@ -117,6 +117,30 @@
 .study_list li .list_title{
 	font-size:17px;
 }
+
+.category-wrapper{
+	display: flex;
+}
+.category-box-container {
+	display: flex;
+	gap: 10px;
+}
+
+.category-box {
+	padding: 10px;
+	text-align: center;
+	cursor: pointer;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	width: 120px;
+}
+
+.category-box.selected {
+	background-color: #99a98f;
+	color: #fff;
+}
+
 
 @media(max-width: 1300px) {
 	/*개인신뢰도, 할일, 일정*/
