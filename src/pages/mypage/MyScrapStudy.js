@@ -87,7 +87,7 @@ const MyScrapStudy = () => {
                         <div className="study_list">
                             {scrapStudies.length === 0 && (
                                 <div className="no_scrap">
-                                    <h2>스크랩한 스터디가 없습니다.</h2>
+                                    <p>스크랩한 스터디가 없습니다.</p>
                                 </div>
                             )}
                             {scrapStudies.map((study, index) => (
