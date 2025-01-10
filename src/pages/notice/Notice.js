@@ -113,7 +113,7 @@ const Notice = () => {
                 <div className="community_header">
                   <SearchBar/>
                   {userIsAdmin ? (
-                      <Link to={`/admin/insert-notice`}
+                      <Link to={`/admin/notice/insert`}
                             style={{
                               textDecoration: "none",
                               color: "inherit",
