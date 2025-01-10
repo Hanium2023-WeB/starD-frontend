@@ -1,11 +1,9 @@
 import React, {useCallback, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/repeat_etc/Header";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 
 const NoticeInsert = () => {
-    const navigate = useNavigate();
     const [dataId, setDataId] = useState(0);
     const [posts, setPosts] = useState([]);
     const [formData, setFormData] = useState({
@@ -50,7 +48,6 @@ const NoticeInsert = () => {
             formData.content.trim() === ''
         ) {
             alert('게시글 정보를 입력해주세요.');
-
             return;
         }
         if (formData.title.trim() === '') {
@@ -80,7 +77,7 @@ const NoticeInsert = () => {
                 console.log(res.data);
                 const id = res.data.postId;
                 alert("게시글이 등록되었습니다.");
-                window.location.href = `/noticedetail/${id}`;
+                window.location.href = `/notice/detail/${id}`;
             }).catch((error) => {
                 console.log('전송 실패', error);
                 alert("게시글 등록 실패");

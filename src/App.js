@@ -63,6 +63,7 @@ import {TeamBlogProvider} from "./components/datacontext/TeamBlogContext";
 import {Toaster} from "react-hot-toast";
 import {EventSourceProvider} from "./pages/notification/EventSourceContext";
 import Subscribe from "./pages/notification/Subscribe";
+import NoticeInsert from "./pages/notice/NoticeInsert";
 
 function App() {
   return (
@@ -208,6 +209,8 @@ function App() {
                        element={<ReportManagement/>}/> {/* Report management */}
                 <Route path="/admin/faq-insert"
                        element={<FaqInsert/>}/> {/* Insert new FAQ */}
+                <Route path="/admin/notice/insert"
+                       element={<NoticeInsert/>}/> {/* Insert new Notice */}
 
                 {/* Miscellaneous Routes */}
                 <Route path="/chat" element={<Chat/>}/> {/* Chat page */}
