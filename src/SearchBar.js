@@ -37,11 +37,12 @@ const SearchBar = ({isHome, handleClickRecrutingBtn, isOnlyRecruting, onFilterCh
 	const searchItem = (item)=>{
 		console.log("타깃",item)
 		setSearch(item);
-		const selectedType = activityType.find((type) => type.value === selectOption);
+		const selectedType = activityType.find((type) => type.value === selectOption) || activityType[0];
+		console.log(selectedType);
 		if (selectedType) {
 			const queryParams = `?q=${encodeURIComponent(item)}&select=${encodeURIComponent(selectedType.name)}`;
 			console.log(queryParams);
-			navigate(`/search${queryParams}`);
+			navigate(`/study/search${queryParams}`);
 		}
 	}
 
