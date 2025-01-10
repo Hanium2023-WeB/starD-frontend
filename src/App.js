@@ -192,6 +192,9 @@ function App() {
                 <Route path="/qna/insert"
                        element={<QnaInsert/>}/> {/* Insert new QnA */}
 
+                <Route path="/faq/detail/:id"
+                       element={<QnaDetail/>}/> {/* FaQ detail page */}
+
                 {/* Admin Routes */}
                 <Route path="/admin"
                        element={<Admin/>}/> {/* Admin main page */}
