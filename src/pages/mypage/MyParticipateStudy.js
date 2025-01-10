@@ -172,6 +172,11 @@ const MyParticipateStudy = ({sideheader}) => {
     const mypartistudylist = () => {
         return (
             <div className="study_list">
+                {studies.length === 0 && (
+                    <div className="no_study">
+                        <p>스터디 참여 내역이 없습니다.</p>
+                    </div>
+                )}
                 {studies.map((study, index) => (
                     <StudyListItem key={study.studyId} studies={study} index={index} toggleScrap={() => toggleScrap(index)} isParticipateStudy={true} goEvaluationPage={goEvaluationPage} goNextTeamBlog={goNextTeamBlog} />
                 ))}

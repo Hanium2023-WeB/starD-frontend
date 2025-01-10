@@ -31,6 +31,14 @@
 	display: flex;
 	flex-wrap: wrap;
 }
+.study_list .no_study{
+	width: 100%;
+	text-align: center;
+	margin: 70px 0 100px;
+}
+.study_list .no_study p{
+	font-size: 16px;
+}
 
 .study_list .list_header {
 	display: flex;
