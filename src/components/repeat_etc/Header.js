@@ -179,7 +179,7 @@ const Header = ({showSideCenter}) => {
             />
             {isAdmin && (
                 <MemoizedLink
-                    to={`/admin/MemberManagement/page=${page}`}
+                    to={"/admin/member-management/page=1"}
                     children={<li>관리자 페이지</li>}
                     style={{textDecoration: "none", color: "inherit"}}
                 />

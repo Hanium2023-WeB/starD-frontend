@@ -15,7 +15,7 @@ const AdminCategory = () => {
                     <nav>
                         <ul>
                             <li>
-                                <Link to={`/admin/MemberManagement/page=${page}`}
+                                <Link to={`/admin/member-management/page=${page}`}
                                       page={page}
                                       style={{
                                           textDecoration: "none",
@@ -25,7 +25,7 @@ const AdminCategory = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/admin/ReportManagement/page=${page}`}
+                                <Link to={`/admin/report-management/page=${page}`}
                                       page={page}
                                       style={{
                                           textDecoration: "none",
@@ -35,7 +35,7 @@ const AdminCategory = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/admin/FAQManagement/page=${page}`}
+                                <Link to={`/admin/faq-management/page=${page}`}
                                       page={page}
                                       style={{
                                           textDecoration: "none",
@@ -45,7 +45,7 @@ const AdminCategory = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/admin/NoticeManagement/page=${page}`}
+                                <Link to={`/admin/notice-management/page=${page}`}
                                       page={page}
                                       style={{
                                           textDecoration: "none",
