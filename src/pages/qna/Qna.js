@@ -11,6 +11,7 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import QnaInsert from "../qna/QnaInsert";
 import Paging from "../../components/repeat_etc/Paging";
 import toast from "react-hot-toast";
+import FaqInsert from "../admin/FaqInsert";
 
 const Qna = () => {
   const location = useLocation();
@@ -34,6 +35,14 @@ const Qna = () => {
   // 초기 렌더링 또는 검색 상태 확인
   const [isSearchMode, setIsSearchMode] = useState(
       !!searchQuery || !!categoryOption);
+
+  const handleMoveToFaqInsert = () => {
+    if (accessToken && isLoggedInUserId) {
+      window.location.href = "/admin/faq-insert"; // FAQ 작성 페이지로 이동
+    } else {
+      toast.error("로그인 후 이용 가능합니다.");
+    }
+  };
 
   // 권한 조회
   useEffect(() => {
@@ -131,16 +140,15 @@ const Qna = () => {
           <p id="entry-path">홈 > QNA</p>
           <Backarrow subname="QNA LIST"/>
 
-          {showFaqInsert && <QnaInsert postType="FAQ"/>}
-          {showQnaInsert && <QnaInsert postType="QNA"/>}
+          {showFaqInsert && <FaqInsert/>}
+          {showQnaInsert && <QnaInsert/>}
           {!showFaqInsert && !showQnaInsert && (
               <div>
                 <div className="community_header">
                   <SearchBar setIsSearchMode={setIsSearchMode}/>
                   {userIsAdmin ? (
                       <button
-                          onClick={(e) => handleMoveToStudyInsert(e,
-                              "FAQ")}
+                          onClick={handleMoveToFaqInsert}
                           className="new_post_btn"
                       >
                         FAQ 작성
