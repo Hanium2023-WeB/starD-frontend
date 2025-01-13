@@ -3,7 +3,7 @@ import axios from "axios";
 import "../../css/admin_css/Admin.css";
 import Header from "../../components/repeat_etc/Header";
 import AdminCategory from "../../components/repeat_etc/AdminCategory";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Paging from "../../components/repeat_etc/Paging";
 
 const ReportManagement = () => {
@@ -18,9 +18,9 @@ const ReportManagement = () => {
     const navigate = useNavigate();
     const pageparams = location.state ? location.state.page : 1;
     const [page, setPage] = useState(pageparams);
-    const [count, setCount] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-
+    const [totalPages, setTotalPages] = useState(1);
 
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
@@ -36,12 +36,9 @@ const ReportManagement = () => {
             }
         })
             .then((res) => {
-                console.log("전송 성공");
-                console.log(res.data);
-
+                setTotalPages(res.data.totalPages);
                 setReports(res.data.reports);
-                setItemsPerPage(res.data.currentPage);
-                setCount(res.data.totalPage);
+                setTotalElements(res.data.totalElements);
             })
             .catch((error) => {
                 console.error('신고 목록을 가져오는 중 오류 발생: ', error);
@@ -200,86 +197,88 @@ const ReportManagement = () => {
             <div className="container admin_container">
                 <h1 className="admin">⚠️ 관리자 페이지</h1>
                 <div className={"admin_body_container"}>
-                <div className="admin_body">
-                    <AdminCategory/>
-                </div>
+                    <div className="admin_body">
+                        <AdminCategory/>
+                    </div>
 
-                <div className="admin_sub_container">
-                    <h2 className="admin_title">신고 관리</h2>
-                    <div className="admin_table_wrapper">
-                        <h3>&nbsp;</h3>
-                        <table className="report_admin_table">
-                            <thead>
-                            <tr>
-                                <th>구분</th>
-                                <th>게시글 제목 / 댓글 내용</th>
-                                <th>신고 횟수</th>
-                                <th>신고 사유</th>
-                                <th>신고 승인 버튼</th>
-                                <th>신고 반려 버튼</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {reports.map((report, index) => (
-                                <tr key={report.targetId}>
-                                    <td>{tableType(report)}</td>
-                                    <td>
-                                        <div className="report_title"
-                                             onClick={() => openPopup(report)}>{report.content}</div>
-                                    </td>
-                                    <td>{report.reportCount}</td>
-                                    <td>
-                                        <button className="reason_btn" onClick={() => openReasonModal(report)}>신고 사유
-                                        </button>
+                    <div className="admin_sub_container">
+                        <h2 className="admin_title">신고 관리</h2>
+                        <div className="admin_table_wrapper">
+                            <h3>&nbsp;</h3>
+                            <table className="report_admin_table">
+                                <thead>
+                                <tr>
+                                    <th>구분</th>
+                                    <th>게시글 제목 / 댓글 내용</th>
+                                    <th>신고 횟수</th>
+                                    <th>신고 사유</th>
+                                    <th>신고 승인 버튼</th>
+                                    <th>신고 반려 버튼</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {reports.map((report, index) => (
+                                    <tr key={report.targetId}>
+                                        <td>{tableType(report)}</td>
+                                        <td>
+                                            <div className="report_title"
+                                                 onClick={() => openPopup(report)}>{report.content}</div>
+                                        </td>
+                                        <td>{report.reportCount}</td>
+                                        <td>
+                                            <button className="reason_btn" onClick={() => openReasonModal(report)}>신고 사유
+                                            </button>
 
-                                    </td>
-                                    <td>
-                                        <button className="remove_btn" onClick={() => handleReportAccept(report)}>신고
-                                            승인
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button className="reject_btn" onClick={() => handleReportReject(report)}>신고
-                                            반려
-                                        </button>
-                                    </td>
-                                    {showReasonModal && (
-                                        <div className="modal">
-                                            <div className="modal-content">
-                                                <span className="close" onClick={closeReasonModal}>&times;</span>
-                                                <h3>신고 사유</h3>
-                                                <div id="report-reason">
-                                                    {/* reportReasons 표시 */}
-                                                    {reportReason.map((item, index) => (
-                                                        <div key={`reportReason-${index}`}>
-                                                            <span>{item.reason}</span>
-                                                            {item.count > 0 && <span>: {item.count}회</span>}
-                                                        </div>
-                                                    ))}
+                                        </td>
+                                        <td>
+                                            <button className="remove_btn" onClick={() => handleReportAccept(report)}>신고
+                                                승인
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button className="reject_btn" onClick={() => handleReportReject(report)}>신고
+                                                반려
+                                            </button>
+                                        </td>
+                                        {showReasonModal && (
+                                            <div className="modal">
+                                                <div className="modal-content">
+                                                    <span className="close" onClick={closeReasonModal}>&times;</span>
+                                                    <h3>신고 사유</h3>
+                                                    <div id="report-reason">
+                                                        {/* reportReasons 표시 */}
+                                                        {reportReason.map((item, index) => (
+                                                            <div key={`reportReason-${index}`}>
+                                                                <span>{item.reason}</span>
+                                                                {item.count > 0 && <span>: {item.count}회</span>}
+                                                            </div>
+                                                        ))}
 
-                                                    {/* customReasons 표시 */}
-                                                    {reportReason.length > 0 && customReason.length > 0 && <hr />}
-                                                    {customReason.map((reason, index) => (
-                                                        <div key={`customReason-${index}`}>
-                                                            <span>{reason}</span>
-                                                        </div>
-                                                    ))}
+                                                        {/* customReasons 표시 */}
+                                                        {reportReason.length > 0 && customReason.length > 0 && <hr/>}
+                                                        {customReason.map((reason, index) => (
+                                                            <div key={`customReason-${index}`}>
+                                                                <span>{reason}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                                        )}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                </div>
             </div>
-            <div className={"paging"}>
-                <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                        handlePageChange={handlePageChange}/>
-            </div>
+            {reports.length !== 0 &&
+                <div className="pagingDiv">
+                    <Paging page={page} totalItemCount={totalElements} totalPages={totalPages}
+                            itemsPerPage={itemsPerPage}
+                            handlePageChange={handlePageChange}/>
+                </div>}
         </div>
     )
 }

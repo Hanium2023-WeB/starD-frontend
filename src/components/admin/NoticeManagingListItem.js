@@ -1,6 +1,6 @@
 import {Link, useNavigate} from "react-router-dom";
 import "../../css/notice_css/Notice.css";
-import React, {useEffect} from "react";
+import React from "react";
 import axios from "axios";
 let accessToken = localStorage.getItem('accessToken');
 
@@ -30,7 +30,7 @@ const NoticeManagingListItem = ({posts, setPosts}) => {
                 .then(response => {
                     console.log("공지글 삭제 성공 ");
                     alert("게시글이 삭제되었습니다.");
-                    window.location.href = `/admin/NoticeManagement/page=${1}`;
+                    window.location.href = `/admin/notice-management/page=${1}`;
                 })
                 .catch(error => {
                     console.error("Error:", error);
@@ -44,7 +44,7 @@ const NoticeManagingListItem = ({posts, setPosts}) => {
     return (
         <tr className="post_list">
             <td>
-                <Link to={`/noticedetail/${posts.postId}`}
+                <Link to={`/notice/detail/${posts.postId}`}
                       style={{
                           textDecoration: "none",
                           color: "inherit",

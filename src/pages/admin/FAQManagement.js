@@ -1,27 +1,26 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Header from "../../components/repeat_etc/Header";
 import AdminCategory from "../../components/repeat_etc/AdminCategory";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Paging from "../../components/repeat_etc/Paging";
 import FaqManagingListItem from "../../components/admin/FaqManagingListItem";
+
 const FAQManagement = () => {
-    const [members, setMembers] = useState([]);
-    const accessToken = localStorage.getItem('accessToken');
 
     const location = useLocation();
     const navigate = useNavigate();
     const pageparams = location.state ? location.state.page : 1;
     const [page, setPage] = useState(pageparams);
-    const [count, setCount] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-
+    const [totalPages, setTotalPages] = useState(1);
 
     const [posts, setPosts] = useState([]);
 
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
-        navigate(`/admin/FAQManagement/page=${selectedPage}`);
+        navigate(`/admin/faq-management/page=${selectedPage}`);
     };
 
     //페이지 수마다 가져오기
@@ -32,11 +31,9 @@ const FAQManagement = () => {
             },
         })
             .then((res) => {
+                setTotalPages(res.data.totalPages);
                 setPosts(res.data.posts);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
-                console.log("전송 성공");
-                console.log(res.data);
+                setTotalElements(res.data.totalElements);
             }).catch((error) => {
             console.error("데이터 가져오기 실패:", error);
         });
@@ -48,9 +45,9 @@ const FAQManagement = () => {
                 page: 1,
             }
         }).then((res) => {
+            setTotalPages(res.data.totalPages);
             setPosts(res.data.posts);
-            setItemsPerPage(res.data.pageable.pageSize);
-            setCount(res.data.totalElements);
+            setTotalElements(res.data.totalElements);
         })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
@@ -76,27 +73,29 @@ const FAQManagement = () => {
                         <div className="admin_table_wrapper">
                             <table className="member_admin_table">
                                 <thead>
-                                        <th>제목</th>
-                                        <th>닉네임</th>
-                                        <th>날짜</th>
-                                        <th>조회수</th>
-                                        <th>삭제</th>
+                                <th>제목</th>
+                                <th>닉네임</th>
+                                <th>날짜</th>
+                                <th>조회수</th>
+                                <th>삭제</th>
                                 </thead>
                                 <tbody>
-                                 {posts.map((d, index) => (
-                                        <FaqManagingListItem setPosts={setPosts} posts={d} d={d}
-                                                     index={index} key={d.postId}/>
-                                    ))}
+                                {posts.map((d, index) => (
+                                    <FaqManagingListItem setPosts={setPosts} posts={d} d={d}
+                                                         index={index} key={d.postId}/>
+                                ))}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className={"paging"}>
-                <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                        handlePageChange={handlePageChange}/>
-            </div>
+            {posts.length !== 0 &&
+                <div className="pagingDiv">
+                    <Paging page={page} totalItemCount={totalElements} totalPages={totalPages}
+                            itemsPerPage={itemsPerPage}
+                            handlePageChange={handlePageChange}/>
+                </div>}
         </div>
     )
 }
