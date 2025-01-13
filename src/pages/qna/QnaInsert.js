@@ -1,11 +1,8 @@
 import React, {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import Header from "../../components/repeat_etc/Header";
-import Backarrow from "../../components/repeat_etc/Backarrow";
 
 const QnaInsert = () => {
-    //console.log("type: ",postType);
     const postType = "qna"
     const navigate = useNavigate();
     const [dataId, setDataId] = useState(0);

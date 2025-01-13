@@ -5,7 +5,6 @@ import Header from "../../components/repeat_etc/Header";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 
 const FaqInsert = () => {
-    //console.log("type: ",postType);
     const postType = "FAQ"
     const navigate = useNavigate();
     const [dataId, setDataId] = useState(0);
@@ -46,14 +45,6 @@ const FaqInsert = () => {
     const handleSubmit = useCallback(e => {
         e.preventDefault();
 
-        if (
-            formData.title.trim() === '' &&
-            formData.content.trim() === ''
-        ) {
-            alert('게시글 정보를 입력해주세요.');
-
-            return;
-        }
         if (formData.title.trim() === '') {
             alert("제목을 입력해주세요.");
             return;

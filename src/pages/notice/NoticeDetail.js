@@ -5,12 +5,12 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import NoticeEdit from "../../components/notice/NoticeEdit";
 import default_profile_img from "../../images/default_profile_img.png";
+import toast from "react-hot-toast";
 
 const NoticeDetail = () => {
     const navigate = useNavigate();
 
     const {id} = useParams();
-    console.log("postId : ", id);
 
     const [postItem, setPostItem] = useState(null);
     const [posts, setPosts] = useState([]);
@@ -36,8 +36,7 @@ const NoticeDetail = () => {
 
                 if (auth === "USER") {
                     setIsAdmin(false);
-                }
-                else if (auth === "ADMIN") {
+                } else if (auth === "ADMIN") {
                     setIsAdmin(true);
                 }
             })
@@ -68,13 +67,6 @@ const NoticeDetail = () => {
             });
     }, [id, accessToken, isLoggedInUserId]);
 
-    const toggleLike = () => {
-        if (!(accessToken && isLoggedInUserId)) {
-            alert("로그인 해주세요");
-            navigate("/login");
-        }
-    };
-
     const handleEditClick = () => {
         setEditing(true);
     }
@@ -84,7 +76,15 @@ const NoticeDetail = () => {
     }
 
     const handlePostUpdate = (updatedPost) => {
-        console.log("수정 예정 : " + updatedPost.id + ", " + updatedPost.title + ", " + updatedPost.content);
+        if (updatedPost.title.trim() === '') {
+            alert("제목을 입력해주세요.");
+            return;
+        }
+
+        if (updatedPost.content.trim() === '') {
+            alert("내용을 입력해주세요.");
+            return;
+        }
 
         const config = {
             headers: {}
@@ -170,13 +170,13 @@ const NoticeDetail = () => {
                     <div className="community_detail">
                         {postItem && (
                             <div className="post_header">
-                                <div style={{display:"flex", justifyContent:"space-between"}}>
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
                                     <div className="post_title">
                                         {postItem.title}
                                     </div>
                                     {(isWriter || (isWriter && isAdmin)) && (
                                         <div className="button">
-                                            <button style={{marginRight:"5px"}} onClick={handleEditClick}>수정</button>
+                                            <button style={{marginRight: "5px"}} onClick={handleEditClick}>수정</button>
                                             <button onClick={handlePostDelete}>삭제</button>
                                         </div>
                                     )}
@@ -211,7 +211,8 @@ const NoticeDetail = () => {
                             </div>
                         )}
                         {postItem && (
-                            <div className="post_content" dangerouslySetInnerHTML={{ __html: postItem.content.replace(/\n/g, '<br>') }} />
+                            <div className="post_content"
+                                 dangerouslySetInnerHTML={{__html: postItem.content.replace(/\n/g, '<br>')}}/>
                         )}
 
                         <div className="btn">

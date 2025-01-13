@@ -4,7 +4,6 @@ import {Link, useParams, useNavigate} from "react-router-dom";
 import Comment from "../../components/comment/Comment";
 import React, {useState, useEffect, useCallback} from "react";
 import LikeButton from "../../components/repeat_etc/LikeButton";
-import ScrapButton from "../../components/repeat_etc/ScrapButton";
 import axios from "axios";
 import PostEdit from "../../components/community/PostEdit";
 import Report from "../../components/report/Report";
@@ -17,7 +16,6 @@ const PostDetail = () => {
     const navigate = useNavigate();
 
     const {id} = useParams();
-    console.log("postId : ", id);
 
     const [postItem, setPostItem] = useState(null);
     const [posts, setPosts] = useState([]);
@@ -61,7 +59,12 @@ const PostDetail = () => {
             console.warn("postItem이 아직 초기화되지 않았습니다.");
             return;
         }
-        console.log(postItem);
+
+        if (postItem.isAuthor) {
+            toast.error("본인의 게시글에는 좋아요를 누를 수 없습니다.");
+            return;
+        }
+
         toggleLikeStatus(
             postItem,
             accessToken,
@@ -87,9 +90,8 @@ const PostDetail = () => {
     }
 
     const handlePostUpdate = (updatedPost) => {
-        console.log("수정 예정 : " + updatedPost.postId + ", " + updatedPost.title + ", " + updatedPost.content
-            + ", " + updatedPost.category);
-
+        // console.log("수정 예정 : " + updatedPost.postId + ", " + updatedPost.title + ", " + updatedPost.content
+        //     + ", " + updatedPost.category);
         axios.put(`/api/communities/${id}`, {
                 title: updatedPost.title,
                 content: updatedPost.content,

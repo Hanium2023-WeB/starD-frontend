@@ -65,7 +65,7 @@ const FAQManagement = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="container admin_container">
-                <h1 className="admin">관리자 페이지</h1>
+                <h1 className="admin">⚠️ 관리자 페이지</h1>
                 <div className={"admin_body_container"}>
                     <div className="admin_body">
                         <AdminCategory/>
