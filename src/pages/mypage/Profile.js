@@ -32,6 +32,21 @@ const Profile = () => {
             .catch((error) => {
                 console.error("프로필 가져오기 실패:", error);
             });
+
+        axios
+            .get("/api/members/profile/image", {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            .then((res) => {
+                console.error("프로필 가져오기 성공:", res.data);
+                setUploadImgUrl(res.data.imageUrl);
+            })
+            .catch((error) => {
+                console.error("프로필 가져오기 실패:", error);
+            });
     }, []);
 
     return (
@@ -60,7 +75,7 @@ const Profile = () => {
                     </div>
                     <div className={"save_profile_content"}>
                         <Link
-                            to={"/mypage/profile/Editprofile"}
+                            to={"/mypage/profile/edit"}
                             style={{
                                 textDecoration: "none",
                                 color: "inherit",

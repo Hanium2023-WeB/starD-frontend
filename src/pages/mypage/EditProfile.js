@@ -6,6 +6,7 @@ import Header from "../../components/repeat_etc/Header";
 import default_profile_img from "../../images/default_profile_img.png";
 import ImageComponent from "../../components/image/imageComponent";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const EditProfile = () => {
     let accessToken = localStorage.getItem('accessToken');
@@ -52,6 +53,10 @@ const EditProfile = () => {
         }
     }
 
+    useEffect(() => {
+        console.log("Updated uploadImgUrl:", uploadImgUrl);
+    }, [uploadImgUrl]);
+
     //프로필 사진 삭제
     const onchangeImageDelete = (e) => {
         axios
@@ -94,7 +99,27 @@ const EditProfile = () => {
                 // navigate("/mypage/profile");
             })
             .catch((error) => {
-                console.error("프로필 수정 실패:", error);
+                console.error("프로필 수정 실패:", error.response.data || error);
+                toast.error("프로필 이미지 수정에 실패했습니다.");
+            });
+    }
+
+    const saveIntroduce = () => {
+        axios
+            .post("/api/members/edit/introduce", {
+                introduce: selfintro
+            }, {
+                withCredentials: true,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            })
+            .then((res) => {
+                console.log("프로필 수정 성공:", res.data);
+
+            })
+            .catch((error) => {
+                console.error("프로필 수정 실패:", error.response.data || error);
             });
     }
 
@@ -120,7 +145,7 @@ const EditProfile = () => {
                     </div>
                     <div className={"save_profile_content"}>
                         <button className={"save-profile"} onClick={saveProfileImage}>사진 저장</button>
-                        <button className={"save-profile"}>소개 저장</button>
+                        <button className={"save-profile"} onClick={saveIntroduce}>소개 저장</button>
                     </div>
                 </div>
             </div>
