@@ -9,6 +9,7 @@ import PostListItem from "../../components/community/PostListItem";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import Paging from "../../components/repeat_etc/Paging";
+import Category from "../../components/repeat_etc/Category";
 
 const MyWriteComment = () => {
     const navigate = useNavigate();
@@ -53,7 +54,7 @@ const MyWriteComment = () => {
     const insertPage = location.state && location.state.page;
 
     const fetchMyComments = (pageNumber) => {
-        axios.get("/api/user/mypage/reply", {
+        axios.get("/api/members/replies", {
             params: {
                 page: pageNumber,
             },
@@ -63,9 +64,14 @@ const MyWriteComment = () => {
             }
         })
             .then((res) => {
-                setWrittenComments(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
+                console.log(res.data);
+                const repliesWithWriter = res.data.replies.map(reply => ({
+                    ...reply,
+                    writer: res.data.writer
+                }));
+                setWrittenComments(repliesWithWriter);
+                setItemsPerPage(res.data.currentPage);
+                setCount(res.data.replies.length);
             }).catch((error) => {
             console.error("작성한 게시물을 가져오는 중 오류 발생:", error);
         });
@@ -74,29 +80,6 @@ const MyWriteComment = () => {
     useEffect(() => {
         fetchMyComments(page);
     }, [page]);
-
-    useEffect(() => {
-        axios.get("/api/user/mypage/reply", {
-            params: {
-                page: 1,
-            },
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log("전송 성공");
-                console.log(res.data);
-
-                setWrittenComments(res.data.content);
-                setItemsPerPage(res.data.pageable.pageSize);
-                setCount(res.data.totalElements);
-            })
-            .catch((error) => {
-                console.error('작성한 댓글을 가져오는 중 오류 발생: ', error);
-            });
-    }, [insertPage]);
 
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
@@ -112,7 +95,7 @@ const MyWriteComment = () => {
 
         return (
             <>
-                {(writtenComments.length === 0) && <p className="no_scrap">작성한 댓글이 없습니다.</p>}
+                {(writtenComments.length === 0) && <div className="no_study"><p>작성한 댓글이 없습니다.</p></div>}
                 {(writtenComments.length !== 0) &&
                     <table className="post_table">
                         <thead>
@@ -125,16 +108,16 @@ const MyWriteComment = () => {
                         </thead>
                         <tbody>
                         {writtenComments.map((comment) => (
-                            <tr className="post_list" key={comment.id}>
+                            <tr className="post_list" key={comment.replyId}>
                                 <td className="community_category">
-                                    {comment.type === 'COMM' ? '커뮤니티' 
-                                        : comment.type === 'STUDY' ? '스터디'
-                                        : comment.type === 'STUDYPOST' ? '팀 커뮤니티' : comment.type}
+                                    {comment.postType === 'COMM' ? '커뮤니티'
+                                        : comment.postType === 'STUDY' ? '스터디'
+                                        : comment.postType === 'STUDYPOST' ? '팀 커뮤니티' : comment.postType}
                                 </td>
                                 <td className="community_title">
-                                    {comment.type === 'COMM' ? (
+                                    {comment.postType === 'COMM' ? (
                                         <Link
-                                            to={`/postdetail/${comment.post.id}`}
+                                            to={`/community/post/${comment.targetId}`}
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",
@@ -142,9 +125,9 @@ const MyWriteComment = () => {
                                         >
                                             {comment.content}
                                         </Link>
-                                    ) : comment.type === 'QNA' ? (
+                                    ) : comment.postType === 'QNA' ? (
                                         <Link
-                                            to={`/qna/detail/${comment.post.id}`}
+                                            to={`/qna/detail/${comment.targetId}`}
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",
@@ -154,7 +137,7 @@ const MyWriteComment = () => {
                                         </Link>
                                     ) : comment.type === 'STUDY' ? (
                                         <Link
-                                            to={`/studydetail/${comment.study.id}`}
+                                            to={`/study/detail/${comment.targetId}`}
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",
@@ -164,7 +147,7 @@ const MyWriteComment = () => {
                                         </Link>
                                     ) : comment.type === 'STUDYPOST' ? (
                                         <Link
-                                            to={`/${comment.study.id}/teamblog/TeamCommunity/studypostdetail/${comment.studyPost.id}`}
+                                            to={`/teamblog/${comment.targetId}/community/post/${comment.targetId}`}
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",
@@ -176,7 +159,7 @@ const MyWriteComment = () => {
                                         <span>{comment.content}</span>
                                     )}
                                 </td>
-                                <td className="community_nickname">{comment.member?.nickname || '익명'}</td>
+                                <td className="community_nickname">{comment.writer || '익명'}</td>
                                 <td className="community_datetime">{formatDatetime(comment.createdAt)}</td>
                             </tr>
                         ))}
@@ -187,15 +170,18 @@ const MyWriteComment = () => {
         );
     };
     return (
-        <div className={"main_wrap"} id={"community"}>
+        <div>
             <Header showSideCenter={true}/>
-            <div className="community_container">
-                <p id={"entry-path"}> 홈 > 내가 작성한 댓글 </p>
-                <Backarrow subname={"My Write Comment"}/>
-                <div>
-                    <div className="community">
-                        <div className={"community-content"}>
-                            {mypost()}
+            <div className="container">
+                <Category/>
+                <div className="main_container">
+                    <p id={"entry-path"}> 홈 > 마이페이지 > 내가 작성한 댓글 </p>
+                    <Backarrow subname={"내가 작성한 댓글"}/>
+                    <div>
+                        <div className="community">
+                            <div className={"community-content"}>
+                                {mypost()}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -59,7 +59,7 @@ const MyScrapCommunityPost = () => {
     const scrapstory = () => {
         return (
             <>
-                {(scrapedPosts.length === 0) && <p className="no_scrap">스크랩한 게시글이 없습니다.</p>}
+                {(scrapedPosts.length === 0) && <div className="no_scrap"><p>스크랩한 게시글이 없습니다.</p></div>}
                 {(scrapedPosts.length !== 0) &&
                     <table className="post_table">
                         <thead>
@@ -95,13 +95,7 @@ const MyScrapCommunityPost = () => {
                         <PostInsert />
                     )}
                     {!showPostInsert && (
-                        <div>
-                            <div className="community_header">
-                                <SearchBar/>
-                                <button onClick={handleMoveToStudyInsert} className="new_post_btn">
-                                    새 글 작성
-                                </button>
-                            </div>
+                        <div style={{width:"110%", paddingTop:"10px"}}>
                             <div className="community">
                                 <div className={"community-content"}>
                                     {scrapstory()}
