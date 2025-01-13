@@ -50,7 +50,7 @@ const TeamSchedule = () => {
     const [schedules, setSchedules] = useState({});
 
     useEffect(() => {
-        axios.get(`/api/schedule/${studyIdAsNumber}`, {
+        axios.get(`/api/studies/${studyIdAsNumber}/schedules`, {
             params: {
                 year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1,
             }, withCredentials: true, headers: {
@@ -83,11 +83,15 @@ const TeamSchedule = () => {
         const schedule = {
             id: nextId.current, title: title, startDate: formattedDate, color: color,
         };
-        axios.post("/api/schedule", schedule, {
+        axios.post(`/api/studies/{studyId}/schedules`, {
+            task: title,
+            dueDate:formattedDate,
+
+        }, {
             params: {
                 studyId: studyIdAsNumber
             }, withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
             }
         }).then((res) => {
             console.log("전송 성공", res.data);
