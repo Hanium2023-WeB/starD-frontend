@@ -1,4 +1,4 @@
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import React from "react";
 import "../../css/notice_css/Notice.css";
 import axios from "axios";
@@ -29,7 +29,7 @@ const FaqManagingListItem = ({posts, setPosts}) => {
                 .then(response => {
                     console.log("Faq 삭제 성공 ");
                     alert("게시글이 삭제되었습니다.");
-                    window.location.href = `/admin/FaqManagement/page=${1}`;
+                    window.location.href = `/admin/faq-management/page=${1}`;
                 })
                 .catch(error => {
                     console.error("Error:", error);
@@ -43,8 +43,8 @@ const FaqManagingListItem = ({posts, setPosts}) => {
     return (
         <tr className={`post_list ${posts.type === "FAQ" ? "faq_row" : ""}`}>
             <td>
-                <Link to={`/faqdetail/${posts.postId}`}
-                      state={{ postType: posts.postType }}
+                <Link to={`/faq/detail/${posts.postId}`}
+                      state={{postType: posts.postType}}
                       style={{
                           textDecoration: "none",
                           color: "inherit",

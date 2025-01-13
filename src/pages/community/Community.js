@@ -1,6 +1,6 @@
 import Header from "../../components/repeat_etc/Header";
 import React, {useEffect, useState} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 import "../../css/community_css/Community.css";
 import SearchBar from "../../components/community/CommSearchBar";
@@ -21,9 +21,9 @@ const Community = () => {
     const location = useLocation();
     const pageparams = location.state ? location.state.page : 1;
     const [page, setPage] = useState(pageparams);
-    const [count, setCount] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const insertPage = location.state && location.state.page;
+    const [totalPages, setTotalPages] = useState(1);
 
     const searchQuery = new URLSearchParams(location.search).get("q");
     const categoryOption = new URLSearchParams(location.search).get("category");
@@ -47,15 +47,14 @@ const Community = () => {
             }
 
             const response = await axios.get("/api/communities", {
-                params: { page: pageNumber },
+                params: {page: pageNumber},
                 withCredentials: true,
                 headers,
             });
 
-            console.log(response.data);
+            setTotalPages(response.data.totalPages);
             setPosts(response.data.posts);
-            setItemsPerPage(response.data.currentPage);
-            setCount(response.data.posts.length);
+            setTotalElements(response.data.totalElements);
         } catch (error) {
             console.error("데이터 가져오기 실패:", error);
         }
@@ -68,7 +67,7 @@ const Community = () => {
     const handleSearchPost = (pageNumber) => {
         let base_url = "/api/communities";
         let params = {
-            page:pageNumber
+            page: pageNumber
         }
         if (categoryOption && categoryOption !== "전체") {
             // 특정 카테고리를 선택한 경우
@@ -99,9 +98,10 @@ const Community = () => {
             .then((res) => {
                 console.log(base_url);
                 console.log(params);
-                console.log(res.data);
+
                 setPosts(res.data.posts);
-                setCount(res.data.posts.length);
+                setTotalElements(res.data.totalElements);
+                setTotalPages(res.data.totalPages);
             })
             .catch((error) => console.error("데이터 가져오기 실패:", error));
     }
@@ -130,7 +130,7 @@ const Community = () => {
                 <p id={"entry-path"}> 홈 > 커뮤니티 </p>
                 <Backarrow subname={"COMMUNITY LIST"}/>
                 {showPostInsert && (
-                    <PostInsert />
+                    <PostInsert/>
                 )}
                 {!showPostInsert && (
                     <div>
@@ -144,25 +144,25 @@ const Community = () => {
                             <div className={"community-content"}>
                                 <table className="post_table">
                                     <thead>
-                                        <tr>
-                                            <th>카테고리</th>
-                                            <th style={{width:"30%"}}>제목</th>
-                                            <th>닉네임</th>
-                                            <th>날짜</th>
-                                            <th>조회수</th>
-                                            <th>좋아요수</th>
-                                        </tr>
+                                    <tr>
+                                        <th>카테고리</th>
+                                        <th style={{width: "30%"}}>제목</th>
+                                        <th>닉네임</th>
+                                        <th>날짜</th>
+                                        <th>조회수</th>
+                                        <th>좋아요수</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {posts.map((post) => (
-                                            <PostListItem key={post.postId}
-                                                          isMyLikePost={false}
-                                                          posts={post}/>
-                                        ))}
+                                    {posts.map((post) => (
+                                        <PostListItem key={post.postId}
+                                                      isMyLikePost={false}
+                                                      posts={post}/>
+                                    ))}
                                     </tbody>
                                 </table>
                                 {posts.length === 0 && (
-                                    <h4 style={{textAlign:"center"}}>검색 결과가 없습니다.</h4>
+                                    <h4 style={{textAlign: "center"}}>검색 결과가 없습니다.</h4>
 
                                 )}
                                 <br/>
@@ -173,7 +173,8 @@ const Community = () => {
             </div>
             {posts.length !== 0 && (
                 <div className="pagingDiv">
-                    <Paging page={page} totalItemCount={count} itemsPerPage={10}
+                    <Paging page={page} totalItemCount={totalElements} itemsPerPage={itemsPerPage}
+                            totalPages={totalPages}
                             handlePageChange={handlePageChange}/>
                 </div>
             )}
