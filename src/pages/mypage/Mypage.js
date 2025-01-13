@@ -116,14 +116,14 @@ const Mypage = ({sideheader}) => {
     }, []);
 
     useEffect(() => {
-        axios.get("/api/user/mypage/credibility", {
+        axios.post("/api/members/credibility", null, {
             withCredentials: true,
             headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'
+                'Authorization': `Bearer ${accessToken}`
             }
-        }).then((response) => {
-            console.log("개인 신뢰도 가져오기 성공", response.data);
-            setCredibility(response.data);
+        }).then((res) => {
+            console.log("개인 신뢰도 가져오기 성공", res.data);
+            setCredibility(res.data.credibility);
         }).catch((error) => {
             console.error("전송 실패", error.response.data); // Log the response data
         });
