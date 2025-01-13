@@ -8,7 +8,7 @@ const category = () => {
 			<div className="c_01">
 				<div id={"c_title"}>
 				<Link
-					to={"/"}
+					to={"/mypage"}
 					style={{
 						textDecoration: "none",
 						color: "inherit",

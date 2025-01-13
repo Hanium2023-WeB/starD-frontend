@@ -104,7 +104,7 @@ const PostDetail = () => {
             })
             .then(response => {
                 console.log("커뮤니티 게시글 수정 성공");
-                alert("게시글이 수정되었습니다.");
+                toast.success("게시글이 수정되었습니다.");
 
                 setPostItem(response.data);
                 setEditing(false);
@@ -113,7 +113,7 @@ const PostDetail = () => {
             .catch(error => {
                 console.error("Error:", error);
                 console.log("커뮤니티 게시글 수정 실패");
-                alert("수정에 실패했습니다.");
+                toast.error("게시글 수정에 실패했습니다.");
             });
     }
 
@@ -129,7 +129,7 @@ const PostDetail = () => {
             })
                 .then(response => {
                     console.log("커뮤니티 게시글 삭제 성공 ");
-                    alert("게시글이 삭제되었습니다.");
+                    toast.success("게시글이 삭제되었습니다.");
 
                     const updatedPosts = posts.filter(post => post.postId !== postDetail[0].postId);
                     setPosts(updatedPosts);
@@ -139,7 +139,7 @@ const PostDetail = () => {
                     console.error("Error:", error);
                     console.log("커뮤니티 게시글 삭제 실패");
 
-                    alert("삭제에 실패했습니다.");
+                    toast.error("게시글 삭제에 실패했습니다.");
                 });
         }
     }

@@ -75,37 +75,6 @@ const Mypage = ({sideheader}) => {
             });
     }, []);
 
-    const scrapstory = () => {
-        return (
-            <>
-                {(scrapedPosts.length === 0) && <p className="no_scrap">스크랩한 게시글이 없습니다.</p>}
-                {(scrapedPosts.length !== 0) &&
-                    <table className="post_table">
-                        <th>카테고리</th>
-                        <th>제목</th>
-                        <th>닉네임</th>
-                        <th>날짜</th>
-                        <th>조회수</th>
-                        {scrapedPosts.map((post) => (
-                            <tr className="post_list">
-                                <td className="community_category">{post.category}</td>
-                                <Link to={`/postdetail/${post.id}`}
-                                      style={{
-                                          textDecoration: "none",
-                                          color: "inherit",
-                                      }}>
-                                    <td className="community_title">{post.title}</td>
-                                </Link>
-                                <td className="community_nickname">{post.member.nickname}</td>
-                                <td className="community_datetime">{formatDatetime(post.createdAt)}</td>
-                                <td>{post.viewCount}</td>
-                            </tr>
-                        ))}
-                    </table>
-                }
-            </>
-        );
-    };
 
     const ShowAllToDo = () => {
         navigate("/mypage/todo-list", {
@@ -147,14 +116,14 @@ const Mypage = ({sideheader}) => {
     }, []);
 
     useEffect(() => {
-        axios.get("/api/user/mypage/credibility", {
+        axios.post("/api/members/credibility", null, {
             withCredentials: true,
             headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'
+                'Authorization': `Bearer ${accessToken}`
             }
-        }).then((response) => {
-            console.log("개인 신뢰도 가져오기 성공", response.data);
-            setCredibility(response.data);
+        }).then((res) => {
+            console.log("개인 신뢰도 가져오기 성공", res.data);
+            setCredibility(res.data.credibility);
         }).catch((error) => {
             console.error("전송 실패", error.response.data); // Log the response data
         });
@@ -300,14 +269,6 @@ const Mypage = ({sideheader}) => {
                                 )}
                             </div>
                         </div>
-                    </div>
-
-                    <p>스크랩한 스터디</p>
-                    <Slide state={state} type="scrap"/>
-                    <p>스크랩한 게시글</p>
-                    <div className="sub_container">
-                        {scrapstory()}
-                        {/* <Scrap/> */}
                     </div>
                 </div>
             </div>

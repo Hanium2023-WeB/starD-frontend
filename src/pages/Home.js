@@ -236,7 +236,6 @@ const Home = () => {
                                   color: "inherit",
                                 }}> <button
                       id="todo_more">{`ToDo Page >>`}</button></MemoizedLink></span>
-                    <hr className="todo_hr" />
                     {filteredToDo.length === 0 ? (
                         <div className="empty_today_todo">
                                           <span>
