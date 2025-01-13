@@ -424,6 +424,9 @@ input {
   justify-content: space-between;
   font-size: 1.2vw;
   font-weight: bold;
+  border-bottom: 1px solid #99A98F;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
 }
 
 .todo_hr {
