@@ -330,7 +330,7 @@ input {
   box-shadow: 5px 5px rgba(111, 123, 124, 0.15);
   background-color: #cbefcc;
   border-radius: 20px;
-  margin-left: 10px;
+  /*margin-left: 10px;*/
   margin-top: 20px;
   font-family: 'Pretendard-Regular';
   display: flex;
@@ -398,8 +398,9 @@ input {
   display: flex;
   flex-direction: row;
   height: 370px;
-  margin-left: 10px;
+  /*margin-left: 10px;*/
   margin-bottom: 30px;
+  justify-content: space-around;
 }
 
 .dashboard_todo {
@@ -412,7 +413,6 @@ input {
   border-radius: 20px;
   background-color: #faf9b9;
   padding: 10px;
-  margin-left: 10px;
   margin-top: 20px;
   font-family: 'Pretendard-Regular';
   box-shadow: 5px 5px rgba(111, 123, 124, 0.15);
@@ -436,6 +436,8 @@ input {
 button#todo_more {
   border-style: none;
   color: white;
+  font-size: 12px;
+  padding: 5px 10px;
   /*background-color: #F6FFDE;*/
   cursor: pointer;
   background-color: #d6d8c5;
@@ -448,7 +450,7 @@ button#todo_more {
   height: 105%;
   /*border: 1px solid #0d0d2a;*/
   border-radius: 20px;
-  margin-left: 10px;
+  margin-left: 5px;
   margin-top: 20px;
   font-family: 'Pretendard-Regular';
   background-color: #ddead8;

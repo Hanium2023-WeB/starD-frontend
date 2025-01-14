@@ -2,9 +2,11 @@
     width: 95%;
     max-width: 900px;
 }
-.dashboard_detail{
+
+.dashboard_detail {
     overflow: auto;
 }
+
 .dashboard_detail::-webkit-scrollbar {
     width: 5px; /* 스크롤바 너비 */
 }
@@ -12,27 +14,37 @@
 .dashboard_detail::-webkit-scrollbar-thumb {
     background-color: #a5c9ca; /* 스크롤바 색상 */
 }
-.View_All{
+
+.View_All {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin:10px 0 10px 20px;
-    border-bottom: 1px solid #99A98F;
+    margin: 10px 0 10px 20px;
+    border-bottom: 2px solid #99A98F;
     padding-bottom: 10px;
 }
-#view-subtitle{
+
+#view-subtitle {
     font-size: 20px;
     font-weight: bolder;
 }
-.see_all_btn{
+
+.see_all_btn {
     cursor: pointer;
+    background-color: #d6d8c5;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
 }
+
 /*hr{*/
 /*    margin-left: 15px;*/
 /*}*/
-.dashboard_container{
+.dashboard_container {
     display: flex;
     padding-top: 10px;
     padding-left: 35px;
@@ -42,54 +54,109 @@
     font-family: 'Pretendard-Regular';
 }
 
-.HomeDashBoard{
+.HomeDashBoard {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
-.HomeDashBoard > .study_list{
-     display: flex;
+
+.HomeDashBoard > .study_list {
+    display: flex;
     flex-direction: column;
     width: 90%;
 }
-.HomeDashBoard >.study_list> .list {
-width: 600px;
+
+.HomeDashBoard > .study_list > .list {
+    width: 600px;
 }
-.dashboardlist{
-    border: 1px solid #395B64;
+
+.dashboardlist {
+    /*border: 1px solid #395B64;*/
+    background-color: #fffff8;
     margin: 5px;
     border-radius: 10px;
     padding: 10px;
     width: 105%;
     cursor: pointer;
 }
-.HomeDashBoard .list_deadline{
+
+.HomeDashBoard .list_deadline {
     margin-top: 10px !important;
 }
-.dashboard_header{
+
+.dashboard_header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.dashboard_sub_header{
+
+.dashboard_sub_header {
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 440px;
+    width: 100%;
     margin-bottom: 5px;
     /*justify-content: space-between;*/
- }
-.dashboard_day{
+}
+
+.dashboard_day {
     font-size: 13px;
     color: #395B64;
     margin-left: 10px;
     margin-right: 10px;
 }
-.dashboardsubdetail{
+
+.dashboardsubdetail {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
-.dashboardsubdetail .list_onoff{
+
+.dashboardsubdetail .list_onoff {
     margin-bottom: 0 !important;
+}
+
+.dashboard1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%; /* 부모 요소의 너비를 기준으로 */
+    margin-bottom: 5px;
+}
+
+.dashboard2 {
+    flex: 2.5; /* 제목이 상대적으로 적은 공간을 차지 */
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    overflow: hidden; /* 내용이 너무 길면 숨김 */
+    text-overflow: ellipsis; /* 말줄임표 표시 */
+}
+
+.dashboard3 {
+    flex: 1; /* 날짜가 제목보다 적은 공간을 차지 */
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #efefef;
+    margin-left: 10px;
+    text-align: center;
+    border-radius: 20px;
+    padding: 5px 3px;
+    margin-right: 7px;
+}
+
+.dashboard4 {
+    flex: 0.6; /* 진행 상태가 일정 공간을 차지 */
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    background-color: #BBDF9F;
+    border-radius: 20px;
+    text-align: center; /* 오른쪽 정렬 */
+    display: flex; /* Flexbox 적용 */
+    justify-content: center; /* 가로 방향 가운데 정렬 */
+    align-items: center; /* 세로 방향 가운데 정렬 */
+    /*height: 25px; !* 높이 지정 (필요 시 조정 가능) *!*/
+    padding: 5px 3px;
+    margin-right: 10px;
 }
