@@ -8,6 +8,7 @@ import TeamAddSchedule from "../../components/teamschedules/TeamAddSchedule";
 import TeamScheduleCalender from "../../components/teamschedules/TeamScheduleCalender";
 import {useLocation} from "react-router-dom";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
+import toast from "react-hot-toast";
 
 const TeamSchedule = () => {
     const [meetings, setMeetings] = useState({});
@@ -93,8 +94,10 @@ const TeamSchedule = () => {
         }).then((res) => {
             console.log("전송 성공", res.data);
             setSchedules([...schedules, res.data]);
+            toast.success("일정이 등록되었습니다.");
         }).catch((error) => {
             console.error("전송 실패", error.response.data); // Log the response data
+            toast.error("일정 등록에 실패했습니다.");
         });
         nextId.current += 1;
     }, [meetings, selectedDate]);
@@ -118,24 +121,29 @@ const TeamSchedule = () => {
                 const updatedSchedules = schedules.map((schedule) => schedule.scheduleId === res.data.scheduleId ? res.data : schedule);
                 return updatedSchedules;
             });
+            toast.success("일정이 수정되었습니다.");
         }).catch((error) => {
             console.error("전송 실패", error);
+            toast.error("일정 수정에 실패했습니다.");
         });
 
     }, [meetings, selectedDate]);
 
 
     const onRemove = (id) => {
-        axios.delete(`/api/schedule/${id}`, {
-            withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
+        axios.delete(`/api/studies/${studyIdAsNumber}/schedules/${id}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
             }
         }).then((res) => {
             console.log("삭제 성공", res.data);
-            const data = schedules.filter((item) => item.id !== id)
+            const data = schedules.filter((item) => item.scheduleId !== id)
             setSchedules(data);
+            toast.success("일정이 삭제되었습니다.");
         }).catch((error) => {
             console.error("삭제 실패", error);
+            toast.error("일정 삭제에 실패했습니다.");
         });
 
     };

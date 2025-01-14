@@ -54,7 +54,7 @@ const TeamEditSchedule = ({studies, studyTitles, editdata, onUpdate, onRemove, o
     );
     const onDelete = useCallback(
         (e) => {
-            onRemove(editdata.id);
+            onRemove(editdata.scheduleId);
             onClose();
         },
         []
