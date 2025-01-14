@@ -38,7 +38,7 @@ const TeamEditSchedule = ({studies, studyTitles, editdata, onUpdate, onRemove, o
         (e) => {
             if (title !== "") {
                 onUpdate(
-                    editdata.id,
+                    editdata.scheduleId,
                     startDate,
                     title,
                     color
@@ -50,7 +50,7 @@ const TeamEditSchedule = ({studies, studyTitles, editdata, onUpdate, onRemove, o
             onClose();
             e.preventDefault();
         },
-        [ title, color]
+        [title, color]
     );
     const onDelete = useCallback(
         (e) => {
@@ -63,7 +63,7 @@ const TeamEditSchedule = ({studies, studyTitles, editdata, onUpdate, onRemove, o
     return (
         <div className="background">
             <form className="Scheduleedit_insert">
-                <h2>{editdata.title}</h2>
+                <h2 style={{marginBottom:"50px"}}>{editdata.title}</h2>
                 <div className="selecttitle">
                     <p>일정 이름:</p>
                     <input

@@ -80,9 +80,6 @@ const TeamSchedule = () => {
         const startDay = new Date(start_date);
         const formattedDate = `${startDay.getFullYear()}-${String(startDay.getMonth() + 1).padStart(2, '0')}-${String(startDay.getDate()).padStart(2, '0')}T${String(startDay.getHours()).padStart(2, '0')}:${String(startDay.getMinutes()).padStart(2, '0')}:${String(startDay.getSeconds()).padStart(2, '0')}`;
 
-        const schedule = {
-            id: nextId.current, title: title, startDate: formattedDate, color: color,
-        };
         axios.post(`/api/studies/${studyIdAsNumber}/schedules`, {
             title: title,
             color: color,
@@ -107,16 +104,18 @@ const TeamSchedule = () => {
         console.log("title:", newTitle);
         console.log("COLOR:", newColor);
 
-        axios.put(`/api/schedule/${id}`, {}, {
-            params: {
-                title: newTitle, color: newColor,
-            }, withCredentials: true, headers: {
+        axios.put(`/api/studies/${studyIdAsNumber}/schedules/${id}`, {
+            title: newTitle,
+            color: newColor,
+        }, {
+            withCredentials: true,
+            headers: {
                 'Authorization': `Bearer ${accessToken}`,
             }
         }).then((res) => {
             console.log("전송 성공", res.data);
             setSchedules((schedules) => {
-                const updatedSchedules = schedules.map((schedule) => schedule.id === res.data.id ? res.data : schedule);
+                const updatedSchedules = schedules.map((schedule) => schedule.scheduleId === res.data.scheduleId ? res.data : schedule);
                 return updatedSchedules;
             });
         }).catch((error) => {
