@@ -83,14 +83,14 @@ const TeamSchedule = () => {
         const schedule = {
             id: nextId.current, title: title, startDate: formattedDate, color: color,
         };
-        axios.post(`/api/studies/{studyId}/schedules`, {
-            task: title,
-            dueDate:formattedDate,
+        axios.post(`/api/studies/${studyIdAsNumber}/schedules`, {
+            title: title,
+            color: color,
+            startDate:formattedDate,
 
         }, {
-            params: {
-                studyId: studyIdAsNumber
-            }, withCredentials: true, headers: {
+            withCredentials: true,
+            headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         }).then((res) => {
@@ -148,7 +148,7 @@ const TeamSchedule = () => {
             <div className="main_schedule_container">
                 <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 스터디 일정</p>
                 <Backarrow subname={"팀 스터디 모임 일정"}/>
-                <div className="sub_container" id="todo_sub">
+                <div className="sub_container" id="schedule_sub">
                     <TeamScheduleCalender
                         studyId = {studyIdAsNumber}
                         studies={studies}
