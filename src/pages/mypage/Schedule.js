@@ -139,7 +139,7 @@ const Schedule = ({sideheader}) => {
                 <Category/>
                 <div className="main_schedule_container">
                     <Backarrow subname={"스터디 모임 일정"}/>
-                    <div className="sub_container" id="todo_sub">
+                    <div className="sub_container" id="todo_sub" style={{left:"0", width:"135%"}}>
                         <ScheduleCalender
                             studies={studies}
                             studyTitles={studyTitles}

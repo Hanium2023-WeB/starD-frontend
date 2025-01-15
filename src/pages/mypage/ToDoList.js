@@ -24,109 +24,91 @@ const ToDoList = ({sideheader}) => {
     const Year = selectedDate.getFullYear();
     let Month = selectedDate.getMonth() + 1;
     const Dates = selectedDate.getDate();
+
     const [studies, setStudy] = useState([]);
     const [studyTitles, setStudyTitles] = useState([]);
     const [studyIds, setStudyIds] = useState([]);
+
+    const [todos, setTodos] = useState([]);
+
     const [studyMems, setStudyMems] = useState([]);
     const [InsertToDoTitle, setInsertToDoTitle] = useState("")
     const [InsertToDoStudyId, setInsertToDoStudyId] = useState("0")
     const [InsertToDoStudy, setInsertToDoStudy] = useState([]);
     const studyIdAsNumber = parseFloat(InsertToDoStudyId);
     const [todoswithAssignee, setTodoswithAssignee] = useState({});
+
+    const [showIncomplete, setShowIncomplete] = useState(true); // 미완료 보여주기 상태
+    const [showCompleted, setShowCompleted] = useState(false); // 완료 보여주기 상태
+
     let lastTodoId = useRef("1");
-    console.log("########: ", studyMems);
+
     useEffect(() => {
-        axios.get("/api/user/mypage/studying", {
-            withCredentials: true, headers: {
+        axios.get("/api/members/studies/participate", {
+            params: { page: 1 },
+            withCredentials: true,
+            headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         })
             .then((res) => {
-                console.log("모집완료된 스터디, 참여멤버 전송 성공 : ", res.data);
-                const studyList = res.data.content;
+                console.log("모집완료된 스터디, 참여멤버 전송 성공 : ", res.data.studyRecruitPosts);
+                const studyList = res.data.studyRecruitPosts;
                 setStudy(studyList);
-                const studiesTitle = studyList.map(item => item.study.title);
+                const studiesTitle = studyList.map(item => item.title);
                 setStudyTitles(studiesTitle);
-                const studiesIds = studyList.map(item => item.study.id);
+                const studiesIds = studyList.map(item => item.studyId);
                 setStudyIds(studiesIds);
-
-                //TODO - map으로 돌면 멤버가 두 번 저장되어있길래..
-                //const ParticipatedStudiesMem = studyList.map(item => item.member.id);
-                const ParticipatedStudiesMem = studyList.length > 0 ? studyList[0].member.id : null;
-
-                console.log("&&&&&&&&   :", studyList);
-                console.log("&&&&&&&&   :", ParticipatedStudiesMem);
-                setStudyMems(ParticipatedStudiesMem);
             })
             .catch((error) => {
                 console.error("모집완료된 스터디, 참여멤버  가져오기 실패:", error);
             });
     }, [accessToken]);
+
     useEffect(() => {
-        if (InsertToDoStudyId === "0") {
-            axios.get(`/api/todo/all`, {
-                params: {
-                    year: Year, month: Month,
-                }, headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }).then((response) => {
-                console.log('전체 스터디 투두리스트 가져오기 성공:', response.data);
-                if (response.data.length > 0) {
-                    lastTodoId = response.data[response.data.length - 1].toDo.id;
-                    console.log('마지막 데이터의 toDo.id:', lastTodoId);
-                } else {
-                    console.log('투두 데이터가 없습니다.');
-                }
-                const groupedTodos = {};
-                response.data.forEach((todoItem) => {
-                    const dueDate = new Date(todoItem.toDo.dueDate).toDateString();
-                    if (!groupedTodos[dueDate]) {
-                        groupedTodos[dueDate] = [];
-                    }
-                    groupedTodos[dueDate].push(todoItem);
+        if (studyIds.length > 0) {
+            // 각 studyId별로 API 호출
+            const todoRequests = studyIds.map((studyId) =>
+                axios.get(`/api/studies/${studyId}/to-dos`, {
+                    params: { year: Year, month: Month },
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                })
+            );
+
+            // 모든 요청이 완료된 후 결과 처리
+            Promise.all(todoRequests)
+                .then((responses) => {
+                    const localNickname = localStorage.getItem("nickname");
+                    const filteredTodos = [];
+
+                    responses.forEach((response) => {
+                        const todos = response.data;
+                        console.log(response.data);
+
+                        todos.forEach((todoItem) => {
+                            // assignees 배열에서 localNickname과 일치하는 항목이 있는지 확인
+                            const hasMatchingAssignee = todoItem.assignees.some(
+                                (assignee) => assignee.nickname === localNickname
+                            );
+
+                            if (hasMatchingAssignee) {
+                                filteredTodos.push(todoItem);
+                            }
+                        });
+                    });
+
+                    setTodos(filteredTodos);
+                    console.log("필터링된 투두리스트:", filteredTodos);
+                })
+                .catch((error) => {
+                    console.log("스터디별 투두리스트 가져오기 실패:", error);
                 });
-
-                setTodoswithAssignee((prevTodos) => ({
-                    ...prevTodos, ...groupedTodos,
-                }));
-            }).catch((error) => {
-                console.log('전체 스터디 투두리스트 가져오기 실패:', error);
-            })
-        } else {
-            axios.get(`/api/todo/user/${studyIdAsNumber}`, {
-                params: {
-                    year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1,
-                }, headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }).then((response) => {
-                console.log('스터디별 투두리스트 가져오기 성공:', response.data);
-                const maxId = Math.max(...response.data.map(schedule => schedule.id));
-                if (response.data.length > 0) {
-                    lastTodoId = response.data[response.data.length - 1].toDo.id;
-                    console.log('마지막 데이터의 toDo.id:', lastTodoId);
-
-                } else {
-                    console.log('투두 데이터가 없습니다.');
-                }
-                const groupedTodos = {};
-                response.data.forEach((todoItem) => {
-                    const dueDate = new Date(todoItem.toDo.dueDate).toDateString();
-                    if (!groupedTodos[dueDate]) {
-                        groupedTodos[dueDate] = [];
-                    }
-                    groupedTodos[dueDate].push(todoItem);
-                });
-
-                setTodoswithAssignee((prevTodos) => ({
-                    ...prevTodos, ...groupedTodos,
-                }));
-            }).catch((error) => {
-                console.log('스터디별 투두리스트 가져오기 실패:', error);
-            })
         }
-    }, [InsertToDoStudyId]);
+    }, [studyIds, Year, Month, accessToken]);
+
+    useEffect(() => {
+        console.log(todos);
+    }, [todos]);
 
     const onInsertToggle = () => {
         if (selectedTodo) {
@@ -138,117 +120,6 @@ const ToDoList = ({sideheader}) => {
     const onChangeSelectedTodo = (todo) => {
         setSelectedTodo(todo);
     };
-
-
-    const dateKey = selectedDate.toDateString();
-
-    const onInsert = useCallback((title, task, studyId, id) => {
-        console.error("studyId:", studyId);
-        const filteredObjects = studies.find((item) => item.study.id === studyId);
-        if (!filteredObjects) {
-            console.error("Study not found for studyId:", studyId);
-            return;
-        } else {
-            console.log("filteredObjects", filteredObjects);
-            console.log("title", title);
-            const dateKey = selectedDate.toDateString();
-            const todo = {
-                id: id,
-                study: filteredObjects.study,
-                task: task,
-                date: dateKey,
-                assignees: filteredObjects.member,
-            };
-            const TodoWithAssign = {
-                toDo: todo, member: filteredObjects.member, toDoStatus: false,
-            }
-
-            setTodoswithAssignee((prevTodos) => ({
-                ...prevTodos, [dateKey]: [...(prevTodos[dateKey] || []), TodoWithAssign],
-            }));
-        }
-    }, [selectedDate, studies]);
-
-    const filteredTodos = todoswithAssignee[dateKey] || [];
-
-
-    const onRemove = useCallback(
-        async (id) => {
-            console.log("id", id);
-            alert("삭제하시겠습니까?");
-
-            try {
-                const deleteDataResponse = await axios.delete(`/api/todo/${id}`, {
-                    withCredentials: true, headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-                console.log("삭제 성공:", deleteDataResponse.data);
-                setTodoswithAssignee((prevTodos) => {
-                    const updatedTodos = {...prevTodos};
-                    Object.keys(updatedTodos).forEach((dateKey) => {
-                        updatedTodos[dateKey] = updatedTodos[dateKey].filter((todo) => todo.toDo.id !== id);
-                    });
-                    return updatedTodos;
-                });
-            } catch (error) {
-                console.error("삭제 실패:", error);
-                // Handle the error appropriately (e.g., show an error message to the user)
-            }
-        }, []);
-
-    const onUpdate = async (UpdatedToDo) => {
-        console.log("selectedTodo..:", UpdatedToDo);
-        onInsertToggle();
-        const assigneeStr = studyMems.toString();
-        console.log("assigneeStr..:", assigneeStr);
-        console.log("dueDate..:", UpdatedToDo.toDo.date);
-
-        //TODO - (2023-11-06T16:45:12.958) 이런 식으로 날짜 넘기면 오류 안 나요
-        const currentDate = new Date();
-        const offset = currentDate.getTimezoneOffset();
-        currentDate.setMinutes(currentDate.getMinutes() - offset);
-
-        const isoString = currentDate.toISOString(); // 현재 날짜 및 시간을 ISO 8601 형식의 문자열로 변환
-        console.log("isoString..:", isoString);
-
-        const todoData = {
-            task: UpdatedToDo.toDo.task, dueDate: isoString,
-        };
-        const postDataResponse = await axios.put(`/api/todo/${UpdatedToDo.toDo.id}`, todoData, {
-            params: {
-                studyId: UpdatedToDo.toDo.study.id, assigneeStr: assigneeStr,
-            }, withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((postDataResponse) => {
-                console.log("전송 성공:", postDataResponse.data);
-
-                const updatedTodos = {
-                    ...todoswithAssignee,
-                    [dateKey]: todoswithAssignee[dateKey].map((todo) =>
-                        todo.toDo.id === UpdatedToDo.toDo.id
-                            ? {
-                                toDo: {
-                                    ...todo.toDo,
-                                    study: {...todo.toDo.study, id: UpdatedToDo.toDo.study.id},
-                                    task: UpdatedToDo.toDo.task,
-                                },
-                                toDoStatus: todo.toDoStatus,
-                            }
-                            : todo
-                    ),
-                };
-
-                setTodoswithAssignee(updatedTodos);
-                console.log("전송 성공t:", updatedTodos);
-            })
-            .catch((error) => {
-                console.error("전송 실패:", error);
-            });
-    };
-
 
     const onToggle = useCallback(async (id, todo_status) => {
         console.log("체크 스터디 아이디", id);
@@ -281,20 +152,6 @@ const ToDoList = ({sideheader}) => {
         console.log(`선택한 날짜 : ${day}`);
     };
 
-    const [currentMonth, setCurrentMonth] = useState(new Date());
-
-    const prevMonth = () => {
-        setCurrentMonth(subMonths(currentMonth, 1));
-    };
-    const nextMonth = () => {
-        setCurrentMonth(addMonths(currentMonth, 1));
-    };
-
-    useEffect(() => {
-        Month = format(currentMonth, "M")
-    }, [currentMonth]);
-
-
     const selectStudy = (e) => {
         setInsertToDoTitle(e.target.value)
         if (e.target.value !== "전체") {
@@ -317,32 +174,91 @@ const ToDoList = ({sideheader}) => {
 
     }, [InsertToDoStudyId, studyIdAsNumber]);
 
+    // 미완료 버튼 클릭 핸들러
+    const handleShowIncomplete = () => {
+        setShowIncomplete(true);
+        setShowCompleted(false);
+    };
+
+    // 완료 버튼 클릭 핸들러
+    const handleShowCompleted = () => {
+        setShowIncomplete(false);
+        setShowCompleted(true);
+    };
+
+    const filteredTodos = todos.filter((todo) => {
+        // Todo의 날짜를 00:00:00으로 설정하여 비교
+        const todoDate = new Date(todo.dueDate);
+        todoDate.setHours(0, 0, 0, 0); // 시간 부분을 00:00:00으로 설정
+
+        // selectedDate의 시간도 00:00:00으로 설정
+        const selectedDateCopy = new Date(selectedDate);
+        selectedDateCopy.setHours(0, 0, 0, 0); // 시간 부분을 00:00:00으로 설정
+
+        // 날짜 비교
+        const isSameDate = todoDate.getTime() === selectedDateCopy.getTime();
+
+        // 모든 assignee의 toDoStatus가 true일 때 완료로 간주
+        const allAssigneesCompleted = todo.assignees.every((assignee) => assignee.toDoStatus === true);
+
+        // assignee 상태에 따른 완료/미완료 여부 체크
+        const isIncomplete = todo.assignees.length > 0
+            ? !allAssigneesCompleted
+            : !todo.toDoStatus;
+
+        const isComplete = allAssigneesCompleted || (todo.assignees.length === 0 && todo.toDoStatus);
+
+        return (
+            isSameDate &&
+            ((showCompleted && isComplete) || (showIncomplete && isIncomplete))
+        );
+    });
+
     return (<div>
         <Header showSideCenter={true}/>
         <div className="container">
             <Category/>
             <div className="main_container">
                 <Backarrow subname={"투두 리스트"}/>
-                <div className="sub_container" id="todo_sub">
+                <div className="sub_container" id="todo_sub" style={{left:"40px"}}>
                     <div className="todo_container">
+                        <div className="todo_status">
+                            <div
+                                onClick={handleShowIncomplete}
+                                style={{
+                                    backgroundColor: showIncomplete ? "#99a98f" : "#F2F1EE99", // 미완료 버튼 색상
+                                    color: showIncomplete ? "white" : "black"
+                                }}
+                            >
+                                미완료
+                            </div>
+                            <div
+                                onClick={handleShowCompleted}
+                                style={{
+                                    backgroundColor: showCompleted ? "#99a98f" : "#F2F1EE99", // 완료 버튼 색상
+                                    color: showCompleted ? "white" : "black"
+                                }}
+                            >
+                                완료
+                            </div>
+                        </div>
                         <div className="today">
-                            {" "}
-                            <span>{`오늘은 ${Year}년 ${Month}월 ${Dates}일입니다.`}</span>
+                            <h3>{`오늘은 ${Year}년 ${Month}월 ${Dates}일입니다.`}</h3>
+                            <input
+                                type="date"
+                                placeholder={"날짜를 선택해주세요."}
+                                value={new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000)).toISOString().substring(0, 10)}
+                                onChange={(e) => handleDateClick(e.target.value)} // 선택된 날짜를 handleDateClick으로 전달
+                            />
                         </div>
                         <div>
                             <select id="todo-select" onChange={selectStudy} value={InsertToDoTitle}>
                                 <option value="전체">전체보기</option>
                                 {studyTitles.map((item, index) => (
                                     <option key={index} value={item}>{item}</option>
-
                                 ))}
                             </select>
                         </div>
-                        <ToDoInsert onInsert={onInsert} dueDate={selectedDate} Inserttodostudyid={InsertToDoStudyId}
-                                    Inserttodotitle={InsertToDoTitle} Inserttodostudy={InsertToDoStudy}
-                                    studyidasnumber={studyIdAsNumber} onClose={() => {
-                            setInsertToggle((prev) => !prev);
-                        }}/>
                         <ul className="TodoList">
                             {filteredTodos.length === 0 && (<div className="alert_empty_todo">
                                 <span>할 일이 없습니다.<br/>  할 일을 입력해주세요.</span>
@@ -352,23 +268,15 @@ const ToDoList = ({sideheader}) => {
                                     return (<ToDoListItem
                                         todos={todo}
                                         key={todo.toDo.id}
-                                        onRemove={onRemove}
                                         onToggle={onToggle}
                                         onChangeSelectedTodo={onChangeSelectedTodo}
                                         onInsertToggle={onInsertToggle}
                                         selectedDate={selectedDate}
-
                                     />)
                                 }
                             }))}
                         </ul>
-                        {insertToggle && (<ToDoEdit selectedTodo={selectedTodo} onUpdate={onUpdate}
-                                                    participatedstudies={studies} onClose={() => {
-                            setInsertToggle((prev) => !prev);
-                        }}/>)}
                     </div>
-                    <Calender todo={todoswithAssignee} onDateClick={handleDateClick} prevMonth={prevMonth}
-                              nextMonth={nextMonth} currentMonth={currentMonth}/>
                 </div>
             </div>
         </div>
