@@ -18,6 +18,37 @@
     position: relative;
     margin-top: 15px;
 }
+.main_schedule_container .select_month{
+    width:auto;
+    height: 40px;
+    text-align:center;
+    font-size:15px;
+    padding:0 20px;
+    box-sizing: border-box;
+    margin:0 10px;
+}
+.main_schedule_container .schedule_list{
+    margin-top: 50px;
+}
+.main_schedule_container .schedule_list .schedule_date{
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 15px;
+}
+.main_schedule_container .schedule_list .schedule_title{
+    margin:0 0 10px 15px;
+    padding:5px 10px;
+    border-radius: 10px;
+    display: block; /* 글자만큼 너비 */
+    width: fit-content;    /* 글자 길이만큼만 너비 */
+    box-sizing: border-box;
+    white-space: nowrap;   /* 글자 길이에 맞춰 한 줄로 유지 */
+}
+.main_schedule_container .schedule_list .schedule_title p{
+    font-size: 17px;
+    margin:0;
+}
+
 .Schedulecalendar > .header.row{
     display: flex;
     flex-direction: row;
