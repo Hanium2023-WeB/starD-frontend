@@ -1,0 +1,13 @@
+.spinner_wrapper{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    margin-top: 130px;
+}
+.spinner_wrapper .spinner_text{
+    margin-top: 20px;
+    color: #99A98F;
+    font-weight: 700;
+    font-size: 14px;
+}

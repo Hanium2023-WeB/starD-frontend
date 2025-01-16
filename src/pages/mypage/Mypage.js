@@ -21,6 +21,7 @@ import "../../css/mypage_css/Mypage.css";
 import Footer from "../../components/repeat_etc/Footer";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
+import {useMyPageContext} from "../../components/datacontext/MyPageContext";
 
 const Mypage = ({sideheader}) => {
     const dataId = useRef(0);
@@ -29,6 +30,7 @@ const Mypage = ({sideheader}) => {
     const [today, setToday] = useState(new Date());
     const [parsedTodos, setParsedTodos] = useState([]);
     const [parsedmeetings, setParsedMeetings] = useState([]);
+    const [schedules, setSchedules] = useState([]);
     const [meetings, setMeetings] = useState({});
     const [todayKey, setTodayKey] = useState("");
     const [credibility, setCredibility] = useState("");
@@ -36,9 +38,11 @@ const Mypage = ({sideheader}) => {
     const accessToken = localStorage.getItem('accessToken');
 
     const [scrapedPosts, setScrapedPosts] = useState([]); //스크랩한 게시물을 보유할 상태 변수
+    const { participateStudies } = useMyPageContext();
+    console.log(participateStudies);
 
-    const Year = today.getFullYear();
-    const Month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
     const Dates = today.getDate()
 
     const formatDatetime = (datetime) => {
@@ -51,6 +55,59 @@ const Mypage = ({sideheader}) => {
         const formattedDatetime = `${year}-${month}-${day} ${hours}:${minutes}`;
         return formattedDatetime;
     };
+
+    useEffect(() => {
+        // 오늘 날짜를 얻어오기
+        const today = new Date();
+        const todayDateString = today.toISOString().split('T')[0];  // "YYYY-MM-DD" 형식으로 오늘 날짜 얻기
+
+        // 참여한 스터디들의 studyId를 가지고 API 호출
+        const scheduleRequests = participateStudies.map((study) =>
+            axios.get(`/api/studies/${study.studyId}/schedules`, {
+                params: { year: year, month: month },
+                headers: { Authorization: `Bearer ${accessToken}` }
+            })
+        );
+
+        // 모든 요청이 완료된 후 결과 처리
+        Promise.all(scheduleRequests)
+            .then((responses) => {
+                const allSchedules = [];
+
+                responses.forEach((response) => {
+                    const schedules = response.data;
+
+                    // 각 일정의 날짜가 유효한지 확인하고, 오늘 날짜에 해당하는 일정만 필터링
+                    schedules.forEach((schedule) => {
+                        const scheduleDate = new Date(schedule.startDate);
+
+                        // 날짜가 유효한지 확인
+                        if (isNaN(scheduleDate)) {
+                            console.log(`Invalid date value: ${schedule.startDate}`);
+                            return;
+                        }
+
+                        const scheduleDateString = scheduleDate.toISOString().split('T')[0];  // "YYYY-MM-DD" 형식으로 변환
+
+                        if (scheduleDateString === todayDateString) {
+                            // 오늘 날짜와 일치하는 일정만 필터링
+                            const study = participateStudies.find(study => study.studyId === schedule.studyId);
+
+                            if (study) {
+                                // studyId와 일치하는 participateStudies에서 title을 찾고, 일정과 함께 저장
+                                allSchedules.push({ ...schedule, studyTitle: study.title });
+                            }
+                        }
+                    });
+                });
+
+                setSchedules(allSchedules);  // 오늘 일정만 setSchedules로 업데이트
+                console.log("오늘 일정 리스트:", allSchedules);
+            })
+            .catch((error) => {
+                console.log("일정 리스트 가져오기 실패:", error);
+            });
+    }, [participateStudies, year, month, accessToken]);
 
     const getTodoItemClassName = (checked) => {
         return checked ? "checked" : "unchecked";
@@ -87,7 +144,7 @@ const Mypage = ({sideheader}) => {
     useEffect(() => {
         axios.get(`/api/todo/all`, {
             params: {
-                year: Year, month: Month,
+                year: year, month: month,
             }, headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -103,7 +160,7 @@ const Mypage = ({sideheader}) => {
     useEffect(() => {
         axios.get("/api/schedule/all", {
             params: {
-                year: Year, month: Month,
+                year: year, month: month,
             }, withCredentials: true, headers: {
                 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'
             }
@@ -190,7 +247,7 @@ const Mypage = ({sideheader}) => {
                             <div className="tag">
                                 <p>오늘의 일정</p>
                                 <Link
-                                    to={"/MyPage/Schedule"}
+                                    to={"/mypage/schedule"}
                                     style={{
                                         textDecoration: "none",
                                         color: "inherit",
@@ -200,25 +257,19 @@ const Mypage = ({sideheader}) => {
                                 </Link>
                             </div>
                             <div id="detail">
-                                <span id="today">{`${Year}. ${Month}. ${Dates}`}</span>
+                                <span id="today">{`${year}. ${month}. ${Dates}`}</span>
                                 <hr/>
-                                {filtereMeetings.length === 0 ? (
+                                {schedules.length === 0 ? (
                                     <div className="empty_today_todo">
                                         <span>일정이 없습니다. 일정을 입력해주세요.</span>
                                     </div>) : (
                                     <ul id="todocontent">
-                                        {filtereMeetings.map((meetings) => (
-                                                <li key={meetings.id}>
-                                                    <div className="study-info">
-                                                        <ul className="meetings-list">
-                                                            <li>
-                                                                <div className="meeting-info">
-                                                                    <p className="meeting-id">{`${meetings.study.title} : ${meetings.title}`}</p>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
+                                        {schedules.map((schedule) => (
+                                            <li key={schedule.scheduleId}>
+                                                <div className="meeting-info">
+                                                    <span>{schedule.studyTitle}</span><span className="meeting-id">{` ➡️ ${schedule.title}`}</span>
+                                                </div>
+                                            </li>
                                             )
                                         )}
                                     </ul>
@@ -240,7 +291,7 @@ const Mypage = ({sideheader}) => {
                                 </Link>
                             </div>
                             <div id="detail">
-                                <span id="today">{`${Year}. ${Month}. ${Dates}`}</span>
+                                <span id="today">{`${year}. ${month}. ${Dates}`}</span>
                                 <hr/>
                                 {filteredToDo.length === 0 ? (
                                     <div className="empty_today_todo">

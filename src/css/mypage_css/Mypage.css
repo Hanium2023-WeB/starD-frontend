@@ -92,13 +92,17 @@ p {
 	font-size: 14px;
 }
 #todocontent{
-	padding: 5px;
 
 }
 #todocontent li{
-	padding: 3px;
 	display: flex;
 	flex-direction: row;
+}
+#todocontent li .meeting-info{
+	margin: 3px 0;
+}
+#todocontent li .meeting-info span:nth-of-type(1){
+	font-weight: 700;
 }
 /* .list_container{
     display: flex;
@@ -128,7 +132,8 @@ p {
 	text-overflow: ellipsis;
 }
 .meeting-id{
-	font-size: 10px;
+	margin:0;
+	font-size: 12px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }

@@ -44,7 +44,10 @@
     font-size: 15px;
   }
   .alert_empty_todo{
-    margin-left: 25px;
+    margin-top: 100px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.4;
   }
 
   @media (max-width: 1300px) {
