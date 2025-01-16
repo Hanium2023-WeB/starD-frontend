@@ -1,6 +1,6 @@
 /* 전체 배경 설정 */
 .background {
-    position: relative;
+    position: fixed;
     top: 0;
     left: 0;
     bottom: 0;

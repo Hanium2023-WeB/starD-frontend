@@ -420,7 +420,7 @@ const TeamToDoList = () => {
                                         studyidasnumber={studyIdAsNumber} Assignees={Assignees}
                                         progressStatus={progressStatus}/>
                         <ul className="TodoList">
-                            {filteredTodos.length === 0 && (<div className="alert_empty_todo">
+                            {filteredTodos.length === 0 && (<div className="alert_empty_todo" style={{marginTop:"25px"}}>
                                 <span>할 일이 없습니다.<br/>  할 일을 입력해주세요.</span>
                             </div>)}
                             {filteredTodos.map((todo => {

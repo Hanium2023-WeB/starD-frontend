@@ -57,7 +57,7 @@ const TeamBlog = () => {
             })
     }
     const ShowAllSchedule = () => {
-        navigate(`/${studyIdAsNumber}/teamblog/TeamSchedule`, {
+        navigate(`/teamblog/${studyIdAsNumber}/schedule`, {
             state: {
                 studyIdAsNumber: studyIdAsNumber,
                 Member: Member,
@@ -113,7 +113,7 @@ const TeamBlog = () => {
         } else {
             console.error("parsedTodos is not an array.");
         }
-    }, [parsedSchedules]);
+    }, [schedules, today]);
 
     if (loading) {
         return <Loading loading={true} />;
