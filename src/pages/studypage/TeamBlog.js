@@ -14,7 +14,7 @@ import Chat from "../../components/chat/Chat";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
-
+import Loading from "../../components/repeat_etc/Loading";
 
 const TeamBlog = () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -22,7 +22,8 @@ const TeamBlog = () => {
     const navigate = useNavigate();
     const {studyId} = study.state;
 
-    const { member, studyItem, progressType, todos, schedules, loading, error } = useTeamBlogContext();
+    const { studyItem, todos, schedules, loading, error } = useTeamBlogContext();
+    console.log(schedules);
     const [parsedTodos, setParsedTodos] = useState([]);
     const [parsedSchedules, setParsedSchedules] = useState([]);
     const [today, setToday] = useState(new Date());
@@ -115,7 +116,7 @@ const TeamBlog = () => {
     }, [parsedSchedules]);
 
     if (loading) {
-        return <div>로딩 중...</div>;
+        return <Loading loading={true} />;
     }
 
     if (error) {
@@ -190,8 +191,7 @@ const TeamBlog = () => {
                                                 <ul id="todocontent">
                                                     {filteredSchedule.map((item) => (
                                                         <li key={item.scheduleId}>
-                                                            {/*<div id="todotext">{item.study.title} |</div>*/}
-                                                            <div id="todotext">{item.title}</div>
+                                                            <span id="todotext">📅 {item.title}</span>
                                                         </li>
                                                     ))}
                                                 </ul>

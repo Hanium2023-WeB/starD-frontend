@@ -861,9 +861,9 @@ footer {
   bottom: 8px;
 }
 
-li span {
-  margin-bottom: 5px;
-}
+/*li span {*/
+/*  margin-bottom: 5px;*/
+/*}*/
 
 .item1 {
   margin-left: 10px;

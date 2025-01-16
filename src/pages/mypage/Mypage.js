@@ -1,18 +1,10 @@
 import React, {useState, useEffect, useRef} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import App from "../../App.js";
-import Slide from "../../components/study/Slide.js";
 import Category from "../../components/repeat_etc/Category.js";
-import ToDoList from "../../pages/mypage/ToDoList.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faStar} from "@fortawesome/free-solid-svg-icons";
 import "../../css/study_css/MyParticipateStudy.css";
 import "../../css/mypage_css/Mypage_Scrap.css";
-import {format} from "date-fns";
-import cn from "classnames";
 import checkbox from "../../images/check.png";
 import uncheckbox from "../../images/unchecked.png";
-import Schedule from "../mypage/Schedule.js";
 import Header from "../../components/repeat_etc/Header";
 
 //https://jsonplaceholder.typicode.com/comments
@@ -23,7 +15,7 @@ import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import {useMyPageContext} from "../../components/datacontext/MyPageContext";
 
-const Mypage = ({sideheader}) => {
+const Mypage = () => {
     const dataId = useRef(0);
     const [state, setState] = useState([]);
     const [todos, setTodos] = useState({});
@@ -31,8 +23,7 @@ const Mypage = ({sideheader}) => {
     const [parsedTodos, setParsedTodos] = useState([]);
     const [parsedmeetings, setParsedMeetings] = useState([]);
     const [schedules, setSchedules] = useState([]);
-    const [meetings, setMeetings] = useState({});
-    const [todayKey, setTodayKey] = useState("");
+
     const [credibility, setCredibility] = useState("");
     const navigate = useNavigate();
     const accessToken = localStorage.getItem('accessToken');
@@ -43,95 +34,53 @@ const Mypage = ({sideheader}) => {
 
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
-    const Dates = today.getDate()
+    const Dates = today.getDate();
 
-    const formatDatetime = (datetime) => {
-        const date = new Date(datetime);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const formattedDatetime = `${year}-${month}-${day} ${hours}:${minutes}`;
-        return formattedDatetime;
-    };
-
+    //일정 가져오기
     useEffect(() => {
-        // 오늘 날짜를 얻어오기
+        // 오늘 날짜를 "YYYY-MM-DD" 형식으로 얻기
         const today = new Date();
-        const todayDateString = today.toISOString().split('T')[0];  // "YYYY-MM-DD" 형식으로 오늘 날짜 얻기
+        const todayDateString = today.toISOString().split('T')[0];
 
-        // 참여한 스터디들의 studyId를 가지고 API 호출
-        const scheduleRequests = participateStudies.map((study) =>
-            axios.get(`/api/studies/${study.studyId}/schedules`, {
-                params: { year: year, month: month },
-                headers: { Authorization: `Bearer ${accessToken}` }
+        // 참여한 스터디들의 일정 데이터 가져오기
+        axios
+            .get(`/api/members/schedules`, {
+                params: { year, month },
+                headers: { Authorization: `Bearer ${accessToken}` },
             })
-        );
+            .then((response) => {
+                const schedules = response.data;
 
-        // 모든 요청이 완료된 후 결과 처리
-        Promise.all(scheduleRequests)
-            .then((responses) => {
-                const allSchedules = [];
-
-                responses.forEach((response) => {
-                    const schedules = response.data;
-
-                    // 각 일정의 날짜가 유효한지 확인하고, 오늘 날짜에 해당하는 일정만 필터링
-                    schedules.forEach((schedule) => {
+                // 오늘 날짜와 일치하는 일정 필터링
+                const todaySchedules = schedules
+                    .filter((schedule) => {
                         const scheduleDate = new Date(schedule.startDate);
+                        // 유효한 날짜인지 확인 및 오늘 날짜와 비교
+                        return !isNaN(scheduleDate) &&
+                            scheduleDate.toISOString().split('T')[0] === todayDateString;
+                    })
+                    .map((schedule) => {
+                        // 해당 일정에 스터디 제목 추가
+                        const study = participateStudies.find(
+                            (study) => study.studyId === schedule.studyId
+                        );
+                        return study
+                            ? { ...schedule, studyTitle: study.title }
+                            : null;
+                    })
+                    .filter((schedule) => schedule !== null); // null 값 제거
 
-                        // 날짜가 유효한지 확인
-                        if (isNaN(scheduleDate)) {
-                            console.log(`Invalid date value: ${schedule.startDate}`);
-                            return;
-                        }
-
-                        const scheduleDateString = scheduleDate.toISOString().split('T')[0];  // "YYYY-MM-DD" 형식으로 변환
-
-                        if (scheduleDateString === todayDateString) {
-                            // 오늘 날짜와 일치하는 일정만 필터링
-                            const study = participateStudies.find(study => study.studyId === schedule.studyId);
-
-                            if (study) {
-                                // studyId와 일치하는 participateStudies에서 title을 찾고, 일정과 함께 저장
-                                allSchedules.push({ ...schedule, studyTitle: study.title });
-                            }
-                        }
-                    });
-                });
-
-                setSchedules(allSchedules);  // 오늘 일정만 setSchedules로 업데이트
-                console.log("오늘 일정 리스트:", allSchedules);
+                setSchedules(todaySchedules); // 오늘 일정만 업데이트
+                console.log("오늘 일정 리스트:", todaySchedules);
             })
             .catch((error) => {
-                console.log("일정 리스트 가져오기 실패:", error);
+                console.error("일정 리스트 가져오기 실패:", error);
             });
     }, [participateStudies, year, month, accessToken]);
 
     const getTodoItemClassName = (checked) => {
         return checked ? "checked" : "unchecked";
     };
-
-
-    useEffect(() => {
-        axios.get("/api/scrap/post", {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log("전송 성공");
-                console.log(res.data);
-
-                setScrapedPosts(res.data);
-            })
-            .catch((error) => {
-                console.error('스크랩한 게시물을 가져오는 중 오류 발생: ', error);
-            });
-    }, []);
-
 
     const ShowAllToDo = () => {
         navigate("/mypage/todo-list", {
@@ -157,21 +106,7 @@ const Mypage = ({sideheader}) => {
         })
     }, []);
 
-    useEffect(() => {
-        axios.get("/api/schedule/all", {
-            params: {
-                year: year, month: month,
-            }, withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            console.log("일정 가져오기 성공", response.data);
-            setParsedMeetings(response.data);
-        }).catch((error) => {
-            console.error("전송 실패", error.response.data); // Log the response data
-        });
-    }, []);
-
+    //신뢰도 가져오기
     useEffect(() => {
         axios.post("/api/members/credibility", null, {
             withCredentials: true,
@@ -202,25 +137,9 @@ const Mypage = ({sideheader}) => {
         }
     }, [parsedTodos]);
 
-    const [filtereMeetings, setFilteredMeetings] = useState([]);
-    useEffect(() => {
-        if (Array.isArray(parsedmeetings)) {
-            const filtereMeetings = parsedmeetings.filter((meet) => {
-                const meetstartDate = new Date(meet.startDate).toDateString();
-                const todayDate = today.toDateString();
-                return meetstartDate === todayDate;
-            });
-            console.log("filtereMeetings: ", filtereMeetings);
-            setFilteredMeetings(filtereMeetings);
-        } else {
-            console.error("parsedTodos is not an array.");
-        }
-    }, [parsedmeetings]);
-
     return (
         <div>
             <Header showSideCenter={true}/>
-
             <div className="container">
                 <Category/>
                 <div className="main_container">

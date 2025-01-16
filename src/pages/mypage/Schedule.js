@@ -1,19 +1,11 @@
-import React, {useState, useRef, useCallback, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import Category from "../../components/repeat_etc/Category.js";
-import ScheduleCalender from "../../components/schedule/ScheduleCalender.js";
 import Backarrow from "../../components/repeat_etc/Backarrow.js";
-import AddSchedule from "../../components/schedule/AddSchedule.js";
 import Header from "../../components/repeat_etc/Header";
 import axios from "axios";
-import ToDoListItem from "../../components/todo/ToDoListItem";
-import cn from "classnames";
-import checkbox from "../../images/check.png";
-import uncheckbox from "../../images/unchecked.png";
-import editicon from "../../images/edit.png";
-import removeicon from "../../images/remove.png";
 import Loading from "../../components/repeat_etc/Loading";
 
-const Schedule = ({ sideheader }) => {
+const Schedule = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [loadingStudies, setLoadingStudies] = useState(false); // 스터디 로딩 상태
     const [loadingSchedules, setLoadingSchedules] = useState(false); // 일정 로딩 상태
@@ -53,23 +45,22 @@ const Schedule = ({ sideheader }) => {
     // 일정 데이터 가져오기
     useEffect(() => {
         setLoadingSchedules(true); // 로딩 시작
-        const scheduleRequests = selectedTitle === "전체"
-            ? studyIds.map((studyId) =>
-                axios.get(`/api/studies/${studyId}/schedules`, {
-                    params: { year, month },
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                })
-            )
-            : [axios.get(`/api/studies/${studyIds.find(id =>
-                studies.find(study => study.title === selectedTitle && study.studyId === id))}/schedules`, {
-                params: { year, month },
-                headers: { Authorization: `Bearer ${accessToken}` }
-            })];
 
-        Promise.all(scheduleRequests)
-            .then((responses) => {
-                const allSchedules = responses.flatMap((res) => res.data);
-                setSchedules(allSchedules);
+        // URL 설정
+        const url = selectedTitle === "전체"
+            ? `/api/members/schedules`
+            : `/api/members/schedules/${studyIds.find(id =>
+                studies.find(study => study.title === selectedTitle && study.studyId === id))}`;
+
+        console.log("Fetching schedules from URL:", url);
+
+        // 데이터 요청
+        axios.get(url, {
+            params: { year, month },
+            headers: { Authorization: `Bearer ${accessToken}` }
+        })
+            .then((response) => {
+                setSchedules(response.data); // 성공적으로 스케줄 설정
             })
             .catch((error) => {
                 console.error("일정 가져오기 실패:", error);
@@ -78,6 +69,7 @@ const Schedule = ({ sideheader }) => {
                 setLoadingSchedules(false); // 로딩 종료
             });
     }, [selectedTitle, studyIds, year, month, accessToken]);
+
 
     const handleSelectChange = (event) => {
         setSelectedTitle(event.target.value);

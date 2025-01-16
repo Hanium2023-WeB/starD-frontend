@@ -4,6 +4,7 @@
     text-align: center;
     flex-direction: column;
     margin-top: 130px;
+    height:100vh;
 }
 .spinner_wrapper .spinner_text{
     margin-top: 20px;
