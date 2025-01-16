@@ -8,6 +8,7 @@ import TeamAddSchedule from "../../components/teamschedules/TeamAddSchedule";
 import TeamScheduleCalender from "../../components/teamschedules/TeamScheduleCalender";
 import {useLocation} from "react-router-dom";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
+import toast from "react-hot-toast";
 
 const TeamSchedule = () => {
     const [meetings, setMeetings] = useState({});
@@ -50,7 +51,7 @@ const TeamSchedule = () => {
     const [schedules, setSchedules] = useState({});
 
     useEffect(() => {
-        axios.get(`/api/schedule/${studyIdAsNumber}`, {
+        axios.get(`/api/studies/${studyIdAsNumber}/schedules`, {
             params: {
                 year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1,
             }, withCredentials: true, headers: {
@@ -80,20 +81,23 @@ const TeamSchedule = () => {
         const startDay = new Date(start_date);
         const formattedDate = `${startDay.getFullYear()}-${String(startDay.getMonth() + 1).padStart(2, '0')}-${String(startDay.getDate()).padStart(2, '0')}T${String(startDay.getHours()).padStart(2, '0')}:${String(startDay.getMinutes()).padStart(2, '0')}:${String(startDay.getSeconds()).padStart(2, '0')}`;
 
-        const schedule = {
-            id: nextId.current, title: title, startDate: formattedDate, color: color,
-        };
-        axios.post("/api/schedule", schedule, {
-            params: {
-                studyId: studyIdAsNumber
-            }, withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
+        axios.post(`/api/studies/${studyIdAsNumber}/schedules`, {
+            title: title,
+            color: color,
+            startDate:formattedDate,
+
+        }, {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
             }
         }).then((res) => {
             console.log("전송 성공", res.data);
             setSchedules([...schedules, res.data]);
+            toast.success("일정이 등록되었습니다.");
         }).catch((error) => {
             console.error("전송 실패", error.response.data); // Log the response data
+            toast.error("일정 등록에 실패했습니다.");
         });
         nextId.current += 1;
     }, [meetings, selectedDate]);
@@ -103,36 +107,43 @@ const TeamSchedule = () => {
         console.log("title:", newTitle);
         console.log("COLOR:", newColor);
 
-        axios.put(`/api/schedule/${id}`, {}, {
-            params: {
-                title: newTitle, color: newColor,
-            }, withCredentials: true, headers: {
+        axios.put(`/api/studies/${studyIdAsNumber}/schedules/${id}`, {
+            title: newTitle,
+            color: newColor,
+        }, {
+            withCredentials: true,
+            headers: {
                 'Authorization': `Bearer ${accessToken}`,
             }
         }).then((res) => {
             console.log("전송 성공", res.data);
             setSchedules((schedules) => {
-                const updatedSchedules = schedules.map((schedule) => schedule.id === res.data.id ? res.data : schedule);
+                const updatedSchedules = schedules.map((schedule) => schedule.scheduleId === res.data.scheduleId ? res.data : schedule);
                 return updatedSchedules;
             });
+            toast.success("일정이 수정되었습니다.");
         }).catch((error) => {
             console.error("전송 실패", error);
+            toast.error("일정 수정에 실패했습니다.");
         });
 
     }, [meetings, selectedDate]);
 
 
     const onRemove = (id) => {
-        axios.delete(`/api/schedule/${id}`, {
-            withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
+        axios.delete(`/api/studies/${studyIdAsNumber}/schedules/${id}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
             }
         }).then((res) => {
             console.log("삭제 성공", res.data);
-            const data = schedules.filter((item) => item.id !== id)
+            const data = schedules.filter((item) => item.scheduleId !== id)
             setSchedules(data);
+            toast.success("일정이 삭제되었습니다.");
         }).catch((error) => {
             console.error("삭제 실패", error);
+            toast.error("일정 삭제에 실패했습니다.");
         });
 
     };
@@ -144,7 +155,7 @@ const TeamSchedule = () => {
             <div className="main_schedule_container">
                 <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 스터디 일정</p>
                 <Backarrow subname={"팀 스터디 모임 일정"}/>
-                <div className="sub_container" id="todo_sub">
+                <div className="sub_container" id="schedule_sub">
                     <TeamScheduleCalender
                         studyId = {studyIdAsNumber}
                         studies={studies}

@@ -76,9 +76,9 @@ const TeamRenderScheduleCells = ({
               {Array.isArray(schedules) && schedules
                   .filter((item) => isSameDay(parseISO(item.startDate), cloneDay))
                   .map((item) => (
-                      <div key={item.id} className="event" style={{backgroundColor: item.color}}
+                      <div key={item.scheduleId} className="event" style={{backgroundColor: item.color}}
                            onClick={() => {
-                             openEditSchedule(item.id, item)
+                             openEditSchedule(item.scheduleId, item)
                            }}>
                         <div id="meeting_detail">
                           {item.study && <p>{item.study.title}</p>}

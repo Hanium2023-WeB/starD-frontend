@@ -5,6 +5,7 @@ import uncheckbox from "../../images/unchecked.png";
 import ToDoListItems from "../../css/todo_css/ToDoListItem.css";
 import React, {useEffect, useState} from "react";
 import { TbTriangleInvertedFilled } from "react-icons/tb";
+import { VscTriangleRight, VscTriangleDown } from "react-icons/vsc";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 //할 일 보여주는 컴포넌트
@@ -71,8 +72,14 @@ const TeamToDoListItem = ({
     return (
         <li key={todo.toDoId} className="TodoListItem">
             <div className="TodoHeader">
-                {/* 토글 버튼 왼쪽에 배치 */}
-                <TbTriangleInvertedFilled onClick={toggleDetails} style={{cursor:"pointer"}}/>
+                <TbTriangleInvertedFilled
+                    onClick={toggleDetails}
+                    style={{
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease", // 애니메이션 적용
+                        transform: showDetails ? "rotate(0deg)" : "rotate(-90deg)" // 상태에 따라 회전 각도 적용
+                    }}
+                />
                 {/* 변환된 날짜 출력 */}
                 <div className="TodoDate">
                     {formatDate(selectedDate)}

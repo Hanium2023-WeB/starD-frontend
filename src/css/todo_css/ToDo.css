@@ -1,9 +1,9 @@
 
 #todo_sub.sub_container{
-    width: 120%;
+    width: 110%;
     height: fit-content;
     position: relative;
-    right: 10px;
+    left:70px;
   }
 
   .todo_container{

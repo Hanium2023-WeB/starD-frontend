@@ -153,22 +153,33 @@ const TeamToDoList = () => {
     }, [selectedDate, studies, todoswithAssignee]);
 
     const filteredTodos = todos.filter((todo) => {
-        // 모든 담당자가 완료했으면 isCompleted가 true
-        const isCompleted = todo.assignees.every(assignee => assignee.toDoStatus);
+        // Todo의 날짜를 00:00:00으로 설정하여 비교
+        const todoDate = new Date(todo.dueDate);
+        todoDate.setHours(0, 0, 0, 0); // 시간 부분을 00:00:00으로 설정
 
-        // 완료된 할 일만 필터링
-        if (showCompleted && isCompleted) {
-            return true;
-        }
+        // selectedDate의 시간도 00:00:00으로 설정
+        const selectedDateCopy = new Date(selectedDate);
+        selectedDateCopy.setHours(0, 0, 0, 0); // 시간 부분을 00:00:00으로 설정
 
-        // 미완료된 할 일만 필터링
-        if (showIncomplete && !isCompleted) {
-            return true;
-        }
+        // 날짜 비교
+        const isSameDate = todoDate.getTime() === selectedDateCopy.getTime();
 
-        // 조건에 맞지 않으면 제외
-        return false;
+        // 모든 assignee의 toDoStatus가 true일 때 완료로 간주
+        const allAssigneesCompleted = todo.assignees.every((assignee) => assignee.toDoStatus === true);
+
+        // assignee 상태에 따른 완료/미완료 여부 체크
+        const isIncomplete = todo.assignees.length > 0
+            ? !allAssigneesCompleted
+            : !todo.toDoStatus;
+
+        const isComplete = allAssigneesCompleted || (todo.assignees.length === 0 && todo.toDoStatus);
+
+        return (
+            isSameDate &&
+            ((showCompleted && isComplete) || (showIncomplete && isIncomplete))
+        );
     });
+
 
     //할 일 삭제
     const onRemove = useCallback((id) => {
@@ -375,7 +386,7 @@ const TeamToDoList = () => {
                             </div>
                         </div>
                         <div className="today">
-                            <h3>{`${Year}년 ${Month}월 ${Dates}의 투두입니다.`}</h3>
+                            <h3>{`${Year}년 ${Month}월 ${Dates}일의 투두입니다.`}</h3>
                             <input
                                 type="date"
                                 placeholder={"날짜를 선택해주세요."}
