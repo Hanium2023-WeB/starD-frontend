@@ -10,6 +10,8 @@ import SearchBar from "../../components/teamcommunity/TeamCommSearchBar";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
+import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
+import Loading from "../../components/repeat_etc/Loading";
 
 const TeamCommunity = () => {
     const [posts, setPosts] = useState([]);
@@ -19,6 +21,7 @@ const TeamCommunity = () => {
 
     const location = useLocation();
     const {studyId, Member, selecteStudy, progressStatus} = location.state || {};
+    const [loading, setLoading] = useState(false);
 
     console.log(progressStatus);
     console.log(studyId);
@@ -34,6 +37,7 @@ const TeamCommunity = () => {
     };
 
     useEffect(() => {
+        setLoading(true);
         axios.get(`/api/studies/${studyId}/study-posts`, {
             params: { studyId: studyId },
             withCredentials: true,
@@ -47,6 +51,9 @@ const TeamCommunity = () => {
             })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
+            })
+            .finally(() => {
+                setLoading(false); // 로딩 종료
             });
     }, []);
 
@@ -69,10 +76,11 @@ const TeamCommunity = () => {
                                     새 글 작성
                                 </button>
                             </div>
-                            <div className="community" style={{marginRight:"130px"}}>
-                                <div className={"community-content"}>
-                                    <table className="post_table">
-                                        <thead>
+                            {loading ? <Loading/> : (
+                                <div className="community" style={{marginRight:"130px"}}>
+                                    <div className={"community-content"}>
+                                        <table className="post_table">
+                                            <thead>
                                             <tr>
                                                 <th style={{width:"40%"}}>제목</th>
                                                 <th>닉네임</th>
@@ -80,17 +88,18 @@ const TeamCommunity = () => {
                                                 <th>조회수</th>
                                                 <th>스크랩수</th>
                                             </tr>
-                                        </thead>
-                                        <tbody>
+                                            </thead>
+                                            <tbody>
                                             {posts.map((post) => (
                                                 <PostListItem studyId={studyId}
                                                               setPosts={setPosts}
                                                               posts={post}/>
                                             ))}
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     )}
                 </div>

@@ -1,12 +1,21 @@
-import React from 'react';
-import {Background, LoadingText} from "./Style";
-import Spinner from '../../gif_load/Spin.gif';
+import React, {useState} from 'react';
+import ClipLoader from "react-spinners/ClipLoader";
+import "../../css/Loading.css";
 
-export default ()=>{
+const Loading = ({loading}) => {
     return(
-        <Background>
-            <LoadingText>잠시만 기다려 주세요.</LoadingText>
-            <img src={Spinner} alt={"로딩중"} width={"5%"}/>
-        </Background>
+        <div className="spinner_wrapper">
+            <ClipLoader
+                color="#99A98F"
+                loading={loading}
+                size={50}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+            />
+            <div className="spinner_text">
+                <h> 로딩중입니다. </h>
+            </div>
+        </div>
     )
 }
+export default Loading;

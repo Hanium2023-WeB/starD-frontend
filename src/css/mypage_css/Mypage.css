@@ -92,13 +92,17 @@ p {
 	font-size: 14px;
 }
 #todocontent{
-	padding: 5px;
 
 }
 #todocontent li{
-	padding: 3px;
 	display: flex;
 	flex-direction: row;
+}
+#todocontent li .meeting-info{
+	margin: 3px 0;
+}
+#todocontent li .meeting-info span:nth-of-type(1){
+	font-weight: 700;
 }
 /* .list_container{
     display: flex;
@@ -111,12 +115,10 @@ p {
 	text-decoration: line-through;
 }
 #todotext{
-	position: relative;
-	top: 3.1px;
-	margin-left: 2px;
-	font-size: 10px;
+	font-size: 12px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	margin:3px 0;
 }
 /*마이페이지 안에 있는 투두*/
 .mypage-todotext{
@@ -128,7 +130,8 @@ p {
 	text-overflow: ellipsis;
 }
 .meeting-id{
-	font-size: 10px;
+	margin:0;
+	font-size: 12px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }

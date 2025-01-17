@@ -64,6 +64,7 @@ import {Toaster} from "react-hot-toast";
 import {EventSourceProvider} from "./pages/notification/EventSourceContext";
 import Subscribe from "./pages/notification/Subscribe";
 import NoticeInsert from "./pages/notice/NoticeInsert";
+import {MyPageProvider} from "./components/datacontext/MyPageContext";
 
 function App() {
   return (
@@ -95,39 +96,28 @@ function App() {
                   <ResetPasswordEmailSent/>}/> {/* Update password page */}
 
                 {/* Mypage Routes */}
-                <Route path="/mypage"
-                       element={<Mypage/>}/> {/* User's personal page */}
-                <Route path="/mypage/profile"
-                       element={<Profile/>}/> {/* User profile page */}
-                <Route path="/mypage/profile/edit"
-                       element={<EditProfile/>}/> {/* Edit user profile */}
-                <Route path="/mypage/editinfo"
-                       element={<Editinfo/>}/> {/* Edit user information */}
-                <Route path="/mypage/participate-study" element={
-                  <MyParticipateStudy/>}/> {/* Participated studies */}
-                <Route path="/mypage/open-study"
-                       element={<MyOpenStudy/>}/> {/* User's open studies */}
-                <Route path="/mypage/apply-study"
-                       element={<MyApplyStudy/>}/> {/* Applied studies */}
-                <Route path="/mypage/scrap-study"
-                       element={<MyScrapStudy/>}/> {/* Scrapped studies */}
-                <Route path="/mypage/scrap-community" element={
-                  <MyScrapCommunityPost/>}/> {/* Scrapped community posts */}
-                <Route path="/mypage/write-post/:page"
-                       element={<MyWritePost/>}/> {/* Posts written by user */}
-                <Route path="/mypage/write-comment/:page" element={
-                  <MyWriteComment/>}/> {/* Comments written by user */}
-                <Route path="/mypage/score"
-                       element={<MyScore/>}/> {/* User score page */}
-                <Route path="/mypage/todo-list"
-                       element={<ToDoList/>}/> {/* User's to-do list */}
-                <Route path="/mypage/schedule"
-                       element={<Schedule/>}/> {/* User's schedule */}
-                <Route path="/mypage/evaluate"
-                       element={
-                         <MemberEvaluate/>}/> {/* Member evaluation page */}
-                <Route path="/mypage/user-profile/:id" element={
-                  <AnotherUserProfile/>}/> {/* View another user's profile */}
+                <Route path="/mypage/*" element={
+                  <MyPageProvider>
+                    <Routes>
+                      <Route index element={<Mypage />} /> {/* Default MyPage */}
+                      <Route path="profile" element={<Profile />} /> {/* Profile page */}
+                      <Route path="profile/edit" element={<EditProfile />} /> {/* Edit profile */}
+                      <Route path="editinfo" element={<Editinfo />} /> {/* Edit info */}
+                      <Route path="participate-study" element={<MyParticipateStudy />} /> {/* My participations */}
+                      <Route path="open-study" element={<MyOpenStudy />} /> {/* My open studies */}
+                      <Route path="apply-study" element={<MyApplyStudy />} /> {/* My applied studies */}
+                      <Route path="scrap-study" element={<MyScrapStudy />} /> {/* My scrap studies */}
+                      <Route path="scrap-community" element={<MyScrapCommunityPost />} /> {/* My scrap community posts */}
+                      <Route path="write-post/:page" element={<MyWritePost />} /> {/* My written posts */}
+                      <Route path="write-comment/:page" element={<MyWriteComment />} /> {/* My written comments */}
+                      <Route path="score" element={<MyScore />} /> {/* My score */}
+                      <Route path="todo-list" element={<ToDoList />} /> {/* My todo list */}
+                      <Route path="schedule" element={<Schedule />} /> {/* My schedule */}
+                      <Route path="evaluate" element={<MemberEvaluate />} /> {/* Member evaluation */}
+                      <Route path="user-profile/:userId" element={<AnotherUserProfile />} /> {/* Another user's profile */}
+                    </Routes>
+                  </MyPageProvider>
+                } />
 
                 {/* Study Routes */}
                 <Route path="/study/:page"
