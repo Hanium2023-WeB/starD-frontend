@@ -66,45 +66,20 @@ const ToDoList = ({sideheader}) => {
     }, [accessToken]);
 
     useEffect(() => {
-        if (studyIds.length > 0) {
-            // 각 studyId별로 API 호출
-            const todoRequests = studyIds.map((studyId) =>
-                axios.get(`/api/studies/${studyId}/to-dos`, {
-                    params: { year: Year, month: Month },
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                })
-            );
+        axios
+            .get(`/api/members/to-dos`, {
+                params: { year: Year, month: Month },
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+            .then((res) => {
+                console.log(res.data);
+                setTodos(res.data);
+            })
+            .catch((error) => {
+                console.error("스터디별 투두리스트 가져오기 실패:", error);
+            });
+    }, [Year, Month, accessToken]);
 
-            // 모든 요청이 완료된 후 결과 처리
-            Promise.all(todoRequests)
-                .then((responses) => {
-                    const localNickname = localStorage.getItem("nickname");
-                    const filteredTodos = [];
-
-                    responses.forEach((response) => {
-                        const todos = response.data;
-                        console.log(response.data);
-
-                        todos.forEach((todoItem) => {
-                            // assignees 배열에서 localNickname과 일치하는 항목이 있는지 확인
-                            const hasMatchingAssignee = todoItem.assignees.some(
-                                (assignee) => assignee.nickname === localNickname
-                            );
-
-                            if (hasMatchingAssignee) {
-                                filteredTodos.push(todoItem);
-                            }
-                        });
-                    });
-
-                    setTodos(filteredTodos);
-                    console.log("필터링된 투두리스트:", filteredTodos);
-                })
-                .catch((error) => {
-                    console.log("스터디별 투두리스트 가져오기 실패:", error);
-                });
-        }
-    }, [studyIds, Year, Month, accessToken]);
 
     useEffect(() => {
         console.log(todos);
@@ -187,31 +162,28 @@ const ToDoList = ({sideheader}) => {
     };
 
     const filteredTodos = todos.filter((todo) => {
-        // Todo의 날짜를 00:00:00으로 설정하여 비교
         const todoDate = new Date(todo.dueDate);
         todoDate.setHours(0, 0, 0, 0); // 시간 부분을 00:00:00으로 설정
 
-        // selectedDate의 시간도 00:00:00으로 설정
         const selectedDateCopy = new Date(selectedDate);
         selectedDateCopy.setHours(0, 0, 0, 0); // 시간 부분을 00:00:00으로 설정
 
-        // 날짜 비교
         const isSameDate = todoDate.getTime() === selectedDateCopy.getTime();
 
-        // 모든 assignee의 toDoStatus가 true일 때 완료로 간주
-        const allAssigneesCompleted = todo.assignees.every((assignee) => assignee.toDoStatus === true);
-
-        // assignee 상태에 따른 완료/미완료 여부 체크
-        const isIncomplete = todo.assignees.length > 0
-            ? !allAssigneesCompleted
-            : !todo.toDoStatus;
-
-        const isComplete = allAssigneesCompleted || (todo.assignees.length === 0 && todo.toDoStatus);
+        const isIncomplete = !todo.toDoStatus;
+        const isComplete = todo.toDoStatus;
 
         return (
             isSameDate &&
             ((showCompleted && isComplete) || (showIncomplete && isIncomplete))
         );
+    }).map((todo) => {
+        // studyId와 studies의 studyId를 비교해 title을 추가
+        const study = studies.find((studyItem) => studyItem.studyId === todo.studyId);
+        return {
+            ...todo,
+            studyTitle: study ? study.title : "스터디 제목 없음", // 일치하는 스터디 제목이 없을 경우 기본값 설정
+        };
     });
 
     return (<div>
@@ -264,16 +236,15 @@ const ToDoList = ({sideheader}) => {
                                 <span>할 일이 없습니다.<br/>  할 일을 입력해주세요.</span>
                             </div>)}
                             {filteredTodos.map((todo => {
-                                if (todo.toDo) {
-                                    return (<ToDoListItem
-                                        todos={todo}
-                                        key={todo.toDo.id}
-                                        onToggle={onToggle}
-                                        onChangeSelectedTodo={onChangeSelectedTodo}
-                                        onInsertToggle={onInsertToggle}
-                                        selectedDate={selectedDate}
-                                    />)
-                                }
+                                return (<ToDoListItem
+                                    todos={todo}
+                                    key={todo.toDoId}
+                                    onToggle={onToggle}
+                                    onChangeSelectedTodo={onChangeSelectedTodo}
+                                    onInsertToggle={onInsertToggle}
+                                    selectedDate={selectedDate}
+                                    studyTitle={todo.studyTitle}
+                                />)
                             }))}
                         </ul>
                     </div>

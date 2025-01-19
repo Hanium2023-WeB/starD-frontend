@@ -13,6 +13,7 @@ import Category from "../../components/repeat_etc/Category";
 import TeamBlog from "../studypage/TeamBlog";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
+import toast from "react-hot-toast";
 
 const TeamToDoList = () => {
 
@@ -132,7 +133,7 @@ const TeamToDoList = () => {
                 }
             })
                 .then((res) => {
-                    alert("Todo가 등록되었습니다.");
+                    toast.success("투두를 등록했습니다");
                     console.log("전송 성공:", res.data);
                     setAssignees([]);
                     setTodos((prevTodos) => {
@@ -141,6 +142,10 @@ const TeamToDoList = () => {
                         return updatedTodos;
                     });
                     nextId.current++;
+
+                    // 담당자 선택 상태 초기화
+                    setSelectedAssigneeIds([]);
+                    setAssignees([]);
                 })
                 .catch((error) => {
                     console.error("전송 실패:", error);
@@ -242,47 +247,73 @@ const TeamToDoList = () => {
     //체크
     const onToggle = useCallback((assigneeId, toDoId, currentUserTodoIndex, todo_status) => {
         console.log("id::", toDoId);
+
         if (currentUserTodoIndex === -1) {
             alert("당신의 할 일이 아닙니다.");
             return;
-        } else {
-            console.log("assignees=>", assigneeId);
-            console.log("currentUserTodoIndex=>", currentUserTodoIndex);
-            console.log("todo_status=>", todo_status);
+        }
 
-            axios.put(
+        console.log("assignees=>", assigneeId);
+        console.log("currentUserTodoIndex=>", currentUserTodoIndex);
+        console.log("todo_status=>", todo_status);
+
+        // Optimistically update the local state
+        setTodos((prevTodos) =>
+            prevTodos.map((todo) => {
+                if (todo.toDoId === toDoId) {
+                    const updatedAssignees = todo.assignees.map((assignee) => {
+                        if (assignee.assigneeId === assigneeId) {
+                            return { ...assignee, toDoStatus: !todo_status };
+                        }
+                        return assignee;
+                    });
+
+                    const allChecked = updatedAssignees.every((assignee) => assignee.toDoStatus);
+                    return { ...todo, assignees: updatedAssignees, toDoStatus: allChecked };
+                }
+                return todo;
+            })
+        );
+
+        axios
+            .put(
                 `/api/studies/${studyIdAsNumber}/to-dos/${toDoId}/${assigneeId}`,
                 null,
                 {
                     params: { status: !todo_status },
                     withCredentials: true,
                     headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
+                        Authorization: `Bearer ${accessToken}`,
+                    },
                 }
-            ).then((res) => {
+            )
+            .then((res) => {
                 if (res.status === 200) {
                     console.log("체크 성공:", res.data);
 
-                    axios.get(`/api/todo/${studyIdAsNumber}`, {
-                        params: {
-                            year: Year,
-                            month: Month,
-                        },
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    }).then((res) => {
-                        console.log('스터디별 투두리스트 가져오기 성공:', res.data);
-                        setTodos(res.data); // 받아온 데이터를 setTodos로 설정
-                    }).catch((error) => {
-                        console.log('스터디별 투두리스트 가져오기 실패:', error);
-                    });
+                    toast.success("투두를 완료했습니다! 🎉");
+                    axios
+                        .get(`/api/todo/${studyIdAsNumber}`, {
+                            params: {
+                                year: Year,
+                                month: Month,
+                            },
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                        })
+                        .then((res) => {
+                            console.log("스터디별 투두리스트 가져오기 성공:", res.data);
+                            setTodos(res.data);
+                        })
+                        .catch((error) => {
+                            console.error("스터디별 투두리스트 가져오기 실패:", error);
+                        });
                 }
-            }).catch((error) => {
+            })
+            .catch((error) => {
                 console.error("Error:", error);
             });
-        }
     }, []);
 
     const handleDateClick = (day) => {
@@ -321,34 +352,6 @@ const TeamToDoList = () => {
     useEffect(() => {
         Month = format(currentMonth, "M")
     }, [currentMonth]);
-
-    // useEffect(() => {
-    //     axios.get(`/api/studies/${studyIdAsNumber}/to-dos`, {
-    //         params: {
-    //             year: Year, month: Month,
-    //         }, headers: {
-    //             Authorization: `Bearer ${accessToken}`,
-    //         },
-    //     }).then((response) => {
-    //         console.log('스터디별 투두리스트 가져오기 성공:', response.data);
-    //         const maxId = Math.max(...response.data.map(schedule => schedule.id));
-    //         nextId.current = maxId + 1;
-    //         const groupedTodos = {};
-    //         response.data.forEach((todoItem) => {
-    //             const dueDate = new Date(todoItem.dueDate).toDateString();
-    //             if (!groupedTodos[dueDate]) {
-    //                 groupedTodos[dueDate] = [];
-    //             }
-    //             groupedTodos[dueDate].push(todoItem);
-    //         });
-    //
-    //         setTodoswithAssignee((prevTodos) => ({
-    //             ...prevTodos, ...groupedTodos,
-    //         }));
-    //     }).catch((error) => {
-    //         console.log('스터디별 투두리스트 가져오기 실패:', error);
-    //     })
-    // }, [studyIdAsNumber, currentMonth]);
 
     useEffect(() => {
         console.log("todoswithAssignee: ", todoswithAssignee);
