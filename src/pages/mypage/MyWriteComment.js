@@ -1,11 +1,8 @@
 import Header from "../../components/repeat_etc/Header";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import "../../css/community_css/Community.css";
-import SearchBar from "../../components/community/CommSearchBar";
-import PostInsert from "../../components/community/PostInsert";
-import PostListItem from "../../components/community/PostListItem";
 import axios from "axios";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import Paging from "../../components/repeat_etc/Paging";
@@ -13,27 +10,8 @@ import Category from "../../components/repeat_etc/Category";
 
 const MyWriteComment = () => {
     const navigate = useNavigate();
-    const [posts, setPosts] = useState([]);
-    const [showPostInsert, setShowPostInsert] = useState(false);
     let accessToken = localStorage.getItem('accessToken');
-    let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
-
-
-    const dataId = useRef(0);
-    const [state, setState] = useState([]);
-    const [todos, setTodos] = useState({});
-    const [today, setToday] = useState(new Date());
-    const [parsedTodos, setParsedTodos] = useState([]);
-    const [parsedmeetings, setParsedMeetings] = useState([]);
-    const [meetings, setMeetings] = useState({});
-    const [todayKey, setTodayKey] = useState("");
-    const [credibility, setCredibility] = useState("");
-
     const [writtenComments, setWrittenComments] = useState([]);
-
-    const Year = today.getFullYear();
-    const Month = today.getMonth() + 1;
-    const Dates = today.getDate()
 
     const formatDatetime = (datetime) => {
         const date = new Date(datetime);
@@ -49,9 +27,9 @@ const MyWriteComment = () => {
     const location = useLocation();
     const pageparams = location.state ? location.state.page : 1;
     const [page, setPage] = useState(pageparams);
-    const [count, setCount] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const insertPage = location.state && location.state.page;
+    const [totalPages, setTotalPages] = useState(0);
 
     const fetchMyComments = (pageNumber) => {
         axios.get("/api/members/replies", {
@@ -70,8 +48,8 @@ const MyWriteComment = () => {
                     writer: res.data.writer
                 }));
                 setWrittenComments(repliesWithWriter);
-                setItemsPerPage(res.data.currentPage);
-                setCount(res.data.replies.length);
+                setTotalElements(res.data.totalElements);
+                setTotalPages(res.data.totalPages);
             }).catch((error) => {
             console.error("작성한 게시물을 가져오는 중 오류 발생:", error);
         });
@@ -83,7 +61,7 @@ const MyWriteComment = () => {
 
     const handlePageChange = (selectedPage) => {
         setPage(selectedPage);
-        navigate(`/MyPage/mycomment/page=${selectedPage}`);
+        navigate(`/myPage/write-comment/page=${selectedPage}`);
     };
 
     const mypost = () => {
@@ -112,42 +90,20 @@ const MyWriteComment = () => {
                                 <td className="community_category">
                                     {comment.postType === 'COMM' ? '커뮤니티'
                                         : comment.postType === 'STUDY' ? '스터디'
-                                        : comment.postType === 'STUDYPOST' ? '팀 커뮤니티' : comment.postType}
+                                            : comment.postType === 'STUDYPOST' ? '팀 커뮤니티' : comment.postType}
                                 </td>
                                 <td className="community_title">
-                                    {comment.postType === 'COMM' ? (
+                                    {['COMM', 'QNA', 'STUDY', 'STUDYPOST'].includes(comment.postType) ? (
                                         <Link
-                                            to={`/community/post/${comment.targetId}`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {comment.content}
-                                        </Link>
-                                    ) : comment.postType === 'QNA' ? (
-                                        <Link
-                                            to={`/qna/detail/${comment.targetId}`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {comment.content}
-                                        </Link>
-                                    ) : comment.type === 'STUDY' ? (
-                                        <Link
-                                            to={`/study/detail/${comment.targetId}`}
-                                            style={{
-                                                textDecoration: "none",
-                                                color: "inherit",
-                                            }}
-                                        >
-                                            {comment.content}
-                                        </Link>
-                                    ) : comment.type === 'STUDYPOST' ? (
-                                        <Link
-                                            to={`/teamblog/${comment.targetId}/community/post/${comment.targetId}`}
+                                            to={
+                                                comment.postType === 'COMM'
+                                                    ? `/community/post/${comment.targetId}`
+                                                    : comment.postType === 'QNA'
+                                                        ? `/qna/detail/${comment.targetId}`
+                                                        : comment.postType === 'STUDY'
+                                                            ? `/study/detail/${comment.targetId}`
+                                                            : `/teamblog/${comment.studyId}/community/post/${comment.targetId}`
+                                            }
                                             style={{
                                                 textDecoration: "none",
                                                 color: "inherit",
@@ -186,10 +142,13 @@ const MyWriteComment = () => {
                     </div>
                 </div>
             </div>
-            <div className={"paging"}>
-                <Paging page={page} totalItemCount={count} itemsPerPage={itemsPerPage}
-                        handlePageChange={handlePageChange}/>
-            </div>
+            {writtenComments.length !== 0 &&
+                <div className="pagingDiv">
+                    <Paging page={page} totalItemCount={totalElements} itemsPerPage={itemsPerPage}
+                            totalPages={totalPages}
+                            handlePageChange={handlePageChange}/>
+                </div>
+            }
         </div>
     );
 }
