@@ -87,10 +87,6 @@ const ToDoList = ({sideheader}) => {
     }, [selectedTitle, studyIds, year, month, accessToken]);
 
 
-    useEffect(() => {
-        console.log(todos);
-    }, [todos]);
-
     const onInsertToggle = () => {
         if (selectedTodo) {
             setSelectedTodo(null);

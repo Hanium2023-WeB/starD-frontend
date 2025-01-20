@@ -76,6 +76,41 @@ const Mypage = () => {
             .catch((error) => {
                 console.error("일정 리스트 가져오기 실패:", error);
             });
+
+        // 참여한 스터디들의 일정 데이터 가져오기
+        axios
+            .get(`/api/members/to-dos`, {
+                params: { year, month },
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+            .then((response) => {
+                const todos = response.data;
+
+                // 오늘 날짜와 일치하는 일정 필터링
+                const todayToDos = todos
+                    .filter((todo) => {
+                        const todoDate = new Date(todo.dueDate);
+                        // 유효한 날짜인지 확인 및 오늘 날짜와 비교
+                        return !isNaN(todoDate) &&
+                            todoDate.toISOString().split('T')[0] === todayDateString;
+                    })
+                    .map((todo) => {
+                        // 해당 일정에 스터디 제목 추가
+                        const study = participateStudies.find(
+                            (study) => study.studyId === todo.studyId
+                        );
+                        return study
+                            ? { ...todo, studyTitle: study.title }
+                            : null;
+                    })
+                    .filter((todo) => todo !== null); // null 값 제거
+
+                setTodos(todayToDos); // 오늘 일정만 업데이트
+                console.log("오늘 투두 리스트:", todayToDos);
+            })
+            .catch((error) => {
+                console.error("일정 리스트 가져오기 실패:", error);
+            });
     }, [participateStudies, year, month, accessToken]);
 
     const getTodoItemClassName = (checked) => {
@@ -212,7 +247,7 @@ const Mypage = () => {
                             <div id="detail">
                                 <span id="today">{`${year}. ${month}. ${Dates}`}</span>
                                 <hr/>
-                                {filteredToDo.length === 0 ? (
+                                {todos.length === 0 ? (
                                     <div className="empty_today_todo">
                                           <span>
                                             할 일이 없습니다.<br/> 할 일을 입력해주세요.
@@ -221,9 +256,9 @@ const Mypage = () => {
 
                                 ) : (
                                     <ul id="todocontent">
-                                        {filteredToDo.map((todo) => (
+                                        {todos.map((todo) => (
                                             <li
-                                                key={todo.toDo.id}
+                                                key={todo.toDoId}
                                                 className={getTodoItemClassName(todo.toDoStatus)}
                                             >
                                                 {todo.toDoStatus ? (
@@ -231,8 +266,8 @@ const Mypage = () => {
                                                 ) : (
                                                     <img src={uncheckbox} alt="unchecked" width="20px"/>
                                                 )}
-                                                <div id="todotext">{todo.toDo.study.title} |</div>
-                                                <div id="todotext">{todo.toDo.task}</div>
+                                                <div id="todotext">{todo.studyTitle} | </div>
+                                                <div id="todotext">{todo.task}</div>
                                             </li>
                                         ))}
                                     </ul>
