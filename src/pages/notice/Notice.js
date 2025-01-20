@@ -131,8 +131,8 @@ const Notice = () => {
 
                         </div>
                         <div className="community">
-                            <div>
-                                <table className="notice_table"
+                            <div className={"community-content"}>
+                                <table className="post_table"
                                        key={posts.postId}>
                                     <th>제목</th>
                                     <th>닉네임</th>
@@ -145,6 +145,12 @@ const Notice = () => {
                                                         key={d.postId}/>
                                     ))}
                                 </table>
+                                {posts.length === 0 && (
+                                    <h4 style={{textAlign: "center"}}>검색 결과가 없습니다.</h4>
+
+                                )}
+                                <br/>
+
                             </div>
                         </div>
                         {posts.length !== 0 &&
