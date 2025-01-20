@@ -8,16 +8,13 @@ import axios from "axios";
 import TeamToDoInsert from "../../components/teamtodo/TeamToDoInsert";
 import TeamToDoEdit from "../../components/teamtodo/TeamToDoEdit";
 import TeamToDoListItem from "../../components/teamtodo/TeamToDoListItem";
-import TeamToDoList_css from "../../css/todo_css/TeamToDoList.css";
-import Category from "../../components/repeat_etc/Category";
-import TeamBlog from "../studypage/TeamBlog";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 import toast from "react-hot-toast";
 
 const TeamToDoList = () => {
 
-    const { member, studyItem, progressType, todos, setTodos, schedules, loading, error } = useTeamBlogContext();
+    const { member, todos, setTodos, loading, error } = useTeamBlogContext();
     console.log(todos);
     console.log(member);
 
@@ -56,8 +53,6 @@ const TeamToDoList = () => {
     const [todoswithAssignee, setTodoswithAssignee] = useState({});
 
     const nextId = useRef(1);
-
-    const dateKey = selectedDate.toDateString();
 
     //담당자 추가 핸들러
     const handleAddAssignees = (e) => {
@@ -237,6 +232,7 @@ const TeamToDoList = () => {
                         todo.toDoId === toDoId ? res.data : todo
                     )
                 );
+                toast.success("투두가 수정되었습니다.");
             })
             .catch((error) => {
                 console.error("업데이트 실패:", error);

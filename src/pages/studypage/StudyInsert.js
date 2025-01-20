@@ -208,7 +208,7 @@ const StudyInsert = () => {
             alert("제목은 최대 200자까지 입력 가능합니다.");
             return;
         }
-        if (formData.capacity.trim() === '') {
+        if (String(formData.capacity).trim() === '') {
             alert("모집 인원을 입력해주세요.");
             return;
         }

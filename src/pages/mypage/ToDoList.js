@@ -20,10 +20,11 @@ const ToDoList = ({sideheader}) => {
     const [selectedTodo, setSelectedTodo] = useState(null);
     const [insertToggle, setInsertToggle] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedTitle, setSelectedTitle] = useState("전체");
     const accessToken = localStorage.getItem('accessToken');
-    const Year = selectedDate.getFullYear();
-    let Month = selectedDate.getMonth() + 1;
-    const Dates = selectedDate.getDate();
+    const year = selectedDate.getFullYear();
+    let month = selectedDate.getMonth() + 1;
+    const dates = selectedDate.getDate();
 
     const [studies, setStudy] = useState([]);
     const [studyTitles, setStudyTitles] = useState([]);
@@ -66,11 +67,16 @@ const ToDoList = ({sideheader}) => {
     }, [accessToken]);
 
     useEffect(() => {
-        axios
-            .get(`/api/members/to-dos`, {
-                params: { year: Year, month: Month },
-                headers: { Authorization: `Bearer ${accessToken}` },
-            })
+        const url = selectedTitle === "전체"
+            ? `/api/members/to-dos`
+            : `/api/members/to-dos/${studyIds.find(id =>
+                studies.find((study => study.title === selectedTitle && study.studyId === id)))}`;
+
+        console.log("Fetching schedules from URL:", url);
+        axios.get(url, {
+            params: { year, month },
+            headers: { Authorization: `Bearer ${accessToken}` },
+        })
             .then((res) => {
                 console.log(res.data);
                 setTodos(res.data);
@@ -78,7 +84,7 @@ const ToDoList = ({sideheader}) => {
             .catch((error) => {
                 console.error("스터디별 투두리스트 가져오기 실패:", error);
             });
-    }, [Year, Month, accessToken]);
+    }, [selectedTitle, studyIds, year, month, accessToken]);
 
 
     useEffect(() => {
@@ -127,20 +133,8 @@ const ToDoList = ({sideheader}) => {
         console.log(`선택한 날짜 : ${day}`);
     };
 
-    const selectStudy = (e) => {
-        setInsertToDoTitle(e.target.value)
-        if (e.target.value !== "전체") {
-            const selectedStudy = studies.find((study) => study.study.title === e.target.value);
-            const selectedId = selectedStudy.study.id;
-            setInsertToDoStudyId(selectedId);
-            setInsertToDoStudy(selectedStudy);
-            console.log(e.target.value);
-            console.log("선택한 스터디 아이디", selectedId);
-        } else if (e.target.value === "전체") {
-            const allselect = "0";
-            setInsertToDoStudyId(allselect);
-            console.log("전체 select: ", allselect);
-        }
+    const handleSelectChange = (e) => {
+        setSelectedTitle(e.target.value);
     }
     useEffect(() => {
         console.log("InsertToDoStudyId_투두리스트:::", InsertToDoStudyId);
@@ -215,7 +209,7 @@ const ToDoList = ({sideheader}) => {
                             </div>
                         </div>
                         <div className="today">
-                            <h3>{`오늘은 ${Year}년 ${Month}월 ${Dates}일입니다.`}</h3>
+                            <h3>{`오늘은 ${year}년 ${month}월 ${dates}일입니다.`}</h3>
                             <input
                                 type="date"
                                 placeholder={"날짜를 선택해주세요."}
@@ -224,29 +218,45 @@ const ToDoList = ({sideheader}) => {
                             />
                         </div>
                         <div>
-                            <select id="todo-select" onChange={selectStudy} value={InsertToDoTitle}>
+                            <select value={selectedTitle} onChange={handleSelectChange}>
                                 <option value="전체">전체보기</option>
                                 {studyTitles.map((item, index) => (
                                     <option key={index} value={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
-                        <ul className="TodoList">
-                            {filteredTodos.length === 0 && (<div className="alert_empty_todo">
-                                <span>할 일이 없습니다.<br/>  할 일을 입력해주세요.</span>
-                            </div>)}
-                            {filteredTodos.map((todo => {
-                                return (<ToDoListItem
-                                    todos={todo}
-                                    key={todo.toDoId}
-                                    onToggle={onToggle}
-                                    onChangeSelectedTodo={onChangeSelectedTodo}
-                                    onInsertToggle={onInsertToggle}
-                                    selectedDate={selectedDate}
-                                    studyTitle={todo.studyTitle}
-                                />)
-                            }))}
-                        </ul>
+                        <div className="TodoList">
+                            {filteredTodos.length === 0 && (
+                                <div className="alert_empty_todo">
+                                    <span>할 일이 없습니다.<br /> 할 일을 입력해주세요.</span>
+                                </div>
+                            )}
+                            {Object.entries(
+                                filteredTodos.reduce((acc, todo) => {
+                                    const { studyTitle } = todo;
+                                    if (!acc[studyTitle]) acc[studyTitle] = [];
+                                    acc[studyTitle].push(todo);
+                                    return acc;
+                                }, {})
+                            ).map(([studyTitle, todos]) => (
+                                <div key={studyTitle} className="study-group">
+                                    <h2 className="study-title">{studyTitle}</h2>
+                                    <ul>
+                                        {todos.map((todo) => (
+                                            <ToDoListItem
+                                                todos={todo}
+                                                key={todo.toDoId}
+                                                onToggle={onToggle}
+                                                onChangeSelectedTodo={onChangeSelectedTodo}
+                                                onInsertToggle={onInsertToggle}
+                                                selectedDate={selectedDate}
+                                                studyTitle={todo.studyTitle}
+                                            />
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -13,7 +13,6 @@ const ToDoListItem = ({todos, onToggle, onChangeSelectedTodo, onInsertToggle, se
 
     return(
         <li key={todos.toDoId} className="TodoListItem">
-            <p>{todos.studyTitle}</p>
             <div className={cn('checkbox', { checked: todos.toDoStatus })} onClick={() => onToggle(todos.toDoId, todos.toDoStatus)}>
                 {todos.toDoStatus ? <img src={checkbox} width="20px" /> : <img src={uncheckbox} width="20px" />}
                 <div className="text">{todos.task}</div>

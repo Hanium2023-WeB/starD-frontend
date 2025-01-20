@@ -37,20 +37,25 @@ const TeamToDoEdit = ({ selectedTodo, onUpdate, Member, onClose }) => {
                 return;
             }
 
-            if (task.trim() === '' && todoassignees.length === 0) {
+            if (task.trim() === '') {
                 alert("할 일을 적어주세요.");
                 return;
             }
 
-            // 담당자 변경 여부 확인
             const isAssigneesChanged = () => {
-                const originalAssignees = selectedTodo.assignees.map((a) => a.nickname).sort();
-                const currentAssignees = todoassignees.map((a) => a.nickname).sort();
+                const normalizeAssignees = (assignees) =>
+                    assignees.map((a) => a.nickname).sort();
+
+                const originalAssignees = normalizeAssignees(selectedTodo.assignees || []);
+                const currentAssignees = normalizeAssignees(todoassignees);
+
                 return JSON.stringify(originalAssignees) !== JSON.stringify(currentAssignees);
             };
 
-            // 수정 여부 확인 (담당자 또는 할 일 변경 시)
-            if (!isAssigneesChanged() && task.trim() === selectedTodo.task) {
+            const isTaskChanged = task.trim() !== selectedTodo.task;
+            const isAnyChange = isTaskChanged || isAssigneesChanged();
+
+            if (!isAnyChange) {
                 alert("수정된 사항이 없습니다.");
                 return;
             }
@@ -61,11 +66,14 @@ const TeamToDoEdit = ({ selectedTodo, onUpdate, Member, onClose }) => {
                 assignees: todoassignees,
             };
 
+            console.log("업데이트된 todo:", updatedTodo);
             onUpdate(updatedTodo);
-            onClose();
+            onClose(); // 창 닫기
         },
         [task, todoassignees, onUpdate, onClose, selectedTodo]
     );
+
+
 
     if (!selectedTodo) {
         return null; // selectedTodo가 없을 때 컴포넌트 미표시
