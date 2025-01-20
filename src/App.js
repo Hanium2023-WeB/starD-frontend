@@ -86,7 +86,7 @@ function App() {
                        element={<FindID/>}/> {/* Find ID page */}
                 <Route path="/login/findedID"
                        element={<FindedID/>}/> {/* Found ID page */}
-                <Route path="/login/findPW"
+                <Route path="/find-password"
                        element={<FindPW/>}/> {/* Find password page */}
                 <Route path="/reset-password" element={
                   <ResetPwTokenVerification/>}/> {/* Reset password verification */}

@@ -24,7 +24,7 @@ const Header = ({showSideCenter}) => {
       "/",
       "/subinfo/signup",
       "/subinfo",
-      "/login/findPW",
+      "/find-password",
       "/login",
       "/reset-password",
       "/reset-password/sent"
