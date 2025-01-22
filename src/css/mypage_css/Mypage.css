@@ -80,11 +80,6 @@ html {
 p {
 	font-size: 1.2rem;
 }
-.todo .tag p{
-	font-size: 13px;
-	font-weight: bold;
-
-}
 .todo #detail{
 	font-size: 12px;
 }

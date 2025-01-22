@@ -8,6 +8,7 @@ import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import StudyInfo from "../../components/study/StudyInfo";
 import Backarrow from "../../components/repeat_etc/Backarrow";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const StudyApplyForm = ({sideheader}) => {
 
@@ -62,6 +63,7 @@ const StudyApplyForm = ({sideheader}) => {
             }
         }).then((res) => {
             console.log(res.data);
+            toast.success("제출에 성공했습니다.");
             navigate("/mypage/apply-study");
         })
             .catch((error) => {

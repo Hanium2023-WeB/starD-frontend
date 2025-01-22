@@ -71,8 +71,8 @@ const Schedule = () => {
     }, [selectedTitle, studyIds, year, month, accessToken]);
 
 
-    const handleSelectChange = (event) => {
-        setSelectedTitle(event.target.value);
+    const handleSelectChange = (e) => {
+        setSelectedTitle(e.target.value);
     };
 
     const handleDateClick = (month) => {
