@@ -5,7 +5,6 @@ import Check from "../../images/unchecked.png";
 import "../../css/study_css/TeamBlog.css";
 import axios from "axios";
 import {Link, useNavigate, useParams} from "react-router-dom";
-import TeamBlogcss from "../../css/study_css/TeamBlog.css";
 import {useLocation} from "react-router-dom";
 import MapNaverDefault from "../../components/map/MapNaverDefault";
 import checkbox from "../../images/check.png";
@@ -15,6 +14,7 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 import Loading from "../../components/repeat_etc/Loading";
+import cn from "classnames";
 
 const TeamBlog = () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -27,9 +27,9 @@ const TeamBlog = () => {
     const [parsedTodos, setParsedTodos] = useState([]);
     const [parsedSchedules, setParsedSchedules] = useState([]);
     const [today, setToday] = useState(new Date());
-    const Year = today.getFullYear();
-    const Month = today.getMonth() + 1;
-    const Dates = today.getDate()
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const dates = today.getDate()
     const studyIdAsNumber = parseFloat(studyId);
     const [progressStatus, setProgressStatus] = useState(""); //중단된 스터디인지 판별
 
@@ -82,7 +82,6 @@ const TeamBlog = () => {
             .catch((error) => {
                 console.error("참여멤버 get 실패:", error);
             });
-
     }, [accessToken]);
 
     const [filteredToDo, setFilteredToDo] = useState([]);
@@ -98,7 +97,7 @@ const TeamBlog = () => {
         } else {
             console.error("parsedTodos is not an array.");
         }
-    }, [parsedTodos]);
+    }, [todos, today]);
 
     const [filteredSchedule, setFilteredSchedule] = useState([]);
     useEffect(() => {
@@ -148,7 +147,7 @@ const TeamBlog = () => {
                                             <button id="more" onClick={ShowAllToDo}>전체보기</button>
                                         </div>
                                         <div id="detail">
-                                            <span id="today">{`${Year}. ${Month}. ${Dates}`}</span>
+                                            <span id="today">{`${year}. ${month}. ${dates}`}</span>
                                             <hr/>
                                             {filteredToDo.length === 0 ? (
                                                 <div className="empty_today_todo">
@@ -159,12 +158,11 @@ const TeamBlog = () => {
                                             ) : (
                                                 <ul id="todocontent">
                                                     {filteredToDo.map((todo) => (
-                                                        <li key={todo.toDoId}>
-                                                            {todo.assignees.map((assign)=>(
-                                                                <div id="todotext">{assign.nickname}  </div>
-                                                            ))}
-                                                            <div id="todotext"> | </div>
-                                                            <div id="todotext">{todo.task}</div>
+                                                        <li key={todos.toDoId} className={getTodoItemClassName(todo.toDoStatus)}>
+                                                            <div className={cn('checkbox', { checked: todo.toDoStatus })}>
+                                                                {todo.toDoStatus ? <img src={checkbox} width="20px" /> : <img src={uncheckbox} width="20px" />}
+                                                                <div>{todo.task}</div>
+                                                            </div>
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -179,7 +177,7 @@ const TeamBlog = () => {
                                             <button id="more" onClick={ShowAllSchedule}>전체보기</button>
                                         </div>
                                         <div id="detail">
-                                            <span id="today">{`${Year}. ${Month}. ${Dates}`}</span>
+                                            <span id="today">{`${year}. ${month}. ${dates}`}</span>
                                             <hr/>
                                             {filteredSchedule.length === 0 ? (
                                                 <div className="empty_today_todo">

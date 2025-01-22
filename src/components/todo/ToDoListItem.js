@@ -1,11 +1,6 @@
 import cn from 'classnames';
-import ToDoList from "../../pages/mypage/ToDoList";
 import checkbox from "../../images/check.png";
 import uncheckbox from "../../images/unchecked.png";
-import editicon from "../../images/edit.png";
-import removeicon from "../../images/remove.png";
-import ToDoListItems from "../../css/todo_css/ToDoListItem.css";
-import {useEffect} from "react";
 
 //할 일 보여주는 컴포넌트
 const ToDoListItem = ({todos, onToggle, onChangeSelectedTodo, onInsertToggle, selectedDate}) => {
