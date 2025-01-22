@@ -4,6 +4,8 @@ import Header from "../../components/repeat_etc/Header";
 import Category from "../../components/repeat_etc/Category";
 import axios from "axios";
 import { FaReply } from "react-icons/fa";
+import { MdOutlineSchedule } from "react-icons/md";
+import { VscPassFilled } from "react-icons/vsc";
 import "../../css/notification_css/Notification.css";
 
 const Notification = () => {
@@ -19,18 +21,31 @@ const Notification = () => {
         })
             .then((res) => {
                 console.log("알림 get 성공 : ", res.data);
-                setNotifications(res.data);
+                setNotifications(res.data.infos);
             })
             .catch((error) => {
                 console.error("알림 get 실패:", error);
             });
     }, []);
 
+    const renderIcon = (type) => {
+        switch (type) {
+            case "REPLY":
+                return <FaReply />;
+            case "MATCHING":
+                return <VscPassFilled />;
+            case "MEETING":
+                return <MdOutlineSchedule />;
+            default:
+                return null;
+        }
+    };
+
     const mynotifications = () => {
         return (
             <>
-                {/*{(notifications.length === 0) && <div className="no_study"><p>알림이 없습니다.</p></div>}*/}
-                {/*{(notifications.length !== 0) &&*/}
+                {(notifications.length === 0) && <div className="no_study"><p>알림이 없습니다.</p></div>}
+                {(notifications.length !== 0) &&
                     <table className="notification_table">
                         <thead>
                         <tr>
@@ -41,17 +56,17 @@ const Notification = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {/*{notifications.map((notification) => (*/}
+                        {notifications.map((notification) => (
                             <tr className="notification_list">
-                                <td><FaReply /></td>
-                                <td>알림 제목</td>
-                                <td>이것은 알림의 내용입니다. 이것은 알림의 내용입니다.</td>
-                                <td>읽음</td>
+                                <td>{renderIcon(notification.type)}</td>
+                                <td>{notification.title}</td>
+                                <td>{notification.body}</td>
+                                <td>{notification.read === true ? "읽음" : "읽지 않음"}</td>
                             </tr>
-                            {/*))}*/}
+                            ))}
                         </tbody>
                     </table>
-                {/*}*/}
+                }
             </>
         )
     }
