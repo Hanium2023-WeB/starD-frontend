@@ -25,6 +25,9 @@
     font-size: 18px;
     font-weight: bold;
 }
+.assignees_list{
+    display: flex;
+}
 .assignees{
     display: flex;
     font-size: 18px;

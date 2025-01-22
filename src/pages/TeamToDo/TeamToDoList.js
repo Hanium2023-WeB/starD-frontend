@@ -11,6 +11,7 @@ import TeamToDoListItem from "../../components/teamtodo/TeamToDoListItem";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 import toast from "react-hot-toast";
+import "../../css/todo_css/TeamToDoList.css";
 
 const TeamToDoList = () => {
 

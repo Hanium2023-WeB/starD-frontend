@@ -14,6 +14,7 @@ import Backarrow from "../../components/repeat_etc/Backarrow.js";
 import Header from "../../components/repeat_etc/Header";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 
 const ToDoList = ({sideheader}) => {
@@ -32,10 +33,7 @@ const ToDoList = ({sideheader}) => {
 
     const [todos, setTodos] = useState([]);
 
-    const [studyMems, setStudyMems] = useState([]);
-    const [InsertToDoTitle, setInsertToDoTitle] = useState("")
     const [InsertToDoStudyId, setInsertToDoStudyId] = useState("0")
-    const [InsertToDoStudy, setInsertToDoStudy] = useState([]);
     const studyIdAsNumber = parseFloat(InsertToDoStudyId);
     const [todoswithAssignee, setTodoswithAssignee] = useState({});
 
@@ -98,31 +96,43 @@ const ToDoList = ({sideheader}) => {
         setSelectedTodo(todo);
     };
 
-    const onToggle = useCallback(async (id, todo_status) => {
-        console.log("체크 스터디 아이디", id);
-        console.log("체크 전 상태", todo_status);
-        console.log("체크 후 상태", !todo_status);
-        const postDataResponse = await axios.post(`/api/todo/${id}/status`, null, {
-            params: {status: !todo_status},
-            withCredentials: true, headers: {
-                'Authorization': `Bearer ${accessToken}`
+    const onToggle = useCallback(
+        async (studyId, toDoId, assigneeId, todo_status) => {
+            try {
+                const updatedStatus = !todo_status;
+                const postDataResponse = await axios.put(
+                    `/api/studies/${studyId}/to-dos/${toDoId}/${assigneeId}`,
+                    null,
+                    {
+                        params: { status: updatedStatus },
+                        withCredentials: true,
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+
+                setTodos((prevTodos) =>
+                    prevTodos.map((todo) =>
+                        todo.toDoId === toDoId
+                            ? { ...todo, toDoStatus: !todo_status }
+                            : todo
+                    )
+                );
+
+                // Toast notification
+                if (updatedStatus) {
+                    toast.success("투두를 완료했습니다!");
+                } else {
+                    toast.success("투두 완료를 취소했습니다.");
+                }
+            } catch (error) {
+                console.error("체크 상태 변경 실패:", error);
+                toast.error("체크 상태 변경에 실패했습니다.");
             }
-        });
-        console.log("체크 성공:", postDataResponse.data);
-        setTodoswithAssignee((prevTodos) => {
-            const updatedTodos = {...prevTodos};
-            Object.keys(updatedTodos).forEach((dateKey) => {
-                updatedTodos[dateKey] = updatedTodos[dateKey].map((todo) => todo.toDo.id === id ? {
-                    ...todo,
-                    toDo: {
-                        ...todo.toDo,
-                    },
-                    toDoStatus: !todo.toDoStatus
-                } : todo);
-            });
-            return updatedTodos;
-        });
-    }, [studyIdAsNumber]);
+        },
+        [accessToken]
+    );
 
     const handleDateClick = (day) => {
         setSelectedDate(new Date(day));
@@ -151,7 +161,7 @@ const ToDoList = ({sideheader}) => {
         setShowCompleted(true);
     };
 
-    const filteredTodos = todos.filter((todo) => {
+    const filteredTodos = (Array.isArray(todos) ? todos : []).filter((todo) => {
         const todoDate = new Date(todo.dueDate);
         todoDate.setHours(0, 0, 0, 0); // 시간 부분을 00:00:00으로 설정
 
@@ -175,6 +185,7 @@ const ToDoList = ({sideheader}) => {
             studyTitle: study ? study.title : "스터디 제목 없음", // 일치하는 스터디 제목이 없을 경우 기본값 설정
         };
     });
+
 
     return (<div>
         <Header showSideCenter={true}/>

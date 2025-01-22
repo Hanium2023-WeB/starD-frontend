@@ -90,7 +90,14 @@
     border-radius: 5px;
     padding: 0 10px;
 }
-
+#todocontent .checkbox,
+#todocontent .uncheckbox{
+    margin-left: 0;
+}
+.checked{
+    color: #adb5bd;
+    text-decoration: line-through;
+}
 .TeamToDo{
     width: 100%;
 }
