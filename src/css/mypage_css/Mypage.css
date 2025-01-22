@@ -93,6 +93,9 @@ p {
 	display: flex;
 	flex-direction: row;
 }
+#todocontent li img{
+	cursor: pointer;
+}
 #todocontent li .meeting-info{
 	margin: 3px 0;
 }
@@ -129,6 +132,9 @@ p {
 	font-size: 12px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+#detail .empty_today_todo{
+	margin-top: 10px;
 }
 .empty_today_todo{
 	margin-top: 20px;

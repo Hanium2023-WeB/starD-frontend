@@ -18,7 +18,7 @@ import {useMyPageContext} from "../../components/datacontext/MyPageContext";
 const Mypage = () => {
     const dataId = useRef(0);
     const [state, setState] = useState([]);
-    const [todos, setTodos] = useState({});
+    const [todos, setTodos] = useState([]);
     const [today, setToday] = useState(new Date());
     const [parsedTodos, setParsedTodos] = useState([]);
     const [parsedmeetings, setParsedMeetings] = useState([]);
@@ -266,7 +266,7 @@ const Mypage = () => {
                                                 ) : (
                                                     <img src={uncheckbox} alt="unchecked" width="20px"/>
                                                 )}
-                                                <div id="todotext">{todo.studyTitle} | </div>
+                                                <div id="todotext">{todo.studyTitle} |&nbsp;</div>
                                                 <div id="todotext">{todo.task}</div>
                                             </li>
                                         ))}
