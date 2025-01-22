@@ -128,7 +128,7 @@ const Mypage = () => {
             <div className="container">
                 <Category/>
                 <div className="main_container">
-                    <p id={"entry-path"}> 홈 > 마이페이지 </p>
+                    <p id={"entry-path"}> 마이페이지 </p>
                     <Backarrow subname={"마이페이지"}/>
                     {isLoading ? (
                         <Loading /> // 로딩 중이면 Loading 컴포넌트 표시

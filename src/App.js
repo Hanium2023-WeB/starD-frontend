@@ -65,6 +65,7 @@ import {EventSourceProvider} from "./pages/notification/EventSourceContext";
 import Subscribe from "./pages/notification/Subscribe";
 import NoticeInsert from "./pages/notice/NoticeInsert";
 import {MyPageProvider} from "./components/datacontext/MyPageContext";
+import Notification from "./pages/notification/Notification";
 
 function App() {
   return (
@@ -115,6 +116,7 @@ function App() {
                       <Route path="schedule" element={<Schedule />} /> {/* My schedule */}
                       <Route path="evaluate" element={<MemberEvaluate />} /> {/* Member evaluation */}
                       <Route path="user-profile/:userId" element={<AnotherUserProfile />} /> {/* Another user's profile */}
+                      <Route path="notification" element={<Notification />} /> {/* Notification */}
                     </Routes>
                   </MyPageProvider>
                 } />

@@ -192,7 +192,7 @@ const MyParticipateStudy = ({sideheader}) => {
             <div className="container">
                 <Category/>
                 <div className="main_container">
-                    <p id={"entry-path"}> 홈 > 스터디 참여 내역 </p>
+                    <p id={"entry-path"}> 마이페이지 > 스터디 참여 내역 </p>
                     <Backarrow subname={"스터디 참여 내역"}/>
                     {loading ? <Loading/> : (
                         <div className="content_container">
