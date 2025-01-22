@@ -9,39 +9,20 @@ import ImageComponent from "../../components/image/imageComponent";
 
 const Profile = () => {
     let accessToken = localStorage.getItem('accessToken');
-    let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
     const [uploadImgUrl, setUploadImgUrl] = useState(null);
-    const [selfintro, setSelfIntro] = useState("");
-    const [toggle, setToggle] = useState(false);
     const [profile, setProfile] =useState(null);
-    const [testimg, setTestImg]=useState('');
 
     //프로필 조회하기
     useEffect(() => {
         axios
-            .get("/api/members/profile/image", {
+            .get("/api/members/profiles", {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             })
             .then((res) => {
-                console.error("프로필 가져오기 성공:", res.data);
-                setUploadImgUrl(res.data.imageUrl);
-            })
-            .catch((error) => {
-                console.error("프로필 가져오기 실패:", error);
-            });
-
-        axios
-            .get("/api/members/profile/image", {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-            .then((res) => {
-                console.error("프로필 가져오기 성공:", res.data);
+                setProfile(res.data);
                 setUploadImgUrl(res.data.imageUrl);
             })
             .catch((error) => {
@@ -58,7 +39,7 @@ const Profile = () => {
                     <p id={"entry-path"}> 홈 > 마이페이지 > 프로필 </p>
                     <Backarrow subname={"프로필"}/>
                     <div className="sub_container">
-                        <ImageComponent getImgName = {uploadImgUrl} imageUrl={uploadImgUrl} />
+                        <ImageComponent imageUrl={uploadImgUrl} />
                         <div className={"One-line-self-introduction"}>
                             <p id={"self-intro-p"}>한줄 자기소개</p>
                             <div>

@@ -14,35 +14,33 @@ function calculateDateDifference(startDate, endDate) {
     return daysDifference;
 }
 
-function checkRecruitStatus(recruitStatus, proressStatus) {
+function checkRecruitStatus(recruitStatus) {
     if (recruitStatus == "RECRUITING")
         return "👐🏻 모집 중";
-    else if (proressStatus == "DISCONTINUE")
-        return "⛔️ 중단된 스터디";
     else
         return "✅ 모집 완료";
 }
 
-function checkProgressStatus(recruitStatus, proressStatus){
-    if (recruitStatus == "IN_PROGRESS")
-        return "진행 중";
-    else if (proressStatus == "CANCELED")
-        return "중단된 스터디";
-    else if (proressStatus == "COMPLETED")
-        return "진행 완료";
+function checkProgressStatus(progressStatus) {
+    if (progressStatus == "IN_PROGRESS")
+        return "🧑🏻‍💻 진행 중";
+    else if (progressStatus == "CANCELED")
+        return "🚥 중단된 스터디";
+    else if (progressStatus == "COMPLETED")
+        return "🏁 진행 완료";
 }
 
 const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextTeamBlog, goEvaluationPage}) => {
-    // console.log(studies);
-    const imgUrl = studies.imgUrl ? studies.imgUrl : default_profile_img;
+    const imgUrl = studies.profileImg ? studies.profileImg : default_profile_img;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
+
     const recruitStatus = isParticipateStudy ? checkProgressStatus(studies.progressType) : checkRecruitStatus(studies.recruitmentType, studies.progressType);
     const navigate = useNavigate();
 
 
     const GoNextDetailPage = () => {
         // console.log(d.id);
-        navigate(`/study/detail/${studies.studyId}`, { state: { id: studies.studyId } });
+        navigate(`/study/detail/${studies.studyId}`, {state: {id: studies.studyId}});
 
     }
 
@@ -64,7 +62,7 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
                 </div>
             </div>
             <div className="list_founder">
-                <ImageComponent getImgName = {imgUrl} imageSrc={""} />
+                <ImageComponent imageUrl={imgUrl}/>
                 <span>{studies.nickname}</span>
             </div>
             <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>
@@ -79,15 +77,16 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
             </div>
             <div className="list_onoff" onClick={GoNextDetailPage}>{studies.activityType}</div>
             <div className="stroke"></div>
-            <div style={{display:"flex", justifyContent:"space-between"}}>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div className="list_deadline">
                     마감일 | {studies.recruitmentDeadline}
                 </div>
                 {isParticipateStudy && (
                     <div className="buttons">
-                        <button id="go-teamblog"onClick={() => goNextTeamBlog(studies)} >팀블로그 가기</button>
+                        <button id="go-teamblog" onClick={() => goNextTeamBlog(studies)}>팀블로그 가기</button>
                         {studies.progressType === "COMPLETED" ? (
-                            <button className="evaluation_btn" study={studies} onClick={()=>goEvaluationPage(studies)}>팀원 평가</button>
+                            <button className="evaluation_btn" study={studies}
+                                    onClick={() => goEvaluationPage(studies)}>팀원 평가</button>
                         ) : null}
                     </div>
                 )}

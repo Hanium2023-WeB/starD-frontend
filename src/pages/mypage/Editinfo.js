@@ -10,6 +10,7 @@ import Header from "../../components/repeat_etc/Header";
 
 const Editinfo = ({sideheader}) => {
     const [state, setState] = useState({
+        memberId: "",
         nickname: "",
         password: "",
         newPassword: "",
@@ -29,9 +30,9 @@ const Editinfo = ({sideheader}) => {
         })
             .then(response => {
                 const member = response.data;
-                console.log(member);
                 setState({
                     ...state,
+                    memberId: member.memberId,
                     nickname: member.nickname,
                     interests: member.interests
                 });
@@ -230,7 +231,7 @@ const Editinfo = ({sideheader}) => {
                     </div>
                     <div className="sub_container" id="interested">
                         <div className="change_interest">
-                            <EditInterest interests={state.interests}/>
+                            <EditInterest interests={state.interests} memberId={state.memberId}/>
                         </div>
                     </div>
                     <Signout/>

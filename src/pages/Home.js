@@ -230,7 +230,7 @@ const Home = () => {
                   <div className="dashboard_todo">
 
                 <span id="today">📋 {`${Year}. ${Month}. ${Dates} / 오늘의 할 일`}
-                  <MemoizedLink to={"/ToDoList"}
+                  <MemoizedLink to={"/mypage/todo-list"}
                                 style={{
                                   textDecoration: "none",
                                   color: "inherit",

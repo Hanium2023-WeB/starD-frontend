@@ -98,7 +98,7 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
           <div>
             <div className="study_author_info">
                         <span>
-                            <ImageComponent getImgName={imgUrl} imageSrc={""}/>
+                            <ImageComponent imageUrl={imgUrl} imageSrc={""}/>
                             <p className="study_author">
                                 {/*<Link*/}
                               {/*    to={`/${study.recruiter.id}/userprofile`}*/}

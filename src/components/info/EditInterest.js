@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import edit from "../../css/mypage_css/edit.css";
 import axios from "axios";
-const EditInterest=({interests})=>{
+const EditInterest=({interests, memberId})=>{
     const tagoptions = [
         {value: "개발/IT", name: "개발/IT"},
         {value: "취업/자격증", name: "취업/자격증"},
@@ -62,7 +62,6 @@ const EditInterest=({interests})=>{
 
 const handleSaveTag = async () => {
     const accessToken = localStorage.getItem('accessToken');
-    const memberId = localStorage.getItem('newMemberId');
     axios.post("/api/members/edit/interests", {
         interests: tags,
         memberId:memberId,

@@ -210,7 +210,7 @@ const PostDetail = () => {
                                 <div className="post_info">
                                     <div className="left">
                                         <span className="writer_profile">
-                                            <ImageComponent getImgName = {postItem.profileImg ? postItem.profileImg : default_profile_img} imageSrc={""} />
+                                            <ImageComponent imageUrl = {postItem.profileImg} imageSrc={""} />
                                             <Link
                                                 to={`/${postItem.postId}/userprofile`}
                                                 style={{
