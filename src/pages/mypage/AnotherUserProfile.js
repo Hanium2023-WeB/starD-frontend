@@ -11,7 +11,7 @@ import Slide from "../../components/study/Slide";
 const AnotherUserProfile = () => {
     let accessToken = localStorage.getItem('accessToken');
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
-    const { id } = useParams();
+    const {id} = useParams();
     const [uploadImgUrl, setUploadImgUrl] = useState(null);
 
     const [profile, setProfile] = useState(null);
@@ -45,7 +45,6 @@ const AnotherUserProfile = () => {
                 console.error("프로필 가져오기 실패:", error);
             });
     }, []);
-
 
 
     //다른 사용자 커뮤니티 게시글 조회
@@ -114,7 +113,7 @@ const AnotherUserProfile = () => {
                     <p id={"entry-path"}> 홈 > 다른 사용자 프로필 </p>
                     <Backarrow subname={"프로필"}/>
                     <div className="sub_container other_profile">
-                        <ImageComponent getImgName = {uploadImgUrl} imageSrc={""} />
+                        <ImageComponent imageUrl={uploadImgUrl} imageSrc={""}/>
                         <div className="profile_right_content">
                             <p><span className="color">닉네임:</span> {profile?.nickname}</p>
                             <p><span className="color">자기소개:</span> {profile?.introduce === null ? (
@@ -122,7 +121,8 @@ const AnotherUserProfile = () => {
                             ) : (
                                 <span>{profile?.introduce}</span>
                             )}</p>
-                            <p style={{marginBottom:"0"}}>{profile?.nickname}님의 개인신뢰도는 <span className="color">{profile?.credibility}</span>입니다.</p>
+                            <p style={{marginBottom: "0"}}>{profile?.nickname}님의 개인신뢰도는 <span
+                                className="color">{profile?.credibility}</span>입니다.</p>
                         </div>
                     </div>
                     <div className="another_open_study">

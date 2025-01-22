@@ -241,7 +241,7 @@ const StudyApplyList = () => {
                                 <tr key={index}>
                                     <td id={"apply_name"}>
                                         <div>
-                                            <ImageComponent getImgName={""} imageSrc={""} />
+                                            <ImageComponent imageUrl={item.imageUrl}/>
                                             <Link
                                                 to={`/${item.applicantId}/userprofile`}
                                                 style={{
@@ -300,7 +300,7 @@ const StudyApplyList = () => {
                                 .map((item, index) => (
                                     <tr key={index}>
                                         <td id={"apply_name"}>
-                                            <ImageComponent getImgName={""} imageSrc={""} />
+                                            <ImageComponent imageUrl={item.imageUrl} />
                                             <Link
                                                 to={`/${item.applicantId}/userprofile`}
                                                 style={{

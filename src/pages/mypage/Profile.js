@@ -39,7 +39,7 @@ const Profile = () => {
                     <p id={"entry-path"}> 홈 > 마이페이지 > 프로필 </p>
                     <Backarrow subname={"프로필"}/>
                     <div className="sub_container">
-                        <ImageComponent getImgName = {uploadImgUrl} imageUrl={uploadImgUrl} />
+                        <ImageComponent imageUrl={uploadImgUrl} />
                         <div className={"One-line-self-introduction"}>
                             <p id={"self-intro-p"}>한줄 자기소개</p>
                             <div>

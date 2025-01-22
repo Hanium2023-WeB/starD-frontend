@@ -114,7 +114,7 @@ const EditProfile = () => {
                     <Backarrow subname={"프로필 수정"}/>
                     <div className="sub_container">
                         <div className={"profile_content"}>
-                            <ImageComponent getImgName={uploadImgUrl} imageUrl={uploadImgUrl}/>
+                            <ImageComponent imageUrl={uploadImgUrl}/>
                             <input className="image-upload" type="file" accept="image/*"
                                    onChange={onchangeImageUpload}/>
                             <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>

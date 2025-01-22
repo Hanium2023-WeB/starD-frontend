@@ -14,6 +14,7 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import Loading from "../../components/repeat_etc/Loading";
 import StudyListItem from "../../components/study/StudyListItem";
 import {toggleScrapStatus} from "../../util/scrapHandler";
+
 const MyParticipateStudy = ({sideheader}) => {
     const accessToken = localStorage.getItem('accessToken');
     const isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
@@ -59,7 +60,7 @@ const MyParticipateStudy = ({sideheader}) => {
             (isScrapped) => {
                 setStudies((prevStudies) => {
                     const updatedStudies = [...prevStudies];
-                    updatedStudies[index] = { ...study, isScrapped };
+                    updatedStudies[index] = {...study, isScrapped};
                     return updatedStudies;
                 });
             },
@@ -178,7 +179,9 @@ const MyParticipateStudy = ({sideheader}) => {
                     </div>
                 )}
                 {studies.map((study, index) => (
-                    <StudyListItem key={study.studyId} studies={study} index={index} toggleScrap={() => toggleScrap(index)} isParticipateStudy={true} goEvaluationPage={goEvaluationPage} goNextTeamBlog={goNextTeamBlog} />
+                    <StudyListItem key={study.studyId} studies={study} index={index}
+                                   toggleScrap={() => toggleScrap(index)} isParticipateStudy={true}
+                                   goEvaluationPage={goEvaluationPage} goNextTeamBlog={goNextTeamBlog}/>
                 ))}
             </div>
         );
@@ -191,7 +194,7 @@ const MyParticipateStudy = ({sideheader}) => {
                 <div className="main_container">
                     <p id={"entry-path"}> 홈 > 스터디 참여 내역 </p>
                     <Backarrow subname={"스터디 참여 내역"}/>
-                    {loading ? <Loading/>:(
+                    {loading ? <Loading/> : (
                         <div className="content_container">
                             {mypartistudylist()}
                         </div>
