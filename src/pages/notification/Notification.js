@@ -7,10 +7,12 @@ import { FaReply } from "react-icons/fa";
 import { MdOutlineSchedule } from "react-icons/md";
 import { VscPassFilled } from "react-icons/vsc";
 import "../../css/notification_css/Notification.css";
+import {useNavigate} from "react-router-dom";
 
 const Notification = () => {
     const accessToken = localStorage.getItem('accessToken');
     const [notifications, setNotifications] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`/api/notifications`, {
@@ -41,48 +43,58 @@ const Notification = () => {
         }
     };
 
-    const mynotifications = () => {
-        return (
-            <>
-                {(notifications.length === 0) && <div className="no_study"><p>알림이 없습니다.</p></div>}
-                {(notifications.length !== 0) &&
-                    <table className="notification_table">
-                        <thead>
-                        <tr>
-                            <th>타입</th>
-                            <th>제목</th>
-                            <th>내용</th>
-                            <th>읽음 여부</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {notifications.map((notification) => (
-                            <tr className="notification_list">
-                                <td>{renderIcon(notification.type)}</td>
-                                <td>{notification.title}</td>
-                                <td>{notification.body}</td>
-                                <td>{notification.read === true ? "읽음" : "읽지 않음"}</td>
-                            </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                }
-            </>
-        )
+    const readNotification = (notificationId) => {
+        axios.put(`/api/notifications/${notificationId}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+            .then((res) => {
+                console.log("알림 get 성공 : ", res.data);
+                setNotifications(res.data.infos);
+            })
+            .catch((error) => {
+                console.error("알림 get 실패:", error);
+            });
     }
+
+    const handleNotificationClick = (type, targetId, notificationId) => {
+        // 알림 읽음 처리
+        // readNotification(notificationId);
+
+        // type에 따라 페이지 이동
+        if (type === "REPLY") {
+            navigate(`/study/detail/${targetId}`);
+        } else if (type === "MATCHING") {
+            navigate(`/teamblog/${targetId}`);
+        } else {
+            console.warn("알 수 없는 알림 유형:", type);
+        }
+    };
+
     return (
-        <div>
-            <Header showSideCenter={true} />
-            <div className={"container"}>
-                <Category/>
-                <div className="main_container">
-                    <p id={"entry-path"}> 마이페이지 > 알림 </p>
-                    <Backarrow subname={"알림"}/>
-                    <div>
-                        {mynotifications()}
+        <div className="notification_container">
+            <h2 className="noti">알림</h2>
+            <div className="notification_wrapper">
+                {notifications.map((notification) => (
+                    <div
+                        key={notification.NotificationId}
+                        className="notification_component"
+                        onClick={() => handleNotificationClick(notification.type, notification.targetId, notification.NotificationId)}
+                    >
+                        <div className="header">
+                            <div className="sub_header">
+                                <div className="type">{renderIcon(notification.type)}</div>
+                                <div className="title">{notification.title}</div>
+                            </div>
+                            <div>{notification.read === true ? "읽음" : "읽지 않음"}</div>
+                        </div>
+                        <div className="content">{notification.body}</div>
                     </div>
-                </div>
+                ))}
             </div>
+
         </div>
     )
 }
