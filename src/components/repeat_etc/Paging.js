@@ -1,5 +1,6 @@
 import {useEffect} from "react";
 import Pagination from "react-js-pagination";
+import "./../../css/study_css/Pagination.css"
 
 const Paging = ({page, totalItemCount, totalPages, itemsPerPage, handlePageChange}) => {
 
