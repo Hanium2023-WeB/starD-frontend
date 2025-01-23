@@ -1,7 +1,6 @@
 import ScrapButton from "../repeat_etc/ScrapButton";
-import {Link, useNavigate} from "react-router-dom";
-import React, {useEffect} from "react";
-import default_profile_img from "../../images/default_profile_img.png";
+import {useNavigate} from "react-router-dom";
+import React from "react";
 import ImageComponent from "../image/imageComponent";
 
 function calculateDateDifference(startDate, endDate) {
@@ -82,7 +81,7 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
                 </div>
                 {isParticipateStudy && (
                     <div className="buttons">
-                        <button id="go-teamblog" onClick={() => goNextTeamBlog(studies)}>팀블로그 가기</button>
+                        <button id="go-teamblog" onClick={() => goNextTeamBlog(studies)}>팀 블로그 가기</button>
                         {studies.progressType === "COMPLETED" ? (
                             <button className="evaluation_btn" study={studies}
                                     onClick={() => goEvaluationPage(studies)}>팀원 평가</button>

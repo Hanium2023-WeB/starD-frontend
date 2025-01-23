@@ -52,30 +52,32 @@ const category = () => {
 			</div>
 			<div className="c_02">
 				<div id={"c_title"}>
-				<Link
-					to={"/study"}
-					style={{
-						textDecoration: "none",
-						color: "inherit",
-					}}
-				>
+				{/*<Link*/}
+				{/*	to={"/study"}*/}
+				{/*	style={{*/}
+				{/*		textDecoration: "none",*/}
+				{/*		color: "inherit",*/}
+				{/*	}}*/}
+				{/*>*/}
 				STUDY
-				</Link>
+				{/*</Link>*/}
 				</div>
 				<div className="sub_c">
 					<nav>
 						<ul>
 							<Link
-								to={"/mypage/participate-study"}
+								to={"/mypage/participate-study/page=1"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
 								}}
 							>
-								<li>스터디 참여 내역</li>
+								{/* TODO 마이페이지 카테고리 명*/}
+								{/*<li>스터디 참여 내역</li>*/}
+								<li>스터디 팀 블로그</li>
 							</Link>
 							<Link
-								to={"/mypage/open-study"}
+								to={"/mypage/open-study/page=1"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -84,7 +86,7 @@ const category = () => {
 								<li>스터디 개설 내역</li>
 							</Link>
 							<Link
-								to={"/mypage/apply-study"}
+								to={"/mypage/apply-study/page=1"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -98,15 +100,15 @@ const category = () => {
 			</div>
 			<div className="c_03">
 				<div id={"c_title"}>
-				<Link
-					to={"/mypage"}
-					style={{
-						textDecoration: "none",
-						color: "inherit",
-					}}
-				>
+				{/*<Link*/}
+				{/*	to={"/mypage"}*/}
+				{/*	style={{*/}
+				{/*		textDecoration: "none",*/}
+				{/*		color: "inherit",*/}
+				{/*	}}*/}
+				{/*>*/}
 				MY
-				</Link>
+				{/*</Link>*/}
 				</div>
 				<div className="sub_c">
 					<nav>
@@ -142,7 +144,7 @@ const category = () => {
 
 						<ul>
 							<Link
-								to={"/mypage/scrap-study"}
+								to={"/mypage/scrap-study/page=1"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -151,7 +153,7 @@ const category = () => {
 								<li>스크랩한 스터디</li>
 							</Link>
 							<Link
-								to={"/mypage/scrap-community"}
+								to={"/mypage/scrap-community/page=1"}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
