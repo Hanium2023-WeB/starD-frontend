@@ -116,7 +116,6 @@ function App() {
                       <Route path="schedule" element={<Schedule />} /> {/* My schedule */}
                       <Route path="evaluate" element={<MemberEvaluate />} /> {/* Member evaluation */}
                       <Route path="user-profile/:userId" element={<AnotherUserProfile />} /> {/* Another user's profile */}
-                      <Route path="notification" element={<Notification />} /> {/* Notification */}
                     </Routes>
                   </MyPageProvider>
                 } />

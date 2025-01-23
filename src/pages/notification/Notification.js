@@ -44,7 +44,7 @@ const Notification = () => {
     };
 
     const readNotification = (notificationId) => {
-        axios.put(`/api/notifications/${notificationId}`, {
+        axios.put(`/api/notifications/${notificationId}`, null, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -61,7 +61,7 @@ const Notification = () => {
 
     const handleNotificationClick = (type, targetId, notificationId) => {
         // 알림 읽음 처리
-        // readNotification(notificationId);
+        readNotification(notificationId);
 
         // type에 따라 페이지 이동
         if (type === "REPLY") {
@@ -80,7 +80,7 @@ const Notification = () => {
                 {notifications.map((notification) => (
                     <div
                         key={notification.NotificationId}
-                        className="notification_component"
+                        className={`notification_component ${notification.read ? 'read' : ''}`}
                         onClick={() => handleNotificationClick(notification.type, notification.targetId, notification.NotificationId)}
                     >
                         <div className="header">

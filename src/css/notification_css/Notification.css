@@ -54,8 +54,10 @@
     width:100%;
     font-size: 14px;
     margin:10px 0 0 0;
-    color: #595959;
     white-space: nowrap;       /* 텍스트를 한 줄로 제한 */
     overflow: hidden;          /* 넘치는 부분 숨김 */
     text-overflow: ellipsis;   /* 말줄임표(...) 추가 */
+}
+.read{
+    opacity: 0.4;
 }
