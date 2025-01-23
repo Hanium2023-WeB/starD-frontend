@@ -117,6 +117,8 @@ const MyParticipateStudy = ({sideheader}) => {
                     {loading ? <Loading/> : (
                         <div className="content_container">
                             {mypartistudylist()}
+                        </div>
+                    )}
 
                     {studies.length !== 0 && (
                         <div className={"paging"}>

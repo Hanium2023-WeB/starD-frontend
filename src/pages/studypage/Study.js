@@ -157,13 +157,14 @@ const Study = () => {
                     )}
                     <br/>
                 </div>
+                {studies.length !== 0 &&
+                    <div className="pagingDiv">
+                        <Paging page={page} totalItemCount={totalElements} itemsPerPage={9} totalPages={totalPages}
+                                handlePageChange={handlePageChange}/>
+                    </div>
+                }
             </div>
-            {studies.length !== 0 &&
-                <div className="pagingDiv">
-                    <Paging page={page} totalItemCount={totalElements} itemsPerPage={9} totalPages={totalPages}
-                            handlePageChange={handlePageChange}/>
-                </div>
-            }
+
 
         </div>
     );
