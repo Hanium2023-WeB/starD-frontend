@@ -131,7 +131,7 @@ const MyWriteComment = () => {
             <div className="container">
                 <Category/>
                 <div className="main_container">
-                    <p id={"entry-path"}> 홈 > 마이페이지 > 내가 작성한 댓글 </p>
+                    <p id={"entry-path"}> 마이페이지 > 내가 작성한 댓글 </p>
                     <Backarrow subname={"내가 작성한 댓글"}/>
                     <div>
                         <div className="community">

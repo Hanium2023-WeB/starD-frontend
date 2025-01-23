@@ -111,11 +111,12 @@ const MyParticipateStudy = ({sideheader}) => {
             <div className="container">
                 <Category/>
                 <div className="main_container">
-                    <p id={"entry-path"}> 홈 > 스터디 팀 블로그 </p>
+
+                    <p id={"entry-path"}> 마이페이지 > 스터디 팀 블로그 </p>
                     <Backarrow subname={"스터디 팀 블로그"}/>
-                    <div className="content_container">
-                        {mypartistudylist()}
-                    </div>
+                    {loading ? <Loading/> : (
+                        <div className="content_container">
+                            {mypartistudylist()}
 
                     {studies.length !== 0 && (
                         <div className={"paging"}>

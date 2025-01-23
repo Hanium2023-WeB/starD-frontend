@@ -65,6 +65,7 @@ import {EventSourceProvider} from "./pages/notification/EventSourceContext";
 import Subscribe from "./pages/notification/Subscribe";
 import NoticeInsert from "./pages/notice/NoticeInsert";
 import {MyPageProvider} from "./components/datacontext/MyPageContext";
+import Notification from "./pages/notification/Notification";
 
 function App() {
   return (

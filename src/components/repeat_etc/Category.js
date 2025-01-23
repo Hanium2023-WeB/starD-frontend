@@ -26,7 +26,8 @@ const category = () => {
 									textDecoration: "none",
 									color: "inherit",
 								}}
-							><li>프로필</li>
+							>
+								<li>프로필</li>
 							</Link>
 							<Link
 								to={"/mypage/editinfo"}
@@ -37,15 +38,6 @@ const category = () => {
 							>
 								<li>개인정보 수정</li>
 							</Link>
-							<Link
-								to={"/notification"}
-								style={{
-									textDecoration: "none",
-									color: "inherit",
-								}}
-							>
-							<li>알림</li>
-						</Link>
 						</ul>
 					</nav>
 				</div>

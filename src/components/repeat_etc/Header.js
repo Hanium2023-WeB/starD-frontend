@@ -3,11 +3,14 @@ import axiosInstance from "../../api/axiosInstance";
 import {Link, useNavigate} from "react-router-dom";
 import LOGO from "../../images/Logo.png";
 import MemoizedLink from "../../MemoizedLink";
+import { IoIosNotifications, IoIosNotificationsOutline } from "react-icons/io";
+import Notification from "../../pages/notification/Notification";
 
 const Header = ({showSideCenter}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [page, setPage] = useState(1);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false); // 알림 팝업 상태
 
   const navigate = useNavigate();
 
@@ -130,6 +133,11 @@ const Header = ({showSideCenter}) => {
     }
   }, [navigate]);
 
+  // 알림 팝업 토글 함수
+  const toggleNotification = () => {
+    setIsNotificationOpen((prev) => !prev);
+  };
+
   const renderSideLeft = () => (
       <div className="headerbar" title={"홈으로 가기"}>
         <nav>
@@ -196,6 +204,9 @@ const Header = ({showSideCenter}) => {
             {isLoggedIn ? (
                 <>
                   <li>
+                    <IoIosNotificationsOutline size="25" onClick={toggleNotification}/>
+                  </li>
+                  <li>
                     <MemoizedLink
                         to={"/mypage"}
                         children={"마이페이지"}
@@ -246,6 +257,7 @@ const Header = ({showSideCenter}) => {
             <div className="head_right">{renderSideRight()}</div>
           </header>
         </div>
+        {isNotificationOpen && <Notification />}
       </div>
   );
 };

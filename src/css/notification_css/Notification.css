@@ -1,0 +1,63 @@
+.notification_container{
+    width: 430px;
+    height: 600px;
+    position: fixed;
+    top: 10%;
+    right: 10%;
+    border-radius: 20px;
+    border: 0.75px solid #dbdbdb;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.09);
+    z-index: 999;
+    display: grid;
+    grid-template-rows: auto 1fr; /* 첫 번째 행은 자동 높이, 두 번째 행은 나머지 */
+    font-family: Pretendard-Regular;
+}
+.notification_container .noti{
+    margin: 13px 0 0 0;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 0 10px 10px 15px;
+    box-sizing: border-box; /* 패딩 포함 */
+}
+.notification_container .notification_wrapper{
+    background: #f1f1f1;
+    border-radius: 0 0 20px 20px;
+}
+.notification_wrapper .notification_component{
+    margin: 15px;
+    padding:10px;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.notification_component .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.notification_component .sub_header{
+    display: flex;
+    align-items: center;
+}
+.notification_component .sub_header svg{
+    margin-left: 0;
+}
+.notification_component .sub_header .type{
+    margin-right: 10px;
+}
+.notification_component .sub_header .title{
+    font-size: 14px;
+    font-weight: bold;
+}
+.notification_component .content{
+    width:100%;
+    font-size: 14px;
+    margin:10px 0 0 0;
+    white-space: nowrap;       /* 텍스트를 한 줄로 제한 */
+    overflow: hidden;          /* 넘치는 부분 숨김 */
+    text-overflow: ellipsis;   /* 말줄임표(...) 추가 */
+}
+.read{
+    opacity: 0.4;
+}
