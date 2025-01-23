@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
 import {CirclePicker} from "react-color";
 import {parseISO} from 'date-fns';
-import studyList from "../../pages/studypage/StudyList";
+
 
 const TeamEditSchedule = ({studies, studyTitles, editdata, onUpdate, onRemove, onClose}) => {
     const [startDate, setStartDate] = useState(editdata.start_date);

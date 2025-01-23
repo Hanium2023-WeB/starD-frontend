@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 
 import {CirclePicker} from "react-color";
 import {parseISO} from 'date-fns';
-import studyList from "../../pages/studypage/StudyList";
+
 
 const EditSchedule = ({studies, studyTitles, editdata, onUpdate, onRemove, onClose}) => {
 
