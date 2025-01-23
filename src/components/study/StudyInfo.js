@@ -11,7 +11,7 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
   const [reportStudyId, setReportStudyId] = useState(null);
   const [editing, setEditing] = useState(false);
   const accessToken = localStorage.getItem('accessToken');
-  const imgUrl = study.imgUrl ? study.imgUrl : default_profile_img;
+  const imgUrl = study.profileImg;
   const handleOpenReportModal = (studyId) => {
     setReportStudyId(studyId);
     setShowReportModal(true);

@@ -104,11 +104,11 @@ function App() {
                       <Route path="profile" element={<Profile />} /> {/* Profile page */}
                       <Route path="profile/edit" element={<EditProfile />} /> {/* Edit profile */}
                       <Route path="editinfo" element={<Editinfo />} /> {/* Edit info */}
-                      <Route path="participate-study" element={<MyParticipateStudy />} /> {/* My participations */}
-                      <Route path="open-study" element={<MyOpenStudy />} /> {/* My open studies */}
-                      <Route path="apply-study" element={<MyApplyStudy />} /> {/* My applied studies */}
-                      <Route path="scrap-study" element={<MyScrapStudy />} /> {/* My scrap studies */}
-                      <Route path="scrap-community" element={<MyScrapCommunityPost />} /> {/* My scrap community posts */}
+                      <Route path="participate-study/:page" element={<MyParticipateStudy />} /> {/* My participations */}
+                      <Route path="open-study/:page" element={<MyOpenStudy />} /> {/* My open studies */}
+                      <Route path="apply-study/:page" element={<MyApplyStudy />} /> {/* My applied studies */}
+                      <Route path="scrap-study/:page" element={<MyScrapStudy />} /> {/* My scrap studies */}
+                      <Route path="scrap-community/:page" element={<MyScrapCommunityPost />} /> {/* My scrap community posts */}
                       <Route path="write-post/:page" element={<MyWritePost />} /> {/* My written posts */}
                       <Route path="write-comment/:page" element={<MyWriteComment />} /> {/* My written comments */}
                       <Route path="score" element={<MyScore />} /> {/* My score */}
