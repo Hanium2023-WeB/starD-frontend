@@ -31,7 +31,6 @@ function checkProgressStatus(progressStatus) {
 }
 
 const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextTeamBlog, goEvaluationPage}) => {
-    const imgUrl = studies.profileImg ? studies.profileImg : default_profile_img;
     const daysDifference = calculateDateDifference(studies.activityStart, studies.activityDeadline);
 
     const recruitStatus = isParticipateStudy ? checkProgressStatus(studies.progressType) : checkRecruitStatus(studies.recruitmentType, studies.progressType);
@@ -62,7 +61,7 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
                 </div>
             </div>
             <div className="list_founder">
-                <ImageComponent imageUrl={imgUrl}/>
+                <ImageComponent imageUrl={studies.profileImg}/>
                 <span>{studies.nickname}</span>
             </div>
             <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>

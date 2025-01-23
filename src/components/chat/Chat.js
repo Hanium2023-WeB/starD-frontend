@@ -29,8 +29,7 @@ const Chat = (props) => {
 
     const stompClient = useRef(
         new Client({
-            // brokerURL: 'ws://localhost:8080/gs-guide-websocket',
-            brokerURL: 'ws://52.78.94.86:8080/gs-guide-websocket',
+            brokerURL: process.env.REACT_APP_CHAT_API_KEY,
         })
     );
 
