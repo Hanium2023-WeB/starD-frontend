@@ -10,15 +10,13 @@ import ImageComponent from "../../components/image/imageComponent";
 const StudyApplyList = () => {
     const [applyList, setApplyList] = useState([]);
     const location = useLocation();
-    const { capacity } = location.state || {}; // 전달된 state에서 capacity 가져오기
-    console.log(capacity);
+    const {capacity} = location.state || {}; // 전달된 state에서 capacity 가져오기
+
     const [MotiveToggle, setMotiveToggle] = useState(false);
     const [openMotivationIndex, setOpenMotivationIndex] = useState(-1);
     const accessToken = localStorage.getItem('accessToken');
-    const [acceptedMembers, setAcceptedMembers] = useState([]);
 
     const [count, setCount] = useState(0);
-    const [clickedApplyStates, setClickedApplyStates] = useState(Array(applyList.length).fill(false));
     const [clickedRejectStates, setClickedRejectStates] = useState(Array(applyList.length).fill(false));
 
     let {id} = useParams();
@@ -35,30 +33,12 @@ const StudyApplyList = () => {
             }
         })
             .then((res) => {
-                console.log(res.data.length);
-                console.log(res.data);
                 setCount(res.data.length);
                 setApplyList(res.data);
             })
             .catch((error) => {
                 console.error("신청자 데이터 가져오기 실패:", error);
             });
-
-        axios.get(`/api/api/v2/studies/${id}/study-member`, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        }).then((res) => {
-            if (res.data.data.length > 0) {   // 스터디원이 있을 경우 -> 모집 완료
-                console.log("모집 완료");
-                setIsCompleted(true);
-            }
-        })
-            .catch((error) => {
-                console.error("스터디 모집 여부 데이터 가져오기 실패:", error);
-            });
-
     }, []);
 
 
@@ -70,16 +50,18 @@ const StudyApplyList = () => {
         }
     };
 
-    const handleaccept = (memberId, nickname, index) => {
+    const handleAction = (member, index, isAccept) => {
         if (isCompleted === true) {
             alert('이미 모집 완료된 게시글입니다.');
         } else {
-            const result = window.confirm(nickname + "님을(를) 수락하시겠습니까?");
+            const actionText = isAccept ? '수락' : '거절';
+            const result = window.confirm(`${member.nickname}님을(를) ${actionText}하시겠습니까?`);
+
             if (result) {
-                axios.post(`/api/studies/${id}/applications/${memberId}/assignment`, {}, {
+                axios.post(`/api/studies/${id}/applications/${member.applicantId}/assignment`, {}, {
                     params: {
                         studyId: id,
-                        applicationId: memberId,
+                        applicationId: member.applicantId,
                     },
                     withCredentials: true,
                     headers: {
@@ -87,105 +69,52 @@ const StudyApplyList = () => {
                     }
                 })
                     .then((res) => {
-                        console.log(res.data);
+                        window.alert(`${member.nickname}님을(를) ${actionText}했습니다.`);
 
-                        window.alert(nickname + "님을(를) 수락했습니다.");
-                        setApplyList((prevApplyList) =>
-                            prevApplyList.map((item) => {
-                                if (item.applicantId === memberId) {
-                                    return { ...item, status: "ACCEPTED" }; // 상태 업데이트
-                                }
-                                return item;
-                            })
-                        );
-
-                            setClickedApplyStates((prevStates) => {
-                                const updatedStates = [...prevStates];
-                                updatedStates[index] = true;
-                                return updatedStates;
-                            });
-
-                            setClickedRejectStates((prevStates) => {
-                                const updatedStates = [...prevStates];
-                                updatedStates[index] = false;
-                                return updatedStates;
-                            });
-
-                            setAcceptedMembers([...acceptedMembers, memberId]);
-                    })
-                    .catch((error) => {
-                        console.error("수락 실패:", error);
-                    });
-            }
-        }
-    }
-
-    useEffect(() => {
-        console.log("수락한 멤버", acceptedMembers);
-    }, [acceptedMembers]);
-
-    const handlereturn = (memberId, index) => {
-        if (isCompleted === true) {
-            alert('이미 모집 완료된 게시글입니다.');
-        } else {
-            const result = window.confirm(memberId + "을(를) 거절하시겠습니까?");
-
-            if (result) {
-
-                //TODO db에서 받아오기 setApplyList로 상태 업데이트
-                axios.put(`/api/api/v2/studies/${id}/select`, {}, {
-                    params: {
-                        applicantId: memberId,
-                        isSelect: false
-                    },
-                    withCredentials: true,
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                })
-                    .then((res) => {
-                        console.log(res.data);
-
-                        if (res.data !== "SUCCESS") {
-                            window.alert(memberId + "을(를) 거절 실패했습니다.");
-                            console.log("거절 실패");
-                        } else {
-                            window.alert(memberId + "을(를) 거절했습니다.");
-                            setApplyList((prevApplyList) => {
-                                const updatedList = prevApplyList.map((item) => {
-                                    if (item.member.id === memberId) {
-                                        return {...item, participationState: false};
+                        if (isAccept) {
+                            setApplyList((prevApplyList) =>
+                                prevApplyList.map((item) => {
+                                    if (item.applicantId === member.applicantId) {
+                                        return {...item, status: "ACCEPTED"}; // 상태 업데이트
                                     }
                                     return item;
-                                });
-                                return updatedList;
-                            });
+                                })
+                            );
 
+                            setClickedRejectStates((prevStates) => {
+                                const updatedStates = [...prevStates];
+                                updatedStates[index] = false;
+                                return updatedStates;
+                            });
+                        } else {
+                            setApplyList((prevApplyList) =>
+                                prevApplyList.map((item) => {
+                                    if (item.applicantId === member.applicantId) {
+                                        return {...item, status: "REJECTED"};
+                                    }
+                                    return item;
+                                })
+                            );
                             setClickedRejectStates((prevStates) => {
                                 const updatedStates = [...prevStates];
                                 updatedStates[index] = true;
                                 return updatedStates;
                             });
-                            setClickedApplyStates((prevStates) => {
-                                const updatedStates = [...prevStates];
-                                updatedStates[index] = false;
-                                return updatedStates;
-                            });
-                            setAcceptedMembers(acceptedMembers.filter((id) => id !== memberId));
                         }
-
                     })
                     .catch((error) => {
-                        console.error("거절 실패:", error);
+                        console.error("상태 변경 실패:", error);
                     });
             }
         }
     }
-    const goNextTeamBlog = (count) => {
+
+    const goNextTeamBlog = () => {
+        const count = applyList.filter(item => item.status === "ACCEPTED").length;
         if (isCompleted === true) {
             alert('이미 모집 완료된 게시글입니다.');
         } else {
-            if (count > capacity) {
+            if (count > capacity - 1) {
                 alert("모집인원을 초과하였습니다.");
                 return;
             } else {
@@ -196,8 +125,6 @@ const StudyApplyList = () => {
                     }
                 })
                     .then((res) => {
-                        console.log(res.data);
-                        console.log("모집 완료");
 
                         axios.post(`/api/chats/rooms/${id}`, null, {
                             withCredentials: true,
@@ -236,12 +163,12 @@ const StudyApplyList = () => {
                         <tbody>
                         {/* PENDING 상태인 지원자들만 표시 */}
                         {applyList
-                            .filter((item) => item.status === "PENDING")
+                            .filter((item) => item.status === "PENDING" || item.status === "REJECTED")
                             .map((item, index) => (
                                 <tr key={index}>
                                     <td id={"apply_name"}>
                                         <div>
-                                            <ImageComponent imageUrl={item.imageUrl}/>
+                                            <ImageComponent imageUrl={item.profileImg}/>
                                             <Link
                                                 to={`/${item.applicantId}/userprofile`}
                                                 style={{
@@ -254,24 +181,26 @@ const StudyApplyList = () => {
                                         </div>
                                     </td>
                                     <td>
-                                        <button className={"look_motive"} onClick={() => toggleMotivation(index)}>보기</button>
-                                        {openMotivationIndex === index && (
-                                            <Motive motive={item.introduce} onClose={() => setOpenMotivationIndex(-1)} />
+                                        <button className={"look_motive"}
+                                                onClick={() => toggleMotivation(item.applicantId)}>보기
+                                        </button>
+                                        {openMotivationIndex === item.applicantId && (
+                                            <Motive motive={item.introduce} onClose={() => setOpenMotivationIndex(-1)}/>
                                         )}
                                     </td>
                                     <td>
                     <span>
                         <button
-                            className={`acceptbtn ${item.participationState === true ? 'clicked' : ''}`}
-                            onClick={() => handleaccept(item.applicantId, item.nickname, index)}
+                            className={`acceptbtn ${item.status === "ACCEPTED" ? 'clicked' : ''}`}
+                            onClick={() => handleAction(item, index, true)}
                         >
                             수락
                         </button>
                     </span>
                                         <span>
                         <button
-                            className={`rejectbtn ${item.participationState === false ? 'clicked' : ''}`}
-                            onClick={() => handlereturn(item.applicantId, index)}
+                            className={`rejectbtn ${item.status === "REJECTED" ? 'clicked' : ''}`}
+                            onClick={() => handleAction(item, index, false)}
                         >
                             거절
                         </button>
@@ -300,7 +229,7 @@ const StudyApplyList = () => {
                                 .map((item, index) => (
                                     <tr key={index}>
                                         <td id={"apply_name"}>
-                                            <ImageComponent imageUrl={item.imageUrl} />
+                                            <ImageComponent imageUrl={item.profileImg}/>
                                             <Link
                                                 to={`/${item.applicantId}/userprofile`}
                                                 style={{
@@ -314,17 +243,17 @@ const StudyApplyList = () => {
                                         </td>
                                         <td>
                                             <button className={"look_motive"}
-                                                    onClick={() => toggleMotivation(index)}>보기
+                                                    onClick={() => toggleMotivation(item.applicantId)}>보기
                                             </button>
-                                            {openMotivationIndex === index && (
+                                            {openMotivationIndex === item.applicantId && (
                                                 <Motive motive={item.introduce}
-                                                        onClose={() => setOpenMotivationIndex(-1)} />
+                                                        onClose={() => setOpenMotivationIndex(-1)}/>
                                             )}
                                         </td>
                                         <td>
                                             <button
                                                 className={`rejectbtn ${clickedRejectStates[index] ? 'clicked' : ''}`}
-                                                onClick={() => handlereturn(item.applicantId, index)}
+                                                onClick={() => handleAction(item, index, false)}
                                             >
                                                 수락 취소
                                             </button>
@@ -337,7 +266,7 @@ const StudyApplyList = () => {
                 </div>
                 {isCompleted === false && (
                     <div className={"apply"}>
-                        <button id={"apply-btn"} onClick={() => goNextTeamBlog(count)}>모집완료</button>
+                        <button id={"apply-btn"} onClick={() => goNextTeamBlog()}>모집완료</button>
                     </div>
                 )}
             </div>

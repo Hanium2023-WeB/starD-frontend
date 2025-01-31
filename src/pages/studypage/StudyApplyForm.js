@@ -64,7 +64,7 @@ const StudyApplyForm = ({sideheader}) => {
         }).then((res) => {
             console.log(res.data);
             toast.success("제출에 성공했습니다.");
-            navigate("/mypage/apply-study");
+            navigate("/mypage/apply-study/1");
         })
             .catch((error) => {
                 console.error("데이터 가져오기 실패:", error);
