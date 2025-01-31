@@ -1,13 +1,12 @@
 import React, {useEffect, useRef, useState, useCallback} from 'react';
 import axios from "axios";
-import { Naver_ID, Naver_Secret } from '../../config';
 
 const MapNaverDefault = ({studyId, Member,progressStatus}) => {
 
     const accessToken = localStorage.getItem('accessToken');
 
-    const [mapLat, setMapLat] = useState(null); // 위도
-    const [mapLng, setMapLng] = useState(null); // 경도
+    const [mapLat, setMapLat] = useState(37.5666103); // 위도
+    const [mapLng, setMapLng] = useState(126.9783882); // 경도
     const [currentLocation, setCurrentLocation] = useState({});
     const mapElement = useRef(null);
     const {naver} = window;
@@ -44,7 +43,6 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
 
         // 위치추적에 성공했을때 위치 값을 넣어줌
         function success(position) {
-            console.log("성공함?");
             console.log("위도", position.coords.latitude);
             console.log("경도", position.coords.longitude);
             setMyLocation({
@@ -57,8 +55,8 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
 
             axios.get(reverseGeocodeUrl, {
                 headers: {
-                    'X-NCP-APIGW-API-KEY-ID': Naver_ID,
-                    'X-NCP-APIGW-API-KEY': Naver_Secret
+                    'X-NCP-APIGW-API-KEY-ID': process.env.REACT_APP_NAVER_MAPS_CLIENT_ID,
+                    'X-NCP-APIGW-API-KEY': process.env.REACT_APP_MAP_NAVER_SECRET
                 },
             })
                 .then(response => {
@@ -95,34 +93,32 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
 
     }, [mapElement, myLocation]);
 
-    //회원가입 시 입력한 구, 군 위치찍기 -> 위도 경도 초기화
-    useEffect(() => {
-        axios.get(`/api/location/${studyId}/all`, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log("Location : ", res.data);
-
-                setMapLat(res.data.latitude);
-                setMapLng(res.data.longitude);
-            })
-            .catch((error) => {
-                console.error("위도, 경도 불러오기 실패", error);
-            });
-
-    }, []);
-
-
+    // //회원가입 시 입력한 구, 군 위치찍기 -> 위도 경도 초기화
+    // useEffect(() => {
+    //     axios.get(`/api/location/${studyId}/all`, {
+    //         withCredentials: true,
+    //         headers: {
+    //             'Authorization': `Bearer ${accessToken}`
+    //         }
+    //     })
+    //         .then((res) => {
+    //             console.log("Location : ", res.data);
+    //
+    //             setMapLat(res.data.latitude);
+    //             setMapLng(res.data.longitude);
+    //         })
+    //         .catch((error) => {
+    //             console.error("위도, 경도 불러오기 실패", error);
+    //         });
+    //
+    // }, []);
 
     useEffect(() => {
         if (!mapElement.current || !naver) return;
 
         if (naver.maps) {
-            const location = new naver.maps.LatLng(mapLng, mapLat);
-            console.log("위치:", location);
+            const location = new naver.maps.LatLng(mapLat, mapLng);
+
             const mapOptions = {
                 center: location,
                 zoom: 16,
@@ -181,7 +177,6 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
     };
 
     const handleInputChange = (index, value) => {
-        console.log(value);
         const newInputs = [...inputs];
         newInputs[index] = value;
         setInputs(newInputs);
@@ -200,9 +195,10 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
             }
         }
 
+        const params = new URLSearchParams();
+        inputs.forEach(place => params.append('places', place));
 
-        axios.get("/api/location/find", {
-            params: {placeList: inputs.join(',')},
+        axios.get(`/api/studies/${studyId}/locations/find?${params.toString()}`, {
             withCredentials: true,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -210,9 +206,8 @@ const MapNaverDefault = ({studyId, Member,progressStatus}) => {
         })
             .then((res) => {
                 console.log("Location : ", res.data);
-
-                setMapLat(res.data.latitude);
-                setMapLng(res.data.longitude);
+                setMapLat(res.data.longitude);
+                setMapLng(res.data.latitude);
             })
             .catch((error) => {
                 console.error("위도, 경도 불러오기 실패", error);
