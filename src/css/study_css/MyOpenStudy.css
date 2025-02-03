@@ -156,6 +156,11 @@ html {
 	color: #99a3af;
 	margin-top:10px;
 }
+.study_list .top{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
 .study_list .list_founder{
 	font-size: 13px;
 	margin-bottom: 15px;
@@ -200,27 +205,31 @@ html {
 	text-align: right;
 }
 #go-teamblog, .evaluation_btn{
-	border-radius: 5px;
+	border-radius: 10px;
 	border-style: none;
-	background-color: #BBDF9F;
-	color: white;
-	padding: 5px;
-	margin-top: 10px;
+	padding: 7px 10px;
 	cursor: pointer;
+	font-family: Pretendard-Regular;
+}
+.evaluation_btn{
+	background: #fff;
+	color: #000;
+	border: 1px dashed #7a8e6d;
+}
+#go-teamblog{
+	background: #BBDF9F;
+	color: white;
+	margin-top: 10px;
 }
 #go-teamblog:hover, .evaluation_btn:hover{
 	background-color: #7A8E6D;
 	color: white;
-	font-weight: bolder;
 }
-.evaluation_btn{
-	margin-left:10px;
+.evaluation_btn:hover{
+	border:1px dashed #fff;
 }
 
 .pagingDiv{
-	/*display: flex;*/
-	/*flex-direction: row;*/
-	/*justify-content: center;*/
 	margin-bottom: 30px;
 }
 
