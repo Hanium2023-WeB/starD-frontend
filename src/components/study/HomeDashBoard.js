@@ -105,7 +105,7 @@ const HomeDashBoard = () => {
                             </div>
                             <div className={"contnet"}>
                                 <div className="list_deadline">
-                                    마감일 | {study.activityDeadline} / 팀장: {study.nickname}
+                                    종료일 | {study.activityDeadline} / 팀장: {study.nickname}
                                 </div>
                                 <div className={"dashboardsubdetail"}>
                                     <div className="list_tag" style={{marginRight: "5px"}}>{study.field}</div>
