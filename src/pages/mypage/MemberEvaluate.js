@@ -8,69 +8,47 @@ import "../../css/study_css/MyParticipateStudy.css";
 import Loading from "../../components/repeat_etc/Loading";
 
 import axios from "axios";
+import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
 
 const MemberEvaluate = () => {
     const accessToken = localStorage.getItem('accessToken');
 
-    const [loading, setLoading] = useState(true);
-
     const [evaluation, setEvaluation] = useState([]);
-    const [showEvaluateInsert, setShowEvaluateInsert] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
+    const [selectedMember, setSelectedMember] = useState(null);
 
-    const [Member, setMember] = useState([]);
+    const { member, loading } = useTeamBlogContext();
 
     const study = useLocation();
     const { studyId } = study.state;
 
-    const handleMoveToEvaluateInsert = (e) => {
-        e.preventDefault();
-        setShowEvaluateInsert(!showEvaluateInsert); // Toggle the showEvaluateInsert state
+    const fetchEvaluations = () => {
+        axios.get(`/api/studies/${studyId}/evaluations/given`, {
+            withCredentials: true,
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+        })
+            .then((res) => {
+                console.log("평가 내역 갱신 성공:", res.data);
+                setEvaluation(res.data);
+            })
+            .catch((error) => {
+                console.error("평가 내역 불러오기 실패:", error);
+            });
     };
 
-
     useEffect(() => {
-        setLoading(true);
+        fetchEvaluations();
+    }, [studyId]);
 
-        axios.get(`/api/api/v2/studies/${studyId}/study-member`, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log("참여멤버 get 성공 : ", res.data);
-
-                const studymemberList = res.data;
-
-                setMember(studymemberList.data);
-
-            })
-            .catch((error) => {
-                console.error("참여멤버 get 실패:", error);
-            });
-
-    }, [accessToken]);
-
-    useEffect(() => {
-        setLoading(true);
-
-        axios.get(`/api/rate/member/${studyId}`, {
-            withCredentials: true,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-            .then((res) => {
-                console.log("평가 내역 get 성공 : ", res.data);
-
-                setEvaluation(res.data);
-
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("평가 내역 불러오기 실패 : ", error);
-            });
-    }, [accessToken, studyId]);
+    const handleOpenPopup = (member) => {
+        console.log(member);
+        setSelectedMember(member);
+        setShowPopup(true);
+    };
+    const handleClosePopup = () => {
+        setShowPopup(false);
+        fetchEvaluations(); // 팝업이 닫히면 평가 내역 다시 가져오기
+    };
 
     return (
         <div>
@@ -81,45 +59,53 @@ const MemberEvaluate = () => {
                     <p id={"entry-path"}> 스터디 참여 내역 > 팀원 평가 </p>
                     <Backarrow subname={"팀원 평가"} />
                     <div className="evaluate">
-                        {loading ? <Loading/> : (
-                            showEvaluateInsert ? ( // Render MemberEvaluateInsert when showEvaluateInsert is true
-                                <MemberEvaluateInsert studyId={studyId} members={Member}
-                                    completeEvaluation={evaluation} />
-                            ) : evaluation.length === 0 ? (
-                                <>
-                                    <p>평가 내역이 없습니다.<br/> 팀원 평가를 진행해주세요.</p>
-                                </>
-                            ) : (
-                                <table className="evaluate_table">
-                                    <thead>
-                                    <tr>
-                                        <th>팀원 이름</th>
-                                        <th>점수</th>
-                                        <th>사유</th>
+                        {loading ? (
+                            <Loading />
+                        ) : (
+                            <table className="evaluate_table">
+                                <thead>
+                                <tr>
+                                    <th>팀원 이름</th>
+                                    <th>점수</th>
+                                    <th>사유</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {evaluation.map((eva, index) => (
+                                    <tr className="evaluate_list" key={index}>
+                                        <td className="member_name">{eva.nickname}</td>
+                                        <td className="member_rating">
+                                            {eva.evaluationStatus ? eva.starRating : "X"}
+                                        </td>
+                                        <td className="member_evaluate_reason">
+                                            {eva.evaluationStatus ? eva.starReason : "아직 평가되지 않았습니다."}
+                                        </td>
+                                        <td>
+                                            {eva.evaluationStatus ? (
+                                                "평가 완료"
+                                            ) : (
+                                                <button className="evaluate_button" onClick={() => handleOpenPopup(eva)}>
+                                                    팀원 평가하기
+                                                </button>
+                                            )}
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    {evaluation.map((eva, index) => (
-                                        <tr className="evaluate_list">
-                                            <td className="member_name">{eva.target.nickname}</td>
-                                            <td className="member_rating">{eva.starRating}</td>
-                                            <td className="member_evaluate_reason">{eva.reason}</td>
-                                        </tr>
-                                    ))}
-
-                                    {/*{members.map((member) => (*/}
-                                    {/*    <tr className="evaluate_list">*/}
-                                    {/*        <td className="community_category">{}</td>*/}
-                                    {/*        <td className="community_nickname">{}</td>*/}
-                                    {/*        <td className="community_datetime">{}</td>*/}
-                                    {/*    </tr>*/}
-                                    </tbody>
-                                </table>
-                            )
+                                ))}
+                                </tbody>
+                            </table>
                         )}
 
-                        {evaluation.length < Member.length - 1 && !showEvaluateInsert && (
-                            <button className="evaluate_button" onClick={handleMoveToEvaluateInsert}>팀원 평가하기</button>
+                        {showPopup && (
+                            <div className="popup-overlay">
+                                <div className="popup-content">
+                                    <MemberEvaluateInsert
+                                        studyId={studyId}
+                                        member={selectedMember}
+                                        onClose={handleClosePopup} // 팝업 닫기 함수 전달
+                                    />
+                                </div>
+                            </div>
                         )}
                     </div>
 

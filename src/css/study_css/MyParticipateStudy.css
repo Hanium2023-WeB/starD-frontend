@@ -150,7 +150,7 @@ html {
 	font-size:15px;
 	margin:50px 0 100px;
 }
-.evaluate button, form input{
+form input{
 	width:150px;
 	border-radius: 10px;
 	border: 1px solid #dbdbdb;
@@ -159,7 +159,17 @@ html {
 	box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
 }
 .evaluate button{
+	padding:7px 10px;
+	background: #BBDF9F;
+	color:#fff;
+	border-radius: 10px;
+	border:none;
+	font-family: Pretendard-Regular;
 	cursor: pointer;
+}
+.evaluate button:hover{
+	color:#fff;
+	background: #9ba890;
 }
 .evaluate_table{
 	width: 100%;
@@ -178,20 +188,52 @@ html {
 	border-top:1px solid #d9d9d9;
 }
 
-.evaluate_table textarea{
-	width: 100%;
-	height: 30px;
-}
 .member_rating > div{
 	align-items: center;
 }
 
-.evaluate_list button{
-	width:75px;
-	height:35px;
-	border-radius: 5px;
-	border-style: none;
-	background-color: #BBDF9F;
-	color: white;
+
+.popup-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+}
+
+.popup-content {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	width: 400px;
+	position: relative;
+}
+
+.close-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	border: none;
+	background: transparent;
+	font-size: 20px;
 	cursor: pointer;
+}
+
+.evaluate_form textarea{
+	width:96%;
+	height:35px;
+	padding:7px;
+	font-family: Pretendard-Regular;
+	border-radius: 10px;
+	border:1px solid #d9d9d9;
+	outline: none;
+	margin-bottom: 20px;
+}
+.evaluate_form .register_btn{
+	margin-left: 5px;
 }

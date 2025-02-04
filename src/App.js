@@ -114,7 +114,6 @@ function App() {
                       <Route path="score" element={<MyScore />} /> {/* My score */}
                       <Route path="todo-list" element={<ToDoList />} /> {/* My todo list */}
                       <Route path="schedule" element={<Schedule />} /> {/* My schedule */}
-                      <Route path="evaluate" element={<MemberEvaluate />} /> {/* Member evaluation */}
                       <Route path="user-profile/:userId" element={<AnotherUserProfile />} /> {/* Another user's profile */}
                     </Routes>
                   </MyPageProvider>
@@ -156,6 +155,7 @@ function App() {
                         <StudyPostDetail/>}/> {/* Team blog post detail */}
                       <Route path="member"
                              element={<TeamMember/>}/> {/* Team members */}
+                      <Route path="evaluate" element={<MemberEvaluate />} /> {/* Member evaluation */}
                     </Routes>
                   </TeamBlogProvider>
                 }/>

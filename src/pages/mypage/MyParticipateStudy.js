@@ -82,7 +82,7 @@ const MyParticipateStudy = ({sideheader}) => {
     }
 
     const goEvaluationPage = (item) => {
-        navigate(`/${item.studyId}/evaluate`, {
+        navigate(`/teamblog/${item.studyId}/evaluate`, {
             state: {
                 studyId: item.studyId
             }
