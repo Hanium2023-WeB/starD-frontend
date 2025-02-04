@@ -113,8 +113,7 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
                         </span>
               <p className="study_created_date">{formatDatetime(
                   study.createdAt)}</p>
-              {(study.recruitmentType !== 'COMPLETED') && (study.isAuthor
-                  === false && accessToken) && (
+              {(study.isAuthor === false && accessToken) && (
                   <>
                     <p>&nbsp;&nbsp; | &nbsp;&nbsp;</p>
                     <p className="report_btn"
