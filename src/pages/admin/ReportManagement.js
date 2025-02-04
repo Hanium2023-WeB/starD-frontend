@@ -146,10 +146,10 @@ const ReportManagement = () => {
     const openPopup = (report) => {
         let popupUrl;
         if (report.postType === 'COMM') {
-            popupUrl = `/postdetail/${report.targetId}`;
+            popupUrl = `/community/post/${report.targetId}`;
             window.open(popupUrl, '_blank', 'width=800,height=600');
         } else if (report.postType === 'STUDY') {
-            popupUrl = `/studydetail/${report.targetId}`;
+            popupUrl = `/study/detail/${report.targetId}`;
             window.open(popupUrl, '_blank', 'width=800,height=600');
         } else if (report.postType === 'REPLY') {
             // // TODO 댓글 id로 게시글 정보 가져오기
@@ -161,11 +161,11 @@ const ReportManagement = () => {
             })
                 .then((res) => {
                     if (res.data.parentPostType === "STUDY") {
-                        popupUrl = `/studydetail/${res.data.parentId}`;
+                        popupUrl = `/study/detail/${res.data.parentId}`;
                     } else if (res.data.parentPostType === "COMM") {
-                        popupUrl = `/postdetail/${res.data.parentId}`;
+                        popupUrl = `/community/post/${res.data.parentId}`;
                     } else if (res.data.parentPostType === "STUDYPOST") {
-                        popupUrl = `/${res.data.parentId}/teamblog/TeamCommunity/studypostdetail/${res.data.targetId}`;
+                        popupUrl = `/teamblog/${res.data.parentId}/community/post/${report.targetId}`;
                     }
 
                     window.open(popupUrl, '_blank', 'width=800,height=600');
@@ -173,8 +173,7 @@ const ReportManagement = () => {
                 .catch((error) => {
                     console.error('댓글의 부모 게시글 정보를 가져오는 중 오류 발생: ', error);
                 });
-        } else if (report.tableType === 'STUDYPOST') {
-            // TODO studypost id로 study id 알아오기
+        } else if (report.postType === 'STUDYPOST') {
             axios.get(`/api/studies/${report.targetId}/parent`, {
                 withCredentials: true,
                 headers: {
@@ -182,7 +181,7 @@ const ReportManagement = () => {
                 }
             })
                 .then((res) => {
-                    popupUrl = `/${res.data.parentId}/teamblog/TeamCommunity/studypostdetail/${res.data.targetId}`;
+                    popupUrl = `/teamblog/${res.data.parentId}/community/post/${report.targetId}`;
                     window.open(popupUrl, '_blank', 'width=800,height=600');
                 })
                 .catch((error) => {
@@ -217,7 +216,7 @@ const ReportManagement = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {reports.map((report, index) => (
+                                {reports.map((report) => (
                                     <tr key={report.targetId}>
                                         <td>{tableType(report)}</td>
                                         <td>
