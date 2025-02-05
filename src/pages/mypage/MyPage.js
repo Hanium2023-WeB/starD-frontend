@@ -16,21 +16,18 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import {useMyPageContext} from "../../components/datacontext/MyPageContext";
 import Loading from "../../components/repeat_etc/Loading";
 
-const Mypage = () => {
+const MyPage = () => {
     const dataId = useRef(0);
     const [state, setState] = useState([]);
     const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
     const [today, setToday] = useState(new Date());
-    const [parsedTodos, setParsedTodos] = useState([]);
-    const [parsedmeetings, setParsedMeetings] = useState([]);
     const [schedules, setSchedules] = useState([]);
 
     const [credibility, setCredibility] = useState("");
     const navigate = useNavigate();
     const accessToken = localStorage.getItem('accessToken');
 
-    const [scrapedPosts, setScrapedPosts] = useState([]); //스크랩한 게시물을 보유할 상태 변수
     const { participateStudies } = useMyPageContext();
     console.log(participateStudies);
 
@@ -138,7 +135,8 @@ const Mypage = () => {
                             <div className="tag">
                                 <p>개인 신뢰도</p>
                                 <Link
-                                    to={"/MyPage/myscore"}
+                                    to={"/mypage/score"}
+                                    state={{ credibility: credibility }} // 신뢰도 값 전달
                                     style={{
                                         textDecoration: "none",
                                         color: "inherit",
@@ -235,4 +233,4 @@ const Mypage = () => {
 
     );
 };
-export default Mypage;
+export default MyPage;

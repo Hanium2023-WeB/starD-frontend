@@ -9,27 +9,10 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import Category from "../../components/repeat_etc/Category";
 
 const MyWritePost = () => {
-    const navigate = useNavigate();
-    const [posts, setPosts] = useState([]);
-    const [showPostInsert, setShowPostInsert] = useState(false);
     let accessToken = localStorage.getItem('accessToken');
     let isLoggedInUserId = localStorage.getItem('isLoggedInUserId');
 
-    const dataId = useRef(0);
-    const [state, setState] = useState([]);
-    const [todos, setTodos] = useState({});
-    const [today, setToday] = useState(new Date());
-    const [parsedTodos, setParsedTodos] = useState([]);
-    const [parsedmeetings, setParsedMeetings] = useState([]);
-    const [meetings, setMeetings] = useState({});
-    const [todayKey, setTodayKey] = useState("");
-    const [credibility, setCredibility] = useState("");
-
     const [writtenPosts, setWrittenPosts] = useState([]); //스크랩한 게시물을 보유할 상태 변수
-
-    const Year = today.getFullYear();
-    const Month = today.getMonth() + 1;
-    const Dates = today.getDate()
 
     const formatDatetime = (datetime) => {
         const date = new Date(datetime);
@@ -49,7 +32,6 @@ const MyWritePost = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [studies, setStudies] = useState([]);
     const [studyId, setStudyId] = useState("");
-    const insertPage = location.state && location.state.page;
     const [selectedCategory, setSelectedCategory] = useState("COMM");
 
     useEffect(() => {

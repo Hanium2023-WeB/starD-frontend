@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/userpage/Login";
 import Logout from "./pages/userpage/Logout";
 import Signup from "./pages/userpage/Signup";
-import Mypage from "./pages/mypage/Mypage";
+import MyPage from "./pages/mypage/MyPage";
 import Footer from "./components/repeat_etc/Footer";
 import Editinfo from "./pages/mypage/Editinfo";
 import MyParticipateStudy from "./pages/mypage/MyParticipateStudy";
@@ -96,11 +96,11 @@ function App() {
                 <Route path="/reset-password/sent" element={
                   <ResetPasswordEmailSent/>}/> {/* Update password page */}
 
-                {/* Mypage Routes */}
+                {/* MyPage Routes */}
                 <Route path="/mypage/*" element={
                   <MyPageProvider>
                     <Routes>
-                      <Route index element={<Mypage />} /> {/* Default MyPage */}
+                      <Route index element={<MyPage />} /> {/* Default MyPage */}
                       <Route path="profile" element={<Profile />} /> {/* Profile page */}
                       <Route path="profile/edit" element={<EditProfile />} /> {/* Edit profile */}
                       <Route path="editinfo" element={<Editinfo />} /> {/* Edit info */}
