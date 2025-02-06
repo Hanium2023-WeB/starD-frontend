@@ -117,8 +117,7 @@ const Study = () => {
     return (
         <div className="main_wrap" id="study">
             <Header showSideCenter={true}/>
-            <div className="study_detail_container" style={{width: "70%"}}>
-                <h1>STAR TOUR STORY</h1>
+            <div className="study_detail_container">
                 <div className="arrow_left">
                     <p id="entry-path"> 홈 > 스터디 리스트 </p>
                     <Backarrow subname="STAR TOUR STORY"/>

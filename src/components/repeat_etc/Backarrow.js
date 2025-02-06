@@ -1,6 +1,6 @@
 //뒤로가기 컴포넌트
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as Arrow } from "../../images/Arrow.svg";
+import { FaArrowLeft } from "react-icons/fa6";
 import React from "react";
 
 const Backarrow=({subname})=>{
@@ -10,13 +10,7 @@ const Backarrow=({subname})=>{
     }
     return(
         <div className="backarrow" style={{cursor:"pointer"}}>
-            <svg
-                onClick={handleSVGClick}
-                xmlns="../images/Arrow.svg"
-                width="100"
-                height="40"
-            ><Arrow/>
-            </svg>
+            <FaArrowLeft onClick={handleSVGClick} size="40" color="#8c8c8c"/>
             <p>{subname}</p>
         </div>
     )

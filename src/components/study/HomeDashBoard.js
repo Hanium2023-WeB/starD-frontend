@@ -77,32 +77,36 @@ const HomeDashBoard = () => {
         return (
             <div className={"HomeDashBoard"}>
                 <div className="study_list">
-                    {studies.map((study, index) => (
-                        <div className="dashboardlist" key={study.studyId} onClick={() => goNextTeamBlog(study)}>
-                            <div className="dashboard_header">
-                                <div className="dashboard1">
-                                    <div className="dashboard2">{study.title}</div>
-                                    <div className="dashboard3">🧳&nbsp;
-                                        {calculateDateDifference(study.activityStart, study.activityDeadline)}일간의 스터디
+                    {studies.length === 0 ? (
+                        <span style={{fontSize:"20px"}}>진행 중인 스터디가 없습니다.</span>
+                    ) : (
+                        studies.map((study, index) => (
+                            <div className="dashboardlist" key={study.studyId} onClick={() => goNextTeamBlog(study)}>
+                                <div className="dashboard_header">
+                                    <div className="dashboard1">
+                                        <div className="dashboard2">{study.title}</div>
+                                        <div className="dashboard3">🧳&nbsp;
+                                            {calculateDateDifference(study.activityStart, study.activityDeadline)}일간의 스터디
+                                        </div>
+                                        {study.progressType === "IN_PROGRESS" ? (
+                                            <div className="dashboard4">진행 중</div>
+                                        ) : (
+                                            <div className="dashboard4">진행 완료</div>
+                                        )}
                                     </div>
-                                    {study.progressType === "IN_PROGRESS" ? (
-                                        <div className="dashboard4">
-                                            진행 중</div>
-                                    ) : (<div className="dashboard4">진행 완료</div>)}
-                                </div>
 
-                                <div className="list_btn">
-                                    <div className="list_scrap">
-                                        <ScrapButton
-                                            scrap={studies[index].existsScrap}
-                                            onClick={(event) => {
-                                                event.stopPropagation(); // 이벤트 전파 중단
-                                                toggleScrap(index);
-                                            }}
-                                        />
+                                    <div className="list_btn">
+                                        <div className="list_scrap">
+                                            <ScrapButton
+                                                scrap={studies[index].existsScrap}
+                                                onClick={(event) => {
+                                                    event.stopPropagation(); // 이벤트 전파 중단
+                                                    toggleScrap(index);
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             <div className={"contnet"}>
                                 <div className="list_deadline">
                                     종료일 | {study.activityDeadline} / 팀장: {study.nickname}
@@ -114,14 +118,13 @@ const HomeDashBoard = () => {
                                     <div className="list_founder"></div>
                                 </div>
                             </div>
-
-                        </div>
-                    ))}
-
+                        ))
+                    )}
                 </div>
             </div>
         );
     };
+
     return (
         <div>
             <div className="main_dash_container">

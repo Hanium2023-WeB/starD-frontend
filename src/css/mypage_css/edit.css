@@ -3,22 +3,17 @@
     height: fit-content;
 }
 .backarrow{
-    width: 50%;
     display: flex;
-    /*margin-left: 25%;*/
-    position: relative;
-    right: 2%;
-    /*margin-top: 5%;*/
+    align-items: center;
+    margin-bottom: 30px;
 }
 svg{
     margin-right: 2%;
 }
 .backarrow p {
     font-size: 30px;
-    margin-left: 1%;
     font-weight: bolder;
-    font-family: inter;
-
+    margin-bottom: 0;
 }
 .change_nicname,
 .change_interest, .change_pw , .signout{

@@ -176,11 +176,6 @@ const Qna = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {posts && posts.length === 0 && (
-                                    <tr>
-                                        <td colSpan="5">검색 결과가 없습니다.</td>
-                                    </tr>
-                                )}
                                 {posts && posts.map((d, index) => (
                                     <QnaListItem setPosts={setPosts} posts={d}
                                                  d={d}
@@ -188,6 +183,10 @@ const Qna = () => {
                                 ))}
                                 </tbody>
                             </table>
+                            {posts && posts.length === 0 && (
+                                <h4 style={{textAlign: "center"}}>검색 결과가 없습니다.</h4>
+                            )}
+                            <br/>
                         </div>
 
                         {posts.length !== 0 && (

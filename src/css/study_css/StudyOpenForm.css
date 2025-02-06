@@ -3,24 +3,20 @@ html {
 } /*10px*/
 
 .study_detail_container {
-    /*width: 70%;*/
-    margin: 0 auto;
+    width: 70%;
+    height: auto;
+    min-height: 100%;
+    margin: 25px auto 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
-    bottom: 50px;
-    /*font-family: 'Pretendard-Regular';*/
+    font-family: 'Pretendard-Regular';
 }
 .study_detail_container h1 {
     font-size: 27px;
     text-align: center;
     color: #FFFFFF;
-}
-.study_detail_container .arrow_left {
-    text-align: left;
-    font-size: 50px;
-    color: #898989;
 }
 .interest,.deadline,.onoffline{
     margin-left: 60px;

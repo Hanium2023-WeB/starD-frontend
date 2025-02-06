@@ -15,9 +15,6 @@ html {
 	text-align: center;
 }
 .study_detail_container .arrow_left {
-	text-align: left;
-	font-size: 50px;
-	color: #898989;
 	position: relative;
 }
 .arrow_left .openStudy{

@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/userpage/Login";
 import Logout from "./pages/userpage/Logout";
 import Signup from "./pages/userpage/Signup";
-import Mypage from "./pages/mypage/Mypage";
+import MyPage from "./pages/mypage/MyPage";
 import Footer from "./components/repeat_etc/Footer";
 import Editinfo from "./pages/mypage/Editinfo";
 import MyParticipateStudy from "./pages/mypage/MyParticipateStudy";
@@ -96,11 +96,11 @@ function App() {
                 <Route path="/reset-password/sent" element={
                   <ResetPasswordEmailSent/>}/> {/* Update password page */}
 
-                {/* Mypage Routes */}
+                {/* MyPage Routes */}
                 <Route path="/mypage/*" element={
                   <MyPageProvider>
                     <Routes>
-                      <Route index element={<Mypage />} /> {/* Default MyPage */}
+                      <Route index element={<MyPage />} /> {/* Default MyPage */}
                       <Route path="profile" element={<Profile />} /> {/* Profile page */}
                       <Route path="profile/edit" element={<EditProfile />} /> {/* Edit profile */}
                       <Route path="editinfo" element={<Editinfo />} /> {/* Edit info */}
@@ -114,7 +114,6 @@ function App() {
                       <Route path="score" element={<MyScore />} /> {/* My score */}
                       <Route path="todo-list" element={<ToDoList />} /> {/* My todo list */}
                       <Route path="schedule" element={<Schedule />} /> {/* My schedule */}
-                      <Route path="evaluate" element={<MemberEvaluate />} /> {/* Member evaluation */}
                       <Route path="user-profile/:userId" element={<AnotherUserProfile />} /> {/* Another user's profile */}
                     </Routes>
                   </MyPageProvider>
@@ -156,6 +155,7 @@ function App() {
                         <StudyPostDetail/>}/> {/* Team blog post detail */}
                       <Route path="member"
                              element={<TeamMember/>}/> {/* Team members */}
+                      <Route path="evaluate" element={<MemberEvaluate />} /> {/* Member evaluation */}
                     </Routes>
                   </TeamBlogProvider>
                 }/>

@@ -16,21 +16,18 @@ import Backarrow from "../../components/repeat_etc/Backarrow";
 import {useMyPageContext} from "../../components/datacontext/MyPageContext";
 import Loading from "../../components/repeat_etc/Loading";
 
-const Mypage = () => {
+const MyPage = () => {
     const dataId = useRef(0);
     const [state, setState] = useState([]);
     const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
     const [today, setToday] = useState(new Date());
-    const [parsedTodos, setParsedTodos] = useState([]);
-    const [parsedmeetings, setParsedMeetings] = useState([]);
     const [schedules, setSchedules] = useState([]);
 
     const [credibility, setCredibility] = useState("");
     const navigate = useNavigate();
     const accessToken = localStorage.getItem('accessToken');
 
-    const [scrapedPosts, setScrapedPosts] = useState([]); //스크랩한 게시물을 보유할 상태 변수
     const { participateStudies } = useMyPageContext();
     console.log(participateStudies);
 
@@ -43,21 +40,24 @@ const Mypage = () => {
         const fetchSchedulesAndTodos = async () => {
             try {
                 setIsLoading(true); // 로딩 시작
-                const todayDateString = today.toISOString().split("T")[0];
 
                 // 일정 가져오기
                 const scheduleResponse = await axios.get(`/api/members/schedules`, {
                     params: { year, month },
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
+                const today = new Date();
+                const todayDateString = today.toLocaleDateString("ko-KR").replace(/\. /g, "-").replace(".", "");
+
                 const schedules = scheduleResponse.data.filter((schedule) => {
-                    const scheduleDate = new Date(schedule.startDate).toISOString().split("T")[0];
+                    const scheduleDate = new Date(schedule.startDate).toLocaleDateString("ko-KR").replace(/\. /g, "-").replace(".", "");
                     return scheduleDate === todayDateString;
                 }).map((schedule) => {
                     const study = participateStudies.find((s) => s.studyId === schedule.studyId);
                     return study ? { ...schedule, studyTitle: study.title } : null;
                 }).filter(Boolean);
 
+                console.log(schedules);
                 setSchedules(schedules);
 
                 // 투두 가져오기
@@ -138,7 +138,8 @@ const Mypage = () => {
                             <div className="tag">
                                 <p>개인 신뢰도</p>
                                 <Link
-                                    to={"/MyPage/myscore"}
+                                    to={"/mypage/score"}
+                                    state={{ credibility: credibility }} // 신뢰도 값 전달
                                     style={{
                                         textDecoration: "none",
                                         color: "inherit",
@@ -168,7 +169,7 @@ const Mypage = () => {
                                 <hr/>
                                 {schedules.length === 0 ? (
                                     <div className="empty_today_todo">
-                                        <span>일정이 없습니다. 일정을 입력해주세요.</span>
+                                        <span>일정이 없습니다.<br/> 일정을 입력해주세요.</span>
                                     </div>) : (
                                     <ul id="todocontent">
                                         {schedules.map((schedule) => (
@@ -235,4 +236,4 @@ const Mypage = () => {
 
     );
 };
-export default Mypage;
+export default MyPage;

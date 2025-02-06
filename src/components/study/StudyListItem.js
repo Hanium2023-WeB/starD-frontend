@@ -59,9 +59,15 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
                     </div>
                 </div>
             </div>
-            <div className="list_founder">
-                <ImageComponent imageUrl={studies.profileImg}/>
-                <span>{studies.nickname}</span>
+            <div className="top">
+                <div className="list_founder">
+                    <ImageComponent imageUrl={studies.profileImg}/>
+                    <span>{studies.nickname}</span>
+                </div>
+                {studies.progressType === "COMPLETED" ? (
+                    <button className="evaluation_btn" study={studies}
+                            onClick={() => goEvaluationPage(studies)}>팀원 평가</button>
+                ) : null}
             </div>
             <div className="list_title" onClick={GoNextDetailPage}>{studies.title}</div>
             <div className="list_tag_wrapper" onClick={GoNextDetailPage}>
@@ -91,10 +97,6 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
 
                     <div className="buttons">
                         <button id="go-teamblog" onClick={() => goNextTeamBlog(studies)}>팀 블로그 가기</button>
-                        {studies.progressType === "COMPLETED" ? (
-                            <button className="evaluation_btn" study={studies}
-                                    onClick={() => goEvaluationPage(studies)}>팀원 평가</button>
-                        ) : null}
                     </div>
                 )}
 
