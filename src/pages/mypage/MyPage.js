@@ -40,21 +40,24 @@ const MyPage = () => {
         const fetchSchedulesAndTodos = async () => {
             try {
                 setIsLoading(true); // 로딩 시작
-                const todayDateString = today.toISOString().split("T")[0];
 
                 // 일정 가져오기
                 const scheduleResponse = await axios.get(`/api/members/schedules`, {
                     params: { year, month },
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
+                const today = new Date();
+                const todayDateString = today.toLocaleDateString("ko-KR").replace(/\. /g, "-").replace(".", "");
+
                 const schedules = scheduleResponse.data.filter((schedule) => {
-                    const scheduleDate = new Date(schedule.startDate).toISOString().split("T")[0];
+                    const scheduleDate = new Date(schedule.startDate).toLocaleDateString("ko-KR").replace(/\. /g, "-").replace(".", "");
                     return scheduleDate === todayDateString;
                 }).map((schedule) => {
                     const study = participateStudies.find((s) => s.studyId === schedule.studyId);
                     return study ? { ...schedule, studyTitle: study.title } : null;
                 }).filter(Boolean);
 
+                console.log(schedules);
                 setSchedules(schedules);
 
                 // 투두 가져오기
@@ -166,7 +169,7 @@ const MyPage = () => {
                                 <hr/>
                                 {schedules.length === 0 ? (
                                     <div className="empty_today_todo">
-                                        <span>일정이 없습니다. 일정을 입력해주세요.</span>
+                                        <span>일정이 없습니다.<br/> 일정을 입력해주세요.</span>
                                     </div>) : (
                                     <ul id="todocontent">
                                         {schedules.map((schedule) => (

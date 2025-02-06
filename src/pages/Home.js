@@ -87,8 +87,6 @@ const Home = () => {
         return checked ? "checked" : "unchecked";
     };
 
-
-
     useEffect(() => {
         console.log("parsedTodos", parsedTodos);
         if (Array.isArray(parsedTodos)) {

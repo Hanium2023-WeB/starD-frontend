@@ -179,7 +179,7 @@ const Editinfo = ({sideheader}) => {
             <div className="container">
                 <Category/>
                 <div className="main_container" id="edit_main">
-                    <p id={"entry-path"}> 홈 > 카테고리 > 개인정보 수정</p>
+                    <p id={"entry-path"}> 마이페이지 > 개인정보 수정</p>
                     <Backarrow subname={"개인정보 수정페이지"}/>
                     <div className="sub_container" id="password">
                         <div className="change_pw">
