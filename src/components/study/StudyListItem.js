@@ -82,10 +82,19 @@ const StudyListItem = ({studies, toggleScrap, index, isParticipateStudy, goNextT
             <div className="list_onoff" onClick={GoNextDetailPage}>{studies.activityType}</div>
             <div className="stroke"></div>
             <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div className="list_deadline">
-                    마감일 | {studies.recruitmentDeadline}
-                </div>
+
+                {isParticipateStudy ? (
+                    <div className="list_deadline">
+                        종료일 | {studies.activityDeadline}
+                    </div>
+                ) : (
+                    <div className="list_deadline">
+                        마감일 | {studies.recruitmentDeadline}
+                    </div>
+                )}
+
                 {isParticipateStudy && (
+
                     <div className="buttons">
                         <button id="go-teamblog" onClick={() => goNextTeamBlog(studies)}>팀 블로그 가기</button>
                     </div>

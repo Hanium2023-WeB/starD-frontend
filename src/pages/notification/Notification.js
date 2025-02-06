@@ -79,9 +79,9 @@ const Notification = () => {
             <div className="notification_wrapper">
                 {notifications.map((notification) => (
                     <div
-                        key={notification.NotificationId}
+                        key={notification.notificationId}
                         className={`notification_component ${notification.read ? 'read' : ''}`}
-                        onClick={() => handleNotificationClick(notification.type, notification.targetId, notification.NotificationId)}
+                        onClick={() => handleNotificationClick(notification.type, notification.targetId, notification.notificationId)}
                     >
                         <div className="header">
                             <div className="sub_header">
