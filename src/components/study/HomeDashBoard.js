@@ -107,15 +107,16 @@ const HomeDashBoard = () => {
                                         </div>
                                     </div>
                                 </div>
-                            <div className={"contnet"}>
-                                <div className="list_deadline">
-                                    종료일 | {study.activityDeadline} / 팀장: {study.nickname}
-                                </div>
-                                <div className={"dashboardsubdetail"}>
-                                    <div className="list_tag" style={{marginRight: "5px"}}>{study.field}</div>
-                                    <div className="list_onoff">{study.activityType}</div>
-                                    <div className="stroke"></div>
-                                    <div className="list_founder"></div>
+                                <div className={"contnet"}>
+                                    <div className="list_deadline">
+                                        종료일 | {study.activityDeadline} / 팀장: {study.nickname}
+                                    </div>
+                                    <div className={"dashboardsubdetail"}>
+                                        <div className="list_tag" style={{marginRight: "5px"}}>{study.field}</div>
+                                        <div className="list_onoff">{study.activityType}</div>
+                                        <div className="stroke"></div>
+                                        <div className="list_founder"></div>
+                                    </div>
                                 </div>
                             </div>
                         ))
