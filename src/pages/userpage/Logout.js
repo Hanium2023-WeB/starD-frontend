@@ -2,6 +2,7 @@ import axios from "axios";
 import {useNavigate} from 'react-router-dom';
 import {useEffect} from "react";
 import {useEventSource} from "../notification/EventSourceContext";
+import toast from "react-hot-toast";
 
 const Logout = ({sideheader}) => {
 
@@ -33,7 +34,7 @@ const Logout = ({sideheader}) => {
         closeEventSource();
         setAccessToken(null);
 
-        alert("로그아웃 성공");
+        toast.success("로그아웃 성공");
         navigate('/');
       })
       .catch((error) => {
