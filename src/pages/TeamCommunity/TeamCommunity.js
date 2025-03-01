@@ -63,8 +63,8 @@ const TeamCommunity = () => {
             <div className="container">
                 <TeamBlogGnb studyIdAsNumber={studyId} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
-                    <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 커뮤니티</p>
-                    <Backarrow subname={"TEAM COMMUNITY LIST"}/>
+                    <p id={"entry-path"}> 스터디 팀 블로그 > 팀 블로그 > 팀 커뮤니티</p>
+                    <Backarrow subname={"팀 커뮤니티 리스트"}/>
                     {showPostInsert && (
                         <PostInsert studyId={studyId}/>
                     )}

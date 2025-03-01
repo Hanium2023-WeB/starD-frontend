@@ -21,7 +21,6 @@ import StudyEdit from "./pages/studypage/StudyEdit";
 import MyApplyStudy from "./pages/mypage/MyApplyStudy";
 import InputSubSign from "./pages/userpage/InputSubSign";
 import FindID from "./pages/userpage/FindID";
-import SearchResult from "./pages/studypage/SearchResult";
 import StudyApplyList from "./pages/studypage/StudyApplyList";
 import TeamBlog from "./pages/studypage/TeamBlog";
 import Community from "./pages/community/Community";

@@ -119,10 +119,10 @@ const Study = () => {
             <Header showSideCenter={true}/>
             <div className="study_detail_container">
                 <div className="arrow_left">
-                    <p id="entry-path"> 홈 > 스터디 리스트 </p>
-                    <Backarrow subname="STAR TOUR STORY"/>
+                    <p id="entry-path"> 홈 > 스터디 </p>
+                    <Backarrow subname="스터디 시작하기"/>
                     <button onClick={handleMoveToStudyInsert} className="openStudy">
-                        스터디 개설
+                        모집하기
                     </button>
                 </div>
                 <div className="study">

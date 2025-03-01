@@ -110,7 +110,7 @@ input{
     font-family: "Pretendard-Regular";
 }
 .btn{
-    margin:0 auto;
+    margin:0 auto 40px;
 }
 .btn .register_btn {
     width:inherit;
@@ -248,4 +248,20 @@ input{
 }
 .download_box .download_btn:hover {
     color: #99A98F;
+}
+
+.stop_btn{
+    margin:50px auto 70px;
+    display: flex;
+    align-items: center;
+
+    box-shadow: inherit;
+    background-color: #99A98F;
+    border: none;
+    font-size: 20px;
+    color: #fff;
+    padding: 15px 50px;
+    border-radius: 50px;
+    font-family: 'Pretendard-Regular';
+    cursor: pointer;
 }

@@ -50,7 +50,7 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
     return formattedDatetime;
   };
   const handleEdit = () => {
-    navigate(`/${study.id}/StudyDetail/StudyEdit`, {
+    navigate(`/study/edit/${study.studyId}`, {
       state: {
         study: study,
       }
@@ -94,7 +94,7 @@ const StudyInfo = ({study, isRecruiter, setStudies}) => {
   return (
       <>
         <div className="study_header">
-          <h2 className="study_title">{study.title}</h2>
+          {/*<h2 className="study_title">{study.title}</h2>*/}
           <div>
             <div className="study_author_info">
                         <span>

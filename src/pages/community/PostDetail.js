@@ -181,7 +181,7 @@ const PostDetail = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="community_container">
-                <Backarrow subname={"COMMUNITY LIST"}/>
+                <Backarrow subname={"커뮤니티"}/>
                 {editing ? (
                     <PostEdit
                         post={postItem}

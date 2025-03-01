@@ -153,7 +153,7 @@ const TeamSchedule = () => {
         <div className="container">
             <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
             <div className="main_schedule_container">
-                <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 스터디 일정</p>
+                <p id={"entry-path"}> 스터디 팀 블로그 > 팀 블로그 > 팀 스터디 일정</p>
                 <Backarrow subname={"팀 스터디 모임 일정"}/>
                 <div className="sub_container" id="schedule_sub">
                     <TeamScheduleCalender
