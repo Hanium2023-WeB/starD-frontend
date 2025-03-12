@@ -361,7 +361,7 @@ const TeamToDoList = () => {
         <div className="container">
             <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={selecteStudy} progressStatus={progressStatus}/>
             <div className="main_container">
-                <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 투두 리스트 </p>
+                <p id={"entry-path"}> 스터디 팀 블로그 > 팀 블로그 > 팀 투두 리스트 </p>
                 <Backarrow subname={"팀 투두 리스트"}/>
                 <div className="sub_container" id="todo_sub">
                     <div className="todo_container">

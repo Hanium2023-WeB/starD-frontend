@@ -43,7 +43,7 @@ html {
     box-shadow: inherit;
     padding-left:10px;
     margin:0;
-    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.08);
 }
 .study_open_form .inputbox::placeholder{
     padding:0;
@@ -72,6 +72,9 @@ html {
     position: relative;
     /*right: 7px;*/
 }
+.Study_Region{
+    margin-top:10px;
+}
 
 .study_open_form .right input[name="activityType"],
 .study_open_form .right input[name="activityType"]{
@@ -97,8 +100,8 @@ html {
 
 .study_open_detail{
     display: flex;
-    width: 110%;
-    margin-left: 30px;
+    width: 100%;
+    margin-left: 78px;
     margin-top: 20px;
 }
 .study_open_detail span{
@@ -114,18 +117,22 @@ html {
     height: 100px;
     white-space: pre-line;
     font-family: 'Pretendard-Regular';
+    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.08);
 }
 
 .study_tag{
     display: flex;
     align-items: center;
-    margin-left: 30px;
+    margin-left: 76px;
     margin-bottom: 100px;
 }
 .study_tag span{
     margin-right:20px;
 }
 
+.study_open_form .btn{
+    margin:0 auto 20px;
+}
 .btn .recruit_btn {
     width:inherit;
     height: inherit;
@@ -149,7 +156,7 @@ html {
     border-radius: 10px;
     border:1px solid #dbdbdb;
     background: #fff;
-    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.08);
 }
 
 @media (max-width: 1270px) {

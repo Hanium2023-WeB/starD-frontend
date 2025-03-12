@@ -56,7 +56,7 @@ const MemberEvaluate = () => {
             <div className="container">
                 <Category />
                 <div className="main_container">
-                    <p id={"entry-path"}> 스터디 참여 내역 > 팀원 평가 </p>
+                    <p id={"entry-path"}> 스터디 팀 블로그 > 팀원 평가 </p>
                     <Backarrow subname={"팀원 평가"} />
                     <div className="evaluate">
                         {loading ? (

@@ -15,6 +15,9 @@ svg{
     font-weight: bolder;
     margin-bottom: 0;
 }
+.study_detail_container .backarrow p{
+    margin-left: 40px;
+}
 .change_nicname,
 .change_interest, .change_pw , .signout{
     width: 100%;

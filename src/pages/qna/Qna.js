@@ -139,7 +139,7 @@ const Qna = () => {
             <Header showSideCenter={true}/>
             <div className="community_container">
                 <p id="entry-path">홈 > QNA</p>
-                <Backarrow subname="QNA LIST"/>
+                <Backarrow subname="QNA"/>
 
                 {showFaqInsert && <FaqInsert/>}
                 {showQnaInsert && <QnaInsert/>}

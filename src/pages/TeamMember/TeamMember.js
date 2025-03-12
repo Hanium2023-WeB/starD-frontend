@@ -89,8 +89,8 @@ const TeamCommunity = () => {
             <div className="container">
                 <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member}/>
                 <div className="main_schedule_container"> {/* className 수정 필요 */}
-                    <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 스터디원</p>
-                    <Backarrow subname={"TEAM MEMBER LIST"}/>
+                    <p id={"entry-path"}> 스터디 팀 블로그 > 팀 블로그 > 스터디원</p>
+                    <Backarrow subname={"스터디원 리스트"}/>
 
                     <div>
                         <table className="evaluate_table">
@@ -115,11 +115,11 @@ const TeamCommunity = () => {
                     </div>
 
                     {!allow && (
-                        <button onClick={() => delete_allow()}>중단 동의하기</button>
+                        <button className="stop_btn" onClick={() => delete_allow()}>중단 동의하기</button>
                     )}
 
                     {completion && (
-                        <button onClick={() => cancelStudy()}>스터디 중단하기</button>
+                        <button className="stop_btn" onClick={() => cancelStudy()}>스터디 중단하기</button>
                     )}
                 </div>
             </div>

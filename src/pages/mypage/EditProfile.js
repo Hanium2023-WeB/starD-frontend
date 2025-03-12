@@ -120,7 +120,7 @@ const EditProfile = () => {
                             <button className="image-delete" onClick={onchangeImageDelete}>삭제</button>
                         </div>
                         <div className={"One-line-self-introduction"}>
-                            <p id={"self-intro-p"}>한줄 자기소개</p>
+                            <p id={"self-intro-p"}>한 줄 자기소개</p>
                             <input className="self-intro-input" value={selfintro}
                                    placeholder={"15자이내 자기소개를 적어주세요"}
                                    onChange={onchangeSelfIntro}/>
