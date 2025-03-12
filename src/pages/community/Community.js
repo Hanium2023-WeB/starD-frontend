@@ -128,7 +128,7 @@ const Community = () => {
             <Header showSideCenter={true}/>
             <div className="community_container">
                 <p id={"entry-path"}> 홈 > 커뮤니티 </p>
-                <Backarrow subname={"COMMUNITY LIST"}/>
+                <Backarrow subname={"커뮤니티"}/>
                 {showPostInsert && (
                     <PostInsert/>
                 )}
