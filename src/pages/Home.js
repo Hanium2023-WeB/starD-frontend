@@ -13,7 +13,7 @@ import scheduleimg from "../images/schedule.png";
 import checktodo from "../images/free-icon-to-do-list.png";
 import mapicon from "../images/free-icon-map.png";
 import chaticon from "../images/free-icon-chat.png";
-import TeamBlog from "../images/TeamBlog.png";
+import TeamBlog from "../images/TeamBlogImg.png";
 import Chatting from "../images/Chatting.png";
 import community from "../images/community.png";
 import communityRely from "../images/communityRely.png";
@@ -431,12 +431,12 @@ const Home = () => {
                                     함께 나누면 그 가치가 배가 됩니다.</p>
                                 <div id={"detail-images"}>
                                     <div className="TeamBlogScreenShot">
-                                        <img src={TeamBlog} width="400px" height="400px"
+                                        <img src={TeamBlog} height="400px"
                                              data-aos="fade-up"/>
                                     </div>
-                                    <div className="TeamBlogScreenShot">
-                                        <img src={Chatting} width="200px" data-aos="fade-up"/>
-                                    </div>
+                                    {/*<div className="TeamBlogScreenShot">*/}
+                                    {/*    <img src={Chatting} width="200px" data-aos="fade-up"/>*/}
+                                    {/*</div>*/}
 
                                     <span>스터디원들과의 실시간 채팅과<br/>
                                     할 일, 일정들을 한 눈에 확인할 수 있어요</span>

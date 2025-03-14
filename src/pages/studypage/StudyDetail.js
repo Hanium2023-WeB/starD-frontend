@@ -112,7 +112,7 @@ const StudyDetail = ({sideheader}) => {
         <div className="study_detail_container">
           <h1>STAR TOUR STORY</h1>
           <div className="arrow_left">
-            <Backarrow/>
+            <Backarrow subname={"스터디 시작하기"}/>
           </div>
           <div className="study_detail">
             {studyItem && (

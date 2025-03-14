@@ -13,9 +13,9 @@ const Chat = (props) => {
     const [greetings, setGreetings] = useState([]);
     const [studyId, setStudyId] = useState(props.studyId);
     const [studyTitle, setStudyTitle] = useState(props.studyTitle);
-    const progressStatus= useState(props.progressStatus);
+    const progressStatus = useState(props.progressStatus);
     const [pendingEnter, setPendingEnter] = useState(false);
-    const [chatRoomId, setChatRoomId] =  useState(null);
+    const [chatRoomId, setChatRoomId] = useState(null);
     const [userNickname, setUserNickname] = useState(null);
     const memberNickname = localStorage.getItem('memberNickname');
 
@@ -196,7 +196,7 @@ const Chat = (props) => {
             };
 
             if (message.trim().length === 0) {
-                if(progressStatus === "CANCELED"){
+                if (progressStatus === "CANCELED") {
                     alert('중단된 스터디는 채팅이 불가능합니다.');
                 } else {
                     alert('메시지를 입력하세요.');
@@ -241,48 +241,40 @@ const Chat = (props) => {
     return (
         <div className={"chat_wrap"}>
             <div className={"studyTitle"}>
-                <h2>{studyTitle}</h2><br/><br/>
+                <p>{studyTitle}</p>
             </div>
             <div className={"chattingbox"}>
-                <table className={"chatting"}>
-                    <thead id={"message-thead"}>
-                    <tr>
-                        <th>Messages</th>
-                    </tr>
-                    </thead>
-                    <tbody id={"message"}>
-                    {greetings.map((greeting, index) => (
-                        <tr key={index}>
+                <div className={"message-head"}>
+                    Messages
+                </div>
+                <div className={"chatting"}>
+                    <div id={"message"}>
+                        {greetings.map((greeting, index) => {
+                            const isGreeting = greeting.messageType === "GREETING";
+                            const isMyChat = greeting.nickname === memberNickname;
 
-                            {greeting.messageType === 'GREETING' ? (
-                                <td className={"message-detail"} id={"greet"}>
-                                    <span>{greeting.message}</span>
-                                </td>
-                            ) : (
-                                greeting.nickname === memberNickname ? (
-                                    <td className={"message-detail"} id={"my-chats"}>
-                                                <span>
-                                             {greeting.nickname}: {greeting.message}
-                                                    <br/><p id={"entry-time"}>[{formatDatetime(greeting.createdAt)}]</p>
-                                                        </span>
-                                    </td>
-                                ) : (
-                                    <td className={"message-detail"} id={"other-chats"}>
-                                                <span>
-                                            {greeting.nickname}: {greeting.message}
-                                                    <br/><p id={"entry-time"}>[{formatDatetime(greeting.createdAt)}]</p>
-                                                       </span>
-                                    </td>
-                                )
-                            )}
-
-                        </tr>
-                    ))}
-                    <tr>
-                        <td ref={messageEndRef}></td>
-                    </tr>
-                    </tbody>
-                </table>
+                            return (
+                                <div
+                                    key={index}
+                                    className={`message-detail ${isGreeting ? "greet" : isMyChat ? "my-chats" : "other-chats"}`}>
+                                    <span>
+                                        {!isGreeting && `${greeting.nickname}: `}
+                                        {greeting.message}
+                                        {!isGreeting && (
+                                            <>
+                                                <br/>
+                                                <p className="entry-time">[{formatDatetime(greeting.createdAt)}]</p>
+                                            </>
+                                        )}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                        <div>
+                            <div ref={messageEndRef}></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className={"input_chat"}>
                 <label>채팅 보내기</label>
@@ -297,7 +289,46 @@ const Chat = (props) => {
                 <button onClick={sendMessage}>Send</button>
             </div>
         </div>
-    );
+        // <div className="chat_wrap">
+        //     <div className="studyTitle">
+        //         <p>{studyTitle}</p>
+        //     </div>
+        //     <div className="chattingbox">
+        //         <div className="message-head">Messages</div>
+        //         <div className="messages">
+        //             {greetings.map((greeting, index) => (
+        //                 <div
+        //                     key={index}
+        //                     className={`message-detail ${greeting.messageType === 'GREETING' ? "greet" :
+        //                         greeting.nickname === memberNickname ? "my-chats" : "other-chats"}`}
+        //                 >
+        //             <span>
+        //                 {greeting.messageType !== 'GREETING' && `${greeting.nickname}: `}
+        //                 {greeting.message}
+        //                 {greeting.messageType !== "GREETING" && (
+        //                     <p className="entry-time">[{formatDatetime(greeting.createdAt)}]</p>
+        //                 )}
+        //             </span>
+        //                 </div>
+        //             ))}
+        //             <div ref={messageEndRef}></div>
+        //         </div>
+        //     </div>
+        //     <div className="input_chat">
+        //         <label>채팅 보내기</label>
+        //         <input
+        //             type="text"
+        //             value={message}
+        //             onChange={(e) => setMessage(e.target.value)}
+        //             onKeyDown={onKeyDown}
+        //             placeholder="내용을 입력하세요"
+        //             disabled={progressStatus === "CANCELED"}
+        //         />
+        //         <button onClick={sendMessage}>Send</button>
+        //     </div>
+        // </div>
+    )
+        ;
 };
 
 export default Chat;

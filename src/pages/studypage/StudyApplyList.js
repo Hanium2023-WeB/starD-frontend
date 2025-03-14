@@ -6,6 +6,7 @@ import Header from "../../components/repeat_etc/Header";
 import Motive from "../../components/study/Motive";
 import axios from "axios";
 import ImageComponent from "../../components/image/imageComponent";
+import toast from "react-hot-toast";
 
 const StudyApplyList = () => {
     const [applyList, setApplyList] = useState([]);
@@ -26,6 +27,22 @@ const StudyApplyList = () => {
 
     // 신청자 조회
     useEffect(() => {
+        axios.get(`/api/studies/${id}`, {
+            withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        }).then((res) => {
+            if (res.data.recruitmentType === "RECRUITING") {
+                setIsCompleted(false);
+            } else {
+                setIsCompleted(true);
+            }
+        }).catch((error) => {
+            console.error("스터디 데이터 가져오기 실패:", error);
+        });
+
+
         axios.get(`/api/studies/${id}/applications`, {
             withCredentials: true,
             headers: {
@@ -52,7 +69,7 @@ const StudyApplyList = () => {
 
     const handleAction = (member, index, isAccept) => {
         if (isCompleted === true) {
-            alert('이미 모집 완료된 게시글입니다.');
+            toast.error('이미 모집 완료된 게시글입니다.');
         } else {
             const actionText = isAccept ? '수락' : '거절';
             const result = window.confirm(`${member.nickname}님을(를) ${actionText}하시겠습니까?`);
@@ -112,7 +129,7 @@ const StudyApplyList = () => {
     const goNextTeamBlog = () => {
         const count = applyList.filter(item => item.status === "ACCEPTED").length;
         if (isCompleted === true) {
-            alert('이미 모집 완료된 게시글입니다.');
+            toast.error('이미 모집 완료된 게시글입니다.');
         } else {
             if (count > capacity - 1) {
                 alert("모집인원을 초과하였습니다.");

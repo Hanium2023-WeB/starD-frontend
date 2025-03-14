@@ -1,6 +1,7 @@
 .comment_container{
     background: #F5F5F5;
     padding: 80px 0;
+    margin: 50px auto auto auto;
 }
 .comment_form{
     width:60%;

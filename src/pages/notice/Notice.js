@@ -109,7 +109,7 @@ const Notice = () => {
             <Header showSideCenter={true}/>
             <div className="community_container">
                 <p id={"entry-path"}> 홈 > 공지사항 </p>
-                <Backarrow subname={"NOTICE LIST"}/>
+                <Backarrow subname={"공지사항"}/>
                 {showPostInsert && (
                     <NoticeInsert/>
                 )}

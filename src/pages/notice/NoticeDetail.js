@@ -159,7 +159,7 @@ const NoticeDetail = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="community_container">
-                <Backarrow subname={"NOTICE LIST"}/>
+                <Backarrow subname={"공지사항"}/>
                 {editing ? (
                     <NoticeEdit
                         post={postItem}
