@@ -161,7 +161,7 @@ const QnaDetail = () => {
         <div>
             <Header showSideCenter={true}/>
             <div className="community_container">
-                <Backarrow subname={"QNA"} />
+                <Backarrow subname={"QNA"}/>
                 {editing ? (
                     <QnaEdit
                         post={postItem}

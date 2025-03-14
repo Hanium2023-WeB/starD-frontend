@@ -10,7 +10,7 @@ import {useLocation} from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const StudyDetail = ({sideheader}) => {
+const StudyDetail = () => {
 
   const location = useLocation();
   let studyId = location.state;
@@ -110,9 +110,8 @@ const StudyDetail = ({sideheader}) => {
       <div>
         <Header showSideCenter={true}/>
         <div className="study_detail_container">
-          <h1>STAR TOUR STORY</h1>
           <div className="arrow_left">
-            <Backarrow subname={"스터디 시작하기"}/>
+            <Backarrow subname={studyItem?.title}/>
           </div>
           <div className="study_detail">
             {studyItem && (
@@ -176,7 +175,6 @@ const StudyDetail = ({sideheader}) => {
         <div className="comment_container">
           <Comment type="study"/>
         </div>
-        )
       </div>
   );
 };

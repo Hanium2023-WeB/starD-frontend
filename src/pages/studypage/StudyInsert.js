@@ -392,7 +392,6 @@ const StudyInsert = () => {
         <div className={"main_wrap"} id={"study"}>
             <Header showSideCenter={true}/>
             <div className="study_detail_container" style={{width: "70%"}}>
-                <h1>Insert Study</h1>
                 <div className="arrow_left">
                     <p id={"entry-path"}> 홈 > 스터디 > 스터디 모집 </p>
                     <Backarrow subname={"스터디 모집"}/>

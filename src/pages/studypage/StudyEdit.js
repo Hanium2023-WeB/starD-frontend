@@ -32,7 +32,7 @@ const StudyEdit = () => {
     ];
 
     const handleGoBack = () => {
-        navigate(`/studydetail/${study.id}`);
+        navigate(`/study/detail/${study.studyId}`);
     }
     const handleRadioChange = useCallback((e) => {
         const selectedValue = e.target.value;
@@ -217,10 +217,9 @@ const StudyEdit = () => {
     return (<div className={"main_wrap"} id={"study"}>
         <Header showSideCenter={true}/>
         <div className="study_detail_container" style={{width: "70%"}}>
-            <h1>Edit Study</h1>
             <div className="arrow_left">
-                <p id={"entry-path"}> 홈 > 스터디 리스트 > 스터디 > 스터디 수정 </p>
-                <Backarrow subname={"Edit Study"}/>
+                <p id={"entry-path"}> 홈 > 스터디 > 스터디 수정 </p>
+                <Backarrow subname={"스터디 수정"}/>
                 <div>
                     {studyeditform()}
                 </div>

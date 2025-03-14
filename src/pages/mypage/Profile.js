@@ -41,11 +41,11 @@ const Profile = () => {
                     <div className="sub_container">
                         <ImageComponent imageUrl={uploadImgUrl} />
                         <div className={"One-line-self-introduction"}>
-                            <p id={"self-intro-p"}>한줄 자기소개</p>
+                            <p id={"self-intro-p"}>한 줄 자기소개</p>
                             <div>
                                 {profile?.introduce === null ? (
                                     <>
-                                        <p>자기소개란이 비었어요! 한줄소개를 해주세요!</p>
+                                        <p>자기소개란이 비었어요! 한 줄소개를 해주세요!</p>
                                     </>
                                 ) : (
                                     <p>{profile?.introduce}</p>

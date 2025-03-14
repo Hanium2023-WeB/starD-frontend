@@ -129,8 +129,8 @@ const TeamBlog = () => {
             <div className={"main_content"}>
                 <TeamBlogGnb studyIdAsNumber={studyIdAsNumber} Member={Member} selectStudy={studyItem} progressStatus={progressStatus}/>
                 <div className="team_blog">
-                    <p id={"entry-path"} style={{marginTop:"50px"}}> 스터디 참여 내역 > 팀 블로그 </p>
-                    <Backarrow subname={"스터디 팀 블로그"}/>
+                    <p id={"entry-path"} style={{marginTop:"50px"}}> 스터디 팀 블로그 > 팀 블로그</p>
+                    <Backarrow subname={"팀 블로그 홈"}/>
                     <div className="img_wrapper">
                         <div className="team_info">
                             <h2 className="study_title">{studyItem.title}</h2>

@@ -80,7 +80,6 @@ const MyWriteComment = () => {
                         <tr>
                             <th>타입</th>
                             <th>댓글 내용</th>
-                            <th>닉네임</th>
                             <th>날짜</th>
                         </tr>
                         </thead>
@@ -115,7 +114,6 @@ const MyWriteComment = () => {
                                         <span>{comment.content}</span>
                                     )}
                                 </td>
-                                <td className="community_nickname">{comment.writer || '익명'}</td>
                                 <td className="community_datetime">{formatDatetime(comment.createdAt)}</td>
                             </tr>
                         ))}

@@ -84,7 +84,7 @@ const TeamPostInsert = ( {studyId} ) => {
         }).then((res) => {
             console.log(res.data);
             alert("게시글이 등록되었습니다.");
-            navigate(`/${studyId}/teamblog/TeamCommunity/studypostdetail/${res.data.studyPostId}`)
+            navigate(`/teamblog/${studyId}/community/post/${res.data.studyPostId}`)
         }).catch((error) => {
             console.error('전송 실패', error);
         })

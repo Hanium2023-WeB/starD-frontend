@@ -159,7 +159,6 @@ const MyWritePost = () => {
                                     <th>카테고리</th>
                                 )}
                                 <th>제목</th>
-                                <th>닉네임</th>
                                 <th>날짜</th>
                                 <th>조회수</th>
                             </tr>
@@ -195,7 +194,6 @@ const MyWritePost = () => {
                                             </Link>
                                         ) : null}
                                     </td>
-                                    <td className="community_nickname">{post.writer || '익명'}</td>
                                     <td className="community_datetime">{formatDatetime(post.createdAt)}</td>
                                     <td>{post.hit}</td>
                                 </tr>

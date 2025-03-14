@@ -6,6 +6,7 @@ import axios from "axios";
 import NoticeEdit from "../../components/notice/NoticeEdit";
 import default_profile_img from "../../images/default_profile_img.png";
 import toast from "react-hot-toast";
+import ImageComponent from "../../components/image/imageComponent";
 
 const NoticeDetail = () => {
     const navigate = useNavigate();
@@ -189,11 +190,7 @@ const NoticeDetail = () => {
                                 <div className="post_info">
                                     <div className="left">
                                         <span className="community_nickname">
-                                            <img
-                                                src={postItem.profileImg || default_profile_img} // 기본 이미지 경로
-                                                alt="프로필 이미지"
-                                                className="profile_image" // 필요한 경우 CSS 클래스 추가
-                                            />
+                                            <ImageComponent imageUrl={postItem.profileImg}/>
                                             {postItem.writer}
                                         </span>
                                         <span className="post_created_date">{formatDatetime(postItem.createdAt)}</span>

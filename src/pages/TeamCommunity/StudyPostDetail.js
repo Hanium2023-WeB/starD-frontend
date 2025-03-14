@@ -14,6 +14,7 @@ import { toggleScrapStatus } from "../../util/scrapHandler";
 import ScrapButton from "../../components/repeat_etc/ScrapButton";
 import TeamBlogGnb from "../../components/repeat_etc/TeamBlogGnb";
 import {useTeamBlogContext} from "../../components/datacontext/TeamBlogContext";
+import ImageComponent from "../../components/image/imageComponent";
 
 const StudyPostDetail = ( ) => {
     const navigate = useNavigate();
@@ -224,8 +225,8 @@ const StudyPostDetail = ( ) => {
             <div className="container">
                 <TeamBlogGnb studyIdAsNumber={studyId} Member={member} selectStudy={studyItem} progressStatus={progressType}/>
                 <div className="main_schedule_container">
-                    <p id={"entry-path"}> 스터디 참여내역 > 팀블로그 > 팀 커뮤니티</p>
-                    <Backarrow subname={"TEAM COMMUNITY LIST"}/>
+                    <p id={"entry-path"}> 스터디 팀 블로그 > 팀 블로그 > 팀 커뮤니티</p>
+                    <Backarrow subname={"팀 커뮤니티 리스트"}/>
                     {editing ? (
                         <PostEdit
                             post={postItem}
@@ -249,7 +250,18 @@ const StudyPostDetail = ( ) => {
                                     </div>
                                     <div className="post_info">
                                         <div className="left">
-                                            <span className="post_nickname">{postItem.writer}</span>
+                                            <span className="writer_profile">
+                                                <ImageComponent imageUrl = {postItem.profileImg} imageSrc={""} />
+                                                <Link
+                                                    to={`/${postItem.postId}/userprofile`}
+                                                    style={{
+                                                        textDecoration: "none",
+                                                        color: "inherit",
+                                                    }}
+                                                >
+                                                    <span className="post_nickname">{postItem.writer}</span>
+                                                </Link>
+                                            </span>
                                             <span className="post_created_date">{formatDatetime(postItem.createdAt)}</span>
                                             {postItem.createdAt !== postItem.updatedAt && (
                                               <>
