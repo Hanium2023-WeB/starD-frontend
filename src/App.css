@@ -710,12 +710,11 @@ button#todo_more {
   position: relative;
   top: 5px;
   left: 20px;
-  height: 70px;
   border-radius: 10px;
 }
 
 #c-scrap {
-  top: 40px;
+  top: 25px;
 }
 
 #c-info {

@@ -145,6 +145,7 @@ html {
     border-radius: 50px;
     font-family: 'Pretendard-Regular';
     cursor: pointer;
+    margin-bottom: 30px;
 }
 .study_edit_form .btn .recruit_btn{
     margin-right: 10px;

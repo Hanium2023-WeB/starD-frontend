@@ -13,21 +13,21 @@ import scheduleimg from "../images/schedule.png";
 import checktodo from "../images/free-icon-to-do-list.png";
 import mapicon from "../images/free-icon-map.png";
 import chaticon from "../images/free-icon-chat.png";
-import TeamBlog from "../images/TeamBlog.png";
+import TeamBlog from "../images/TeamBlogImg.png";
 import Chatting from "../images/Chatting.png";
 import community from "../images/community.png";
-import communityfield from "../images/communityfield.png";
-import communityscrap from "../images/communityscrap.png";
+import communityRely from "../images/communityRely.png";
+import communityHeart from "../images/communityHeart.png";
 import MemoizedLink from "../MemoizedLink";
 import axiosInstance from "../api/axiosInstance";
 import toast from "react-hot-toast";
 import axios from "axios";
 
 const CenteredDiv = styled.div`
-  display: flex;
-  flex-direction: column; // 요소들을 가로로 정렬
-  align-items: center; // 가운데 정렬
-  justify-content: center; // 가운데 정렬
+    display: flex;
+    flex-direction: column; // 요소들을 가로로 정렬
+    align-items: center; // 가운데 정렬
+    justify-content: center; // 가운데 정렬
 
 `;
 
@@ -407,13 +407,12 @@ const Home = () => {
                                     스터디 커뮤니티</p>
                                 <div id={"detail-images"}>
                                     <div className="CommunityScreenShot">
-                                        <img id="community_main" src={community} width="400px"
+                                        <img id="community_main" src={community} height="250px"
                                              data-aos="flip-left"/>
                                         <div className={"community-field_scrap"}>
-                                            <img id="c-field" src={communityfield} width="200px"
+                                            <img id="c-field" src={communityRely} height="180px"
                                                  data-aos="flip-left"/>
-                                            <img id="c-scrap" src={communityscrap} width="200px"
-                                                 height={"80px"}
+                                            <img id="c-scrap" src={communityHeart} width="120px"
                                                  data-aos="flip-left"/>
                                         </div>
                                         <span id={"c-info"}>다양한 관심사를 가진 사람들과 <br/>
@@ -432,12 +431,12 @@ const Home = () => {
                                     함께 나누면 그 가치가 배가 됩니다.</p>
                                 <div id={"detail-images"}>
                                     <div className="TeamBlogScreenShot">
-                                        <img src={TeamBlog} width="400px" height="400px"
+                                        <img src={TeamBlog} height="400px"
                                              data-aos="fade-up"/>
                                     </div>
-                                    <div className="TeamBlogScreenShot">
-                                        <img src={Chatting} width="200px" data-aos="fade-up"/>
-                                    </div>
+                                    {/*<div className="TeamBlogScreenShot">*/}
+                                    {/*    <img src={Chatting} width="200px" data-aos="fade-up"/>*/}
+                                    {/*</div>*/}
 
                                     <span>스터디원들과의 실시간 채팅과<br/>
                                     할 일, 일정들을 한 눈에 확인할 수 있어요</span>

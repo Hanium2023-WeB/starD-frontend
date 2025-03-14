@@ -4,78 +4,95 @@
 
 .chat_wrap {
     height: 648.5px;
-    border: 1px solid black;
+    border: 1px dashed #d8d8d8;
     border-radius: 5px;
 }
 
 .chattingbox {
     height: 565px;
-    overflow-y: auto;
-    padding: 0 10px;
-    overflow-x: hidden;
+    overflow-y: auto;       /*세로(수직) 스크롤바 표시*/
+    overflow-x: hidden;     /*가로(수평) 스크롤바를 숨김*/
 }
 
 .chatting {
-    height: fit-content;
-    margin-top: 10px;
+    /*height: 100%;*/
+    /*width: 100%;*/
+    /*height: fit-content;*/
 }
 
 .studyTitle {
-    font-size: 15px;
-    background-color: #BBDF9F;
-    color: white;
+    font-weight: bold;
+    background-color: #f6f6f6;
+    color: black;
     border-radius: 5px;
     position: relative;
-    height:50px;
+    height: 50px;
+    padding: 0 20px;
 }
-.studyTitle>h2{
-    margin: 0px auto;
+.studyTitle>p{
+    font-size: 15px;
+    margin: auto;
     padding-bottom: 0px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.message-head {
+    margin: 5px auto;
+    text-align: center;
+    font-weight: bold;
+}
+
 #message-thead{
     position: relative;
-    left: 53px;
+    /*left: 53px;*/
 }
 #message {
     font-size: 15px;
-    position: relative;
+    /*position: relative;*/
     top: 10px;
 }
 
 .message-detail {
     padding: 10px;
-
 }
-#greet{
+.greet{
     position: relative;
-    left: 55px;
+    margin: 10px 5%;
+    max-width: 95%;
 }
-#my-chats{
+.my-chats{
     background-color: #F0EBC8;
-    /*width: 180px;*/
     height: fit-content;
     border-radius: 10px;
     position: relative;
-    left: 110px;
+    margin: 10px 5%;
+    max-width: 95%;
+    word-break: break-word;
+    word-wrap: break-word;
+    white-space: normal;
 }
-#other-chats{
+.other-chats{
     background-color: #CCE4C3;
-    width: 160px;
     height: fit-content;
     border-radius: 10px;
+    position: relative;
+    margin: 10px 5%;
+    max-width: 95%;
+    word-break: break-word;
+    word-wrap: break-word;
+    white-space: normal;
 }
 #entry-time{
     font-size: 10px;
     margin-bottom: 0px;
 }
-#my-chats  #entry-time{
+.my-chats  .entry-time{
    position: relative;
-    left: 72px;
 }
+
 .input_chat{
     margin-top: -5px;
 }
@@ -100,7 +117,4 @@ label{
     border-style: none;
     border-radius: 5px;
     cursor: pointer;
-}
-.my-chats{
-
 }
