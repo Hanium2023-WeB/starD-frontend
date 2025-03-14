@@ -190,7 +190,7 @@ const NoticeDetail = () => {
                                 <div className="post_info">
                                     <div className="left">
                                         <span className="community_nickname">
-                                            <ImageComponent imageUrl={postItem.profileImg}/>
+                                            <ImageComponent imageUrl={postItem.profileImg} imageCss={"profile_image"}/>
                                             {postItem.writer}
                                         </span>
                                         <span className="post_created_date">{formatDatetime(postItem.createdAt)}</span>
