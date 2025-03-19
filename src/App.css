@@ -826,7 +826,19 @@ footer {
 
 .info_second_content {
   width: 80%;
+}
 
+.stard_info {
+  display: flex;
+  align-items: center;  /* 세로 중앙 정렬 */
+  gap: 8px;  /* 이미지와 텍스트 사이 간격 */
+}
+
+.stard_info span {
+  font-weight: bold;
+  font-size: 30px;
+  color: white;
+  font-family: "Nanum Pen Script", cursive;
 }
 
 .subfooter_info ul {
@@ -852,14 +864,15 @@ footer {
 }
 
 .item_first {
+  /*font-weight: bold;*/
   margin-left: 0px;
   margin-right: 10px;
 }
 
 .item_first li {
-  font-size: 20px;
-  position: relative;
-  bottom: 8px;
+  /*font-size: 20px;*/
+  /*position: relative;*/
+  /*bottom: 8px;*/
 }
 
 /*li span {*/
