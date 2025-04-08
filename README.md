@@ -16,6 +16,44 @@
 <br/>
 
 # 3. Key Features (주요 기능)
+
+| 회원가입 1단계 | 회원가입 2단계 | 로그인 |
+|:-:|:-:|:-:|
+| <img src="https://github.com/user-attachments/assets/3e6365f6-6d2f-4dfc-9587-3c74014649a4" alt="회원가입 1단계" width="450"/> | <img src="https://github.com/user-attachments/assets/eafd5740-9f57-4ae7-9e0f-553ccf8b1c63" alt="회원가입 2단계" width="450"/> | <img src="https://github.com/user-attachments/assets/e5a29879-51c1-46b5-80da-b247bd0aaba6" alt="로그인" width="450"/>
+
+| 스터디 모집 | 스터디 모집 목록 | 스터디 모집 상세 페이지 |
+|:-:|:-:|:-:|
+| <img src="https://github.com/user-attachments/assets/43aa4a2b-1432-45c0-9a91-9217444850ea" alt="스터디 모집" width="450"/> | <img width="450" alt="스터디 모집 목록" src="https://github.com/user-attachments/assets/6c1fc98d-adb3-4489-90e9-760a16bb8be1" />| <img width="450" alt="스터디 모집 상세 페이지" src="https://github.com/user-attachments/assets/35aa937b-2d57-4343-a410-3cf0858096eb" />
+
+
+| 팀 블로그 홈 | 팀 투두 | 스터디 지원 동기 조회 |
+|:-:|:-:|:-:|
+| <img width="450" alt="팀블로그 홈" src="https://github.com/user-attachments/assets/f401d18a-7e21-40dc-bb89-3bc1bcf18b88" />| <img width="450" alt="팀 투두" src="https://github.com/user-attachments/assets/9006c53a-09aa-40bd-acd3-208d710b57bf" />| <img width="450" alt="스터디 지원 동기 조회" src="https://github.com/user-attachments/assets/1456b0e3-4722-4352-ad9f-ae2b52769512" />
+
+| 팀 일정 등록 | 팀 일정 | 팀 커뮤니티 목록 |
+|:-:|:-:|:-:|
+| <img width="450" alt="팀 일정 등록" src="https://github.com/user-attachments/assets/c8f12e85-ae33-4941-8f9f-2ff7e2f407fc" />| <img width="450" alt="팀 일정" src="https://github.com/user-attachments/assets/ceafda64-b468-4063-89cf-a9be4d2e6487" />| <img width="450" alt="팀 커뮤니티 목록" src="https://github.com/user-attachments/assets/8a2755a5-6dee-45b9-b537-61f001f560fe" />
+
+| 팀 커뮤니티 상세 페이지 | 중간 지점 찾기 | 실시간 채팅 |
+|:-:|:-:|:-:|
+| <img width="450" alt="팀 커뮤니티 상세 페이지" src="https://github.com/user-attachments/assets/eaaf1e3f-d6f9-46f8-b6f2-6f8f5650543f" />| <img width="450" alt="중간 지점 찾기" src="https://github.com/user-attachments/assets/bbee7310-4b96-4023-b49c-1e80c3a62557" />| <img width="450" alt="실시간 채팅" src="https://github.com/user-attachments/assets/5d1ff21f-616e-4fa0-905f-5eec2f05bed1" />
+
+| 커뮤니티 목록 조회 |  커뮤니티 상세 조회 | 커뮤니티 등록 |
+|:-:|:-:|:-:|
+| <img width="450" alt="커뮤니티 목록 조회" src="https://github.com/user-attachments/assets/e9213772-2151-40fb-a83a-9445b3417508" />| <img width="450" alt="커뮤니티 상세 조회" src="https://github.com/user-attachments/assets/b5e5c8f4-0cad-4b63-962d-51b1cf5928ca" />| <img width="450" alt="커뮤니티 등록" src="https://github.com/user-attachments/assets/49a9106a-da8e-43f9-9ae4-30305f0c7666" />
+
+| 공지사항 |  QnA | 마이페이지 |
+|:-:|:-:|:-:|
+| <img width="450" alt="공지사항" src="https://github.com/user-attachments/assets/64ba7aa6-3072-472a-ab08-4cce40fa6024" />| <img width="450" alt="QnA" src="https://github.com/user-attachments/assets/47a07baf-6dfe-4441-8b63-df24bf108e8b" />| <img width="450" alt="마이페이지" src="https://github.com/user-attachments/assets/89f3c294-5699-4a93-bb85-7de0f7f80322" />
+
+
+| 관리자 페이지 |  스터디 팀원 평가 | 스터디 팀원 평가 조회 |
+|:-:|:-:|:-:|
+| <img width="1429" alt="image" src="https://github.com/user-attachments/assets/a5773c31-7614-475c-a206-5a743c5d9624" /> |
+| <img width="1435" alt="image" src="https://github.com/user-attachments/assets/c7d803c2-58f8-4abc-a181-57347199c084" /> <img width="450" alt="스터디 팀원 평가 조회" src="https://github.com/user-attachments/assets/7a5b64d8-44d9-4ac2-b7f4-3c7bacaf3a9c" />
+
+
+
 - **회원가입**:
     - 회원가입 시 DB에 유저정보가 등록됩니다.
 
