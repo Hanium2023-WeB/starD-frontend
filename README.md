@@ -49,8 +49,7 @@
 
 | 관리자 페이지 |  스터디 팀원 평가 | 스터디 팀원 평가 조회 |
 |:-:|:-:|:-:|
-| <img width="1429" alt="image" src="https://github.com/user-attachments/assets/a5773c31-7614-475c-a206-5a743c5d9624" /> |
-| <img width="1435" alt="image" src="https://github.com/user-attachments/assets/c7d803c2-58f8-4abc-a181-57347199c084" /> <img width="450" alt="스터디 팀원 평가 조회" src="https://github.com/user-attachments/assets/7a5b64d8-44d9-4ac2-b7f4-3c7bacaf3a9c" />
+| <img width="450" alt="관리자 페이지" src="https://github.com/user-attachments/assets/a5773c31-7614-475c-a206-5a743c5d9624" /> | <img width="450" alt="스터디 팀원 평가" src="https://github.com/user-attachments/assets/c7d803c2-58f8-4abc-a181-57347199c084" /> | <img width="450" alt="스터디 팀원 평가 조회" src="https://github.com/user-attachments/assets/7a5b64d8-44d9-4ac2-b7f4-3c7bacaf3a9c" />
 
 
 
