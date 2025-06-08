@@ -8,7 +8,7 @@
 # 2. Team Members (팀원 및 팀 소개)
 |                                                        김현수                                                        |                                                        허민영                                                        |
 |:-----------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|
-| <img src="https://github.com/user-attachments/assets/af16adf8-5ef7-4c46-8316-375571920f3c" alt="김현수" width="150"> | <img src="" alt="허민영" width="150"> |
+| <img src="https://github.com/user-attachments/assets/af16adf8-5ef7-4c46-8316-375571920f3c" alt="김현수" width="150"> | <img src="https://github.com/user-attachments/assets/0e9b3777-647c-47eb-b3ab-43dc640da99d" alt="허민영" width="150" height="150"> |
 |                                                        FE                                                         |                                                        FE                                                         |
 |                                      [GitHub](https://github.com/khskys0805)                                      |                                       [GitHub](https://github.com/MinCodeHub)                                        |
 
@@ -100,7 +100,7 @@
 |        |                                                                                                                   |                                                                                                                                                                 |
 |--------|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 김현수    | <img src="https://github.com/user-attachments/assets/af16adf8-5ef7-4c46-8316-375571920f3c" alt="김현수" width="100"> | <ul><li>스터디 개설 및 상세 페이지</li><li>스터디 검색</li><li>스크랩 및 좋아요</li><li>마이페이지 스터디 및 게시글 조회</li><li>커뮤니티</li><li>Q&A</li><li>알림</li><li>백엔드 설계 변경 후 프론트 전면 수정</li></ul> |
-| 허민영 | <img src="" alt="허민영" width="100">                                                                                | <ul><li>회원가입 및 로그인</li><li>투두 리스트</li><li>일정</li><li>스터디 참여 및 수락</li></ul>                                                                       |
+| 허민영 |  <img src="https://github.com/user-attachments/assets/0e9b3777-647c-47eb-b3ab-43dc640da99d" alt="허민영" width="100" height="100">                                                                                | <ul><li>회원가입</li><li>로그인</li><li>팀 투두 리스트(팀, 개인)</li><li>일정(팀 , 개인)</li><li>스터디 모집 목록 페이지</li><li>팀 블로그 홈페이지</li><li>스터디 참여 및 수락</li><li>중간지점 찾기</li><li>프로필</li><li>연동</li></ul>                                                                       |
 
 
 <br/>
